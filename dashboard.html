@@ -268,7 +268,14 @@ function loadData(){
               <div class="v-bar-top"><span class="v-label">⛽ ${v.id==="839"?"الديزل":"البنزين"}</span><span class="v-value">${d.diesel}%</span></div>
               <div class="v-bar"><div class="v-bar-fill v-bar-fuel" style="width:${d.diesel}%"></div></div>
             </div>
-            ${v.id==="839" ? `<div class="v-item">
+            ${v.id==="239" ? `<div class="v-bar-item">
+              <div class="v-bar-top"><span class="v-label">💧 الماء</span><span class="v-value">${d.water}%</span></div>
+              <div class="v-bar"><div class="v-bar-fill v-bar-water" style="width:${d.water}%"></div></div>
+            </div>
+            <div class="v-item">
+              <span class="v-label">⚙️ المضخة الخلفية</span>
+              <span class="v-value" style="color:${d.pump==="تعمل"?"var(--green)":"var(--ember)"};font-weight:700;">${d.pump||"—"}</span>
+            </div>` : v.id==="839" ? `<div class="v-item">
               <span class="v-label">🫁 عدد أجهزة التنفس</span>
               <span class="v-value">${d.breathing||0}</span>
             </div>` : v.id!=="139" ? `<div class="v-bar-item">

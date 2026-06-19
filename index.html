@@ -345,7 +345,23 @@
     </div>
   </section>
 
-  <!-- 6. عدد أجهزة التنفس -->
+  <!-- 6. المضخة الخلفية -->
+  <section class="card" id="sec-pump" style="display:none;">
+    <div class="field-head">
+      <div class="field-num">6</div>
+      <div><div class="field-title">المضخة الخلفية</div><div class="field-sub">هل المضخة الخلفية تعمل؟</div></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px;">
+      <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:12px;border:2px solid var(--line-strong);cursor:pointer;font-weight:700;font-size:15px;transition:all .15s;">
+        <input type="radio" name="pump" value="تعمل" style="accent-color:var(--green);width:20px;height:20px;"> تعمل ✓
+      </label>
+      <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:12px;border:2px solid var(--line-strong);cursor:pointer;font-weight:700;font-size:15px;transition:all .15s;">
+        <input type="radio" name="pump" value="لا تعمل" style="accent-color:var(--ember);width:20px;height:20px;"> لا تعمل ✗
+      </label>
+    </div>
+  </section>
+
+  <!-- 7. عدد أجهزة التنفس -->
   <section class="card" id="sec-breathing" style="display:none;">
     <div class="field-head">
       <div class="field-num">6</div>
@@ -482,6 +498,15 @@ function updateVisibleFields(){
     secHoses.style.display="none";
     secNozzles.style.display="none";
     secBreathing.style.display="none";
+    document.getElementById("sec-pump").style.display="none";
+    fuelTitle.textContent="البنزين";
+    fuelSub.textContent="نسبة البنزين في الخزان";
+  } else if(v==="239"){
+    secWater.style.display="";
+    secHoses.style.display="none";
+    secNozzles.style.display="none";
+    secBreathing.style.display="none";
+    document.getElementById("sec-pump").style.display="";
     fuelTitle.textContent="البنزين";
     fuelSub.textContent="نسبة البنزين في الخزان";
   } else if(v==="839"){
@@ -489,6 +514,7 @@ function updateVisibleFields(){
     secHoses.style.display="none";
     secNozzles.style.display="none";
     secBreathing.style.display="";
+    document.getElementById("sec-pump").style.display="none";
     fuelTitle.textContent="الديزل";
     fuelSub.textContent="نسبة الديزل في الخزان";
   } else {
@@ -496,6 +522,7 @@ function updateVisibleFields(){
     secHoses.style.display="";
     secNozzles.style.display="";
     secBreathing.style.display="none";
+    document.getElementById("sec-pump").style.display="none";
     fuelTitle.textContent="البنزين";
     fuelSub.textContent="نسبة البنزين في الخزان";
   }
@@ -585,6 +612,7 @@ document.getElementById("send").addEventListener("click",async()=>{
     mawza: counters.mawza.v,
     nozzle: counters.nozzle.v,
     breathing: counters.breathing ? counters.breathing.v : 0,
+    pump: (document.querySelector('input[name="pump"]:checked')||{}).value || "",
     notes: document.getElementById("notes").value.trim(),
     operator: operatorInput.value,
     timestamp: new Date().toISOString(),

@@ -280,7 +280,7 @@
   </section>
 
   <!-- 3. الماء -->
-  <section class="card">
+  <section class="card" id="sec-water">
     <div class="field-head">
       <div class="field-num">3</div>
       <div><div class="field-title">الماء</div><div class="field-sub">نسبة الماء في الخزان</div></div>
@@ -297,7 +297,7 @@
   </section>
 
   <!-- 4. عدد الأهواز -->
-  <section class="card">
+  <section class="card" id="sec-hoses">
     <div class="field-head">
       <div class="field-num">4</div>
       <div><div class="field-title">عدد الأهواز</div><div class="field-sub">من 0 إلى 20 لكل نوع</div></div>
@@ -321,7 +321,7 @@
   </section>
 
   <!-- 5. الموزة والفكنوزل -->
-  <section class="card">
+  <section class="card" id="sec-nozzles">
     <div class="field-head">
       <div class="field-num">5</div>
       <div><div class="field-title">الموزة والفكنوزل</div><div class="field-sub">من 0 إلى 20 لكل عنصر</div></div>
@@ -434,7 +434,26 @@ paintSlider(diesel,dieselNum); paintSlider(water,waterNum);
 
 /* ===== القائمة المنسدلة ===== */
 const machine=document.getElementById("machine");
-machine.addEventListener("change",()=>machine.classList.remove("placeholder"));
+machine.addEventListener("change",()=>{
+  machine.classList.remove("placeholder");
+  updateVisibleFields();
+});
+
+function updateVisibleFields(){
+  const v=machine.value;
+  const secWater=document.getElementById("sec-water");
+  const secHoses=document.getElementById("sec-hoses");
+  const secNozzles=document.getElementById("sec-nozzles");
+  if(v==="139"){
+    secWater.style.display="none";
+    secHoses.style.display="none";
+    secNozzles.style.display="none";
+  } else {
+    secWater.style.display="";
+    secHoses.style.display="";
+    secNozzles.style.display="";
+  }
+}
 
 /* ===== الصورة ===== */
 const photo=document.getElementById("photo");

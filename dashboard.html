@@ -135,6 +135,16 @@ main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
   text-decoration:none;margin-bottom:14px;
 }
 .back-link:hover{text-decoration:underline;}
+.v-bar-item{grid-column:1/-1;padding:6px 0;}
+.v-bar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.v-bar{
+  height:12px;border-radius:999px;background:#EAEAE3;
+  border:1px solid var(--line-strong);overflow:hidden;
+}
+.v-bar-fill{height:100%;border-radius:999px;transition:width .3s;}
+.v-bar-fuel{background:var(--ember);}
+.v-bar-water{background:var(--water);}
+
 .v-photo-wrap{display:block;margin-top:12px;}
 .v-photo-big{
   width:100%;max-height:250px;border-radius:12px;
@@ -253,13 +263,13 @@ function loadData(){
         </div>
         <div class="v-body">
           <div class="v-grid">
-            <div class="v-item">
-              <span class="v-label">⛽ البنزين</span>
-              <span class="v-value">${d.diesel}%</span>
+            <div class="v-bar-item">
+              <div class="v-bar-top"><span class="v-label">⛽ البنزين</span><span class="v-value">${d.diesel}%</span></div>
+              <div class="v-bar"><div class="v-bar-fill v-bar-fuel" style="width:${d.diesel}%"></div></div>
             </div>
-            <div class="v-item">
-              <span class="v-label">💧 الماء</span>
-              <span class="v-value">${d.water}%</span>
+            <div class="v-bar-item">
+              <div class="v-bar-top"><span class="v-label">💧 الماء</span><span class="v-value">${d.water}%</span></div>
+              <div class="v-bar"><div class="v-bar-fill v-bar-water" style="width:${d.water}%"></div></div>
             </div>
             <div class="v-item">
               <span class="v-label">هوز إنج ونص</span>

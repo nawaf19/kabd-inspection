@@ -263,11 +263,11 @@
     </div>
   </section>
 
-  <!-- 2. البنزين -->
-  <section class="card">
+  <!-- 2. البنزين / الديزل -->
+  <section class="card" id="sec-fuel">
     <div class="field-head">
       <div class="field-num">2</div>
-      <div><div class="field-title">البنزين</div><div class="field-sub">نسبة البنزين في الخزان</div></div>
+      <div><div class="field-title" id="fuel-title">البنزين</div><div class="field-sub" id="fuel-sub">نسبة البنزين في الخزان</div></div>
     </div>
     <div class="gauge-top">
       <div class="gauge-read"><span id="dieselNum">50</span><span>%</span></div>
@@ -345,7 +345,23 @@
     </div>
   </section>
 
-  <!-- 6. ملاحظات -->
+  <!-- 6. عدد أجهزة التنفس -->
+  <section class="card" id="sec-breathing" style="display:none;">
+    <div class="field-head">
+      <div class="field-num">6</div>
+      <div><div class="field-title">عدد أجهزة التنفس</div><div class="field-sub">من 0 إلى 50</div></div>
+    </div>
+    <div class="stepper-row">
+      <div class="lbl">أجهزة التنفس</div>
+      <div class="stepper" data-counter="breathing" data-min="0" data-max="50">
+        <button type="button" data-step="-1">−</button>
+        <div class="val mono">0</div>
+        <button type="button" data-step="1">+</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. ملاحظات -->
   <section class="card">
     <div class="field-head">
       <div class="field-num">6</div>
@@ -458,14 +474,30 @@ function updateVisibleFields(){
   const secWater=document.getElementById("sec-water");
   const secHoses=document.getElementById("sec-hoses");
   const secNozzles=document.getElementById("sec-nozzles");
+  const secBreathing=document.getElementById("sec-breathing");
+  const fuelTitle=document.getElementById("fuel-title");
+  const fuelSub=document.getElementById("fuel-sub");
   if(v==="139"){
     secWater.style.display="none";
     secHoses.style.display="none";
     secNozzles.style.display="none";
+    secBreathing.style.display="none";
+    fuelTitle.textContent="البنزين";
+    fuelSub.textContent="نسبة البنزين في الخزان";
+  } else if(v==="839"){
+    secWater.style.display="none";
+    secHoses.style.display="none";
+    secNozzles.style.display="none";
+    secBreathing.style.display="";
+    fuelTitle.textContent="الديزل";
+    fuelSub.textContent="نسبة الديزل في الخزان";
   } else {
     secWater.style.display="";
     secHoses.style.display="";
     secNozzles.style.display="";
+    secBreathing.style.display="none";
+    fuelTitle.textContent="البنزين";
+    fuelSub.textContent="نسبة البنزين في الخزان";
   }
 }
 
@@ -552,6 +584,7 @@ document.getElementById("send").addEventListener("click",async()=>{
     hose2: counters.hose2.v,
     mawza: counters.mawza.v,
     nozzle: counters.nozzle.v,
+    breathing: counters.breathing ? counters.breathing.v : 0,
     notes: document.getElementById("notes").value.trim(),
     operator: operatorInput.value,
     timestamp: new Date().toISOString(),

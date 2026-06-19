@@ -212,6 +212,7 @@ function buildReport(){
           <th>هوز إنجين ونص</th>
           <th>الموزع</th>
           <th>الفكنوزل</th>
+          <th>أجهزة التنفس</th>
           <th>المشغل</th>
           <th>الوقت</th>
           <th>ملاحظات</th>
@@ -226,17 +227,18 @@ function buildReport(){
     if(d){
       const ts=new Date(d.timestamp);
       const time=ts.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false});
-      const isJeep = v.id==="139";
+      const hideExtra = v.id==="139" || v.id==="839";
       html+=`<tr>
         <td class="vehicle-label">${v.id}</td>
         <td class="vehicle-label">${v.type}</td>
         <td style="background:var(--green-soft);color:var(--green);font-weight:700;">تم الفحص ✓</td>
         <td class="inspected-val ${fuelClass(d.diesel)}">${d.diesel}%</td>
-        <td class="inspected-val">${isJeep ? "—" : d.water+"%"}</td>
-        <td class="inspected-val">${isJeep ? "—" : d.hose1}</td>
-        <td class="inspected-val">${isJeep ? "—" : d.hose2}</td>
-        <td class="inspected-val">${isJeep ? "—" : d.mawza}</td>
-        <td class="inspected-val">${isJeep ? "—" : d.nozzle}</td>
+        <td class="inspected-val">${hideExtra ? "—" : d.water+"%"}</td>
+        <td class="inspected-val">${hideExtra ? "—" : d.hose1}</td>
+        <td class="inspected-val">${hideExtra ? "—" : d.hose2}</td>
+        <td class="inspected-val">${hideExtra ? "—" : d.mawza}</td>
+        <td class="inspected-val">${hideExtra ? "—" : d.nozzle}</td>
+        <td class="inspected-val">${v.id==="839" ? (d.breathing||0) : "—"}</td>
         <td class="operator-cell">${d.operator||"—"}</td>
         <td class="time-cell">${time}</td>
         <td class="notes-cell">${d.notes||"—"}</td>
@@ -246,7 +248,7 @@ function buildReport(){
       html+=`<tr>
         <td class="vehicle-label">${v.id}</td>
         <td class="vehicle-label">${v.type}</td>
-        <td class="not-inspected" colspan="10">لم يتم الفحص ✗</td>
+        <td class="not-inspected" colspan="11">لم يتم الفحص ✗</td>
         <td class="photo-col not-inspected">—</td>
       </tr>`;
     }

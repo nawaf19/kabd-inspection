@@ -262,15 +262,15 @@
     </div>
   </section>
 
-  <!-- 2. الديزل -->
+  <!-- 2. البنزين -->
   <section class="card">
     <div class="field-head">
       <div class="field-num">2</div>
-      <div><div class="field-title">الديزل</div><div class="field-sub">نسبة الديزل في الخزان</div></div>
+      <div><div class="field-title">البنزين</div><div class="field-sub">نسبة البنزين في الخزان</div></div>
     </div>
     <div class="gauge-top">
       <div class="gauge-read"><span id="dieselNum">50</span><span>%</span></div>
-      <div class="gauge-tag" style="background:var(--ember-soft);color:var(--ember);">DIESEL</div>
+      <div class="gauge-tag" style="background:var(--ember-soft);color:var(--ember);">GASOLINE</div>
     </div>
     <div class="slider">
       <input type="range" id="diesel" min="0" max="100" value="50"
@@ -492,7 +492,7 @@ function buildMessage(){
   if(operator){ m+="\u{1F477} المشغل: "+operator+"\n"; }
   m+="\u{1F4E9} إلى: "+recipient.value+"\n";
   m+="\u{1F522} رقم الآلية: "+machine.value+"\n";
-  m+="⛽ الديزل: "+diesel.value+"%\n";
+  m+="⛽ البنزين: "+diesel.value+"%\n";
   m+="\u{1F4A7} الماء: "+water.value+"%\n\n";
   m+="\u{1F9EF} عدد الأهواز:\n";
   m+="   • هوز إنج ونص: "+counters.hose1.v+"\n";

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>متابعة الفحص — مركز كبد</title>
+<meta name="theme-color" content="#16181C">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="متابعة الفحص">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9EAE4;--surface:#FFFFFF;--ink:#16181C;--muted:#6A6F77;
+  --line:#DDDED6;--line-strong:#C9CAC1;
+  --ember:#D33C1C;--ember-soft:#FBE7E0;
+  --water:#137C9E;--water-soft:#E1F0F5;
+  --green:#1B7A3D;--green-soft:#E2F3E8;
+  --header:#16181C;--radius:16px;
+  --shadow:0 1px 2px rgba(22,24,28,.05), 0 8px 24px rgba(22,24,28,.06);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;
+  font-size:16px;line-height:1.5;
+  padding-bottom:40px;
+  -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:"IBM Plex Mono",monospace;font-feature-settings:"tnum";}
+
+header{
+  position:sticky;top:0;z-index:30;
+  background:var(--header);color:#F4F3EE;
+  padding:calc(env(safe-area-inset-top) + 16px) 18px 16px;
+  border-bottom:3px solid var(--water);
+}
+.h-eyebrow{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;letter-spacing:2px;color:#9AA0A8;text-transform:uppercase;
+  display:flex;align-items:center;gap:8px;
+}
+.h-eyebrow::before{
+  content:"";width:8px;height:8px;border-radius:50%;
+  background:var(--water);display:inline-block;
+  box-shadow:0 0 0 3px rgba(19,124,158,.25);
+}
+header h1{margin:6px 0 0;font-size:22px;font-weight:700;letter-spacing:-.2px;}
+.h-sub{font-size:13px;color:#9AA0A8;margin-top:4px;}
+.h-actions{display:flex;gap:10px;margin-top:12px;}
+.h-btn{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
+  color:#F4F3EE;font-family:inherit;font-size:13px;font-weight:600;
+  padding:8px 14px;border-radius:10px;cursor:pointer;
+  display:flex;align-items:center;gap:6px;
+  transition:background .12s;
+}
+.h-btn:active{background:rgba(255,255,255,.2);}
+.h-btn svg{width:16px;height:16px;}
+
+main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
+
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
+.stat{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:14px;padding:14px;text-align:center;
+  box-shadow:var(--shadow);
+}
+.stat-num{font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:28px;line-height:1;}
+.stat-label{font-size:12px;color:var(--muted);margin-top:4px;font-weight:600;}
+
+.vehicle-card{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);box-shadow:var(--shadow);
+  margin-bottom:12px;overflow:hidden;
+}
+.v-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;border-bottom:1px solid var(--line);
+}
+.v-id{display:flex;align-items:center;gap:10px;}
+.v-num{
+  font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:18px;
+  background:var(--ink);color:#fff;padding:4px 12px;border-radius:8px;
+}
+.v-type{font-weight:700;font-size:15px;}
+.v-status{
+  font-size:12px;font-family:"IBM Plex Mono",monospace;letter-spacing:.5px;
+  font-weight:600;padding:5px 12px;border-radius:999px;
+}
+.v-status.done{background:var(--green-soft);color:var(--green);}
+.v-status.pending{background:var(--ember-soft);color:var(--ember);}
+
+.v-body{padding:14px 16px;}
+.v-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;}
+.v-item{display:flex;justify-content:space-between;align-items:center;
+  padding:6px 0;border-bottom:1px solid var(--line);}
+.v-item:last-child{border-bottom:none;}
+.v-label{font-size:13px;color:var(--muted);font-weight:500;}
+.v-value{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:14px;}
+
+.v-notes{
+  margin-top:10px;padding:10px 12px;
+  background:#F7F7F3;border-radius:10px;
+  font-size:13.5px;line-height:1.6;
+}
+.v-notes-label{font-weight:700;font-size:12px;color:var(--muted);margin-bottom:4px;}
+
+.v-meta{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 16px;background:#FAFAF7;border-top:1px solid var(--line);
+  font-size:12px;color:var(--muted);
+}
+
+.pending-body{
+  padding:30px 16px;text-align:center;color:var(--muted);
+}
+.pending-icon{font-size:36px;margin-bottom:6px;}
+.pending-text{font-weight:600;font-size:15px;color:var(--ember);}
+
+.empty-all{
+  text-align:center;padding:60px 20px;color:var(--muted);
+}
+.empty-all .icon{font-size:48px;margin-bottom:10px;}
+.empty-all .msg{font-size:16px;font-weight:600;}
+.empty-all .sub{font-size:13px;margin-top:6px;}
+
+.back-link{
+  display:inline-flex;align-items:center;gap:6px;
+  color:var(--water);font-weight:600;font-size:14px;
+  text-decoration:none;margin-bottom:14px;
+}
+.back-link:hover{text-decoration:underline;}
+
+@media(max-width:480px){
+  .stats{grid-template-columns:1fr 1fr 1fr;}
+  .stat-num{font-size:22px;}
+  .v-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-eyebrow">CIVIL DEFENSE · KABD</div>
+  <h1>متابعة فحص الآليات</h1>
+  <div class="h-sub" id="lastUpdate"></div>
+  <div class="h-actions">
+    <button class="h-btn" onclick="loadData()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      تحديث
+    </button>
+    <button class="h-btn" onclick="clearAll()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      مسح الكل
+    </button>
+    <a href="index.html" class="h-btn" style="text-decoration:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      فحص جديد
+    </a>
+  </div>
+</header>
+
+<main>
+  <div class="stats" id="stats"></div>
+  <div id="vehicles"></div>
+</main>
+
+<script>
+const VEHICLES = [
+  {id:"139", type:"ضاب",   icon:"🚒"},
+  {id:"239", type:"إنقاذ", icon:"🚑"},
+  {id:"339", type:"بمب",   icon:"🚒"},
+  {id:"439", type:"تنكر",  icon:"🚛"},
+  {id:"539", type:"تنكر",  icon:"🚛"},
+  {id:"1239",type:"تريله", icon:"🚚"}
+];
+
+function loadData(){
+  const KEY="kabd_inspections";
+  let data={};
+  try{ data=JSON.parse(localStorage.getItem(KEY)||"{}"); }catch(e){}
+
+  const total=VEHICLES.length;
+  const done=VEHICLES.filter(v=>data[v.id]).length;
+  const pending=total-done;
+
+  document.getElementById("stats").innerHTML=`
+    <div class="stat">
+      <div class="stat-num" style="color:var(--ink)">${total}</div>
+      <div class="stat-label">إجمالي الآليات</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" style="color:var(--green)">${done}</div>
+      <div class="stat-label">تم الفحص</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" style="color:var(--ember)">${pending}</div>
+      <div class="stat-label">لم يتم الفحص</div>
+    </div>
+  `;
+
+  const container=document.getElementById("vehicles");
+  container.innerHTML="";
+
+  VEHICLES.forEach(v=>{
+    const d=data[v.id];
+    const card=document.createElement("div");
+    card.className="vehicle-card";
+
+    if(d){
+      const ts=new Date(d.timestamp);
+      const date=ts.toLocaleDateString("ar-KW-u-nu-latn",{year:"numeric",month:"2-digit",day:"2-digit"});
+      const time=ts.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false});
+
+      card.innerHTML=`
+        <div class="v-header">
+          <div class="v-id">
+            <div class="v-num mono">${v.id}</div>
+            <div class="v-type">${v.icon} ${v.type}</div>
+          </div>
+          <div class="v-status done">تم الفحص</div>
+        </div>
+        <div class="v-body">
+          <div class="v-grid">
+            <div class="v-item">
+              <span class="v-label">⛽ الديزل</span>
+              <span class="v-value">${d.diesel}%</span>
+            </div>
+            <div class="v-item">
+              <span class="v-label">💧 الماء</span>
+              <span class="v-value">${d.water}%</span>
+            </div>
+            <div class="v-item">
+              <span class="v-label">هوز إنج ونص</span>
+              <span class="v-value">${d.hose1}</span>
+            </div>
+            <div class="v-item">
+              <span class="v-label">هوز إنجين ونص</span>
+              <span class="v-value">${d.hose2}</span>
+            </div>
+            <div class="v-item">
+              <span class="v-label">🔧 الموزة</span>
+              <span class="v-value">${d.mawza}</span>
+            </div>
+            <div class="v-item">
+              <span class="v-label">🔧 الفكنوزل</span>
+              <span class="v-value">${d.nozzle}</span>
+            </div>
+          </div>
+          ${d.notes ? `<div class="v-notes"><div class="v-notes-label">📝 ملاحظات</div>${d.notes}</div>` : ""}
+        </div>
+        <div class="v-meta">
+          <span>👷 ${d.operator||"—"}</span>
+          <span>📩 ${d.recipient||"—"}</span>
+          <span class="mono">${date} — ${time}</span>
+        </div>
+      `;
+    } else {
+      card.innerHTML=`
+        <div class="v-header">
+          <div class="v-id">
+            <div class="v-num mono">${v.id}</div>
+            <div class="v-type">${v.icon} ${v.type}</div>
+          </div>
+          <div class="v-status pending">لم يتم الفحص</div>
+        </div>
+        <div class="pending-body">
+          <div class="pending-icon">⏳</div>
+          <div class="pending-text">لم يتم الفحص بعد</div>
+        </div>
+      `;
+    }
+    container.appendChild(card);
+  });
+
+  const now=new Date();
+  document.getElementById("lastUpdate").textContent=
+    "آخر تحديث: "+now.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
+}
+
+function clearAll(){
+  if(!confirm("هل تريد مسح جميع بيانات الفحص؟")) return;
+  try{ localStorage.removeItem("kabd_inspections"); }catch(e){}
+  loadData();
+}
+
+loadData();
+setInterval(loadData, 30000);
+</script>
+</body>
+</html>

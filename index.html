@@ -411,6 +411,7 @@
       عند إرفاق صورة، اختر «واتساب» ثم المستلم من قائمة المشاركة.<br>
       بدون صورة يُفتح المحادثة مباشرة على رقم المستلم المختار.
     </div>
+    <a href="dashboard.html" style="display:block;text-align:center;margin-top:10px;color:#137C9E;font-weight:700;font-size:14px;text-decoration:none;">📊 لوحة متابعة الفحص</a>
   </div>
 </div>
 
@@ -526,6 +527,27 @@ document.getElementById("send").addEventListener("click",async()=>{
   const text=buildMessage();
   const file=photo.files[0];
   const phone=RECIPIENTS[recipient.value] || RECIPIENTS[Object.keys(RECIPIENTS)[0]];
+
+  // حفظ بيانات الفحص
+  const inspection = {
+    machine: machine.value,
+    diesel: diesel.value,
+    water: water.value,
+    hose1: counters.hose1.v,
+    hose2: counters.hose2.v,
+    mawza: counters.mawza.v,
+    nozzle: counters.nozzle.v,
+    notes: document.getElementById("notes").value.trim(),
+    operator: operatorInput.value.trim(),
+    recipient: recipient.value,
+    timestamp: new Date().toISOString()
+  };
+  try{
+    const KEY="kabd_inspections";
+    let all=JSON.parse(localStorage.getItem(KEY)||"{}");
+    all[machine.value]=inspection;
+    localStorage.setItem(KEY,JSON.stringify(all));
+  }catch(e){}
 
   if(file && navigator.canShare && navigator.canShare({files:[file]})){
     try{

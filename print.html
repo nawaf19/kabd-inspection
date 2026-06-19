@@ -95,6 +95,11 @@ td{background:#fff;}
   max-width:120px;max-height:90px;border-radius:4px;
   border:1px solid #ccc;
 }
+.table-photo{
+  max-width:140px;max-height:100px;border-radius:4px;
+  border:1px solid #ccc;display:block;margin:0 auto;
+}
+.no-photo .photo-col{display:none!important;}
 .operator-cell{font-weight:600;font-size:12px;}
 .time-cell{
   font-family:"IBM Plex Mono",monospace;font-size:11px;
@@ -130,7 +135,7 @@ td{background:#fff;}
   .report-header,.report-meta{background:#eee!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   .fuel-low,.not-inspected{color:#c00!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   .fuel-ok{color:#060!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  .no-photo .photo-section{display:none!important;}
+  .no-photo .photo-col{display:none!important;}
   @page{size:A4 landscape;margin:10mm;}
 }
 </style>
@@ -209,6 +214,7 @@ function buildReport(){
           <th>المشغل</th>
           <th>الوقت</th>
           <th>ملاحظات</th>
+          <th class="photo-col">صورة</th>
         </tr>
       </thead>
       <tbody>
@@ -232,39 +238,19 @@ function buildReport(){
         <td class="operator-cell">${d.operator||"—"}</td>
         <td class="time-cell">${time}</td>
         <td class="notes-cell">${d.notes||"—"}</td>
+        <td class="photo-col">${d.photoData ? `<img src="${d.photoData}" class="table-photo">` : "—"}</td>
       </tr>`;
     } else {
       html+=`<tr>
         <td class="vehicle-label">${v.id}</td>
         <td class="vehicle-label">${v.icon} ${v.type}</td>
         <td class="not-inspected" colspan="10">لم يتم الفحص ✗</td>
+        <td class="photo-col not-inspected">—</td>
       </tr>`;
     }
   });
 
   html+=`</tbody></table>`;
-
-  // قسم الصور
-  let hasPhotos=false;
-  let photosHtml=`<div class="photo-section">
-    <h3>📷 صور الفحص</h3>`;
-
-  VEHICLES.forEach(v=>{
-    const d=data[v.id];
-    if(d && d.photoData){
-      hasPhotos=true;
-      photosHtml+=`
-        <div class="photo-label">${v.id} — ${v.type}</div>
-        <img src="${d.photoData}" alt="صورة فحص ${v.id}">
-      `;
-    }
-  });
-  photosHtml+=`</div>`;
-
-  if(hasPhotos){
-    html+=photosHtml;
-  }
-
   document.getElementById("report").innerHTML=html;
 }
 

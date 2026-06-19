@@ -135,6 +135,11 @@ main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
   text-decoration:none;margin-bottom:14px;
 }
 .back-link:hover{text-decoration:underline;}
+.v-photo{
+  width:50px;height:50px;border-radius:10px;
+  object-fit:cover;border:1.5px solid var(--line-strong);
+  flex:none;
+}
 
 .print-big-btn{
   display:flex;align-items:center;justify-content:center;gap:10px;
@@ -240,6 +245,7 @@ function loadData(){
       card.innerHTML=`
         <div class="v-header">
           <div class="v-id">
+            ${d.photoData ? `<img src="${d.photoData}" class="v-photo">` : ""}
             <div class="v-num mono">${v.id}</div>
             <div class="v-type">${v.icon} ${v.type}</div>
           </div>

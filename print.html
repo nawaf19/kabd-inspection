@@ -165,12 +165,12 @@ td{background:#fff;}
 
 <script>
 const VEHICLES = [
-  {id:"139", type:"جيب",   icon:"🚙"},
-  {id:"239", type:"إنقاذ", icon:"🚑"},
-  {id:"339", type:"بمب",   icon:"🚒"},
-  {id:"439", type:"تنكر",  icon:"🚛"},
-  {id:"539", type:"تنكر",  icon:"🚛"},
-  {id:"1239",type:"تريله", icon:"🚚"}
+  {id:"139", type:"جيب"},
+  {id:"239", type:"إنقاذ"},
+  {id:"339", type:"بمب"},
+  {id:"439", type:"تنكر"},
+  {id:"539", type:"تنكر"},
+  {id:"1239",type:"تريله"}
 ];
 
 function fuelClass(v){
@@ -228,7 +228,7 @@ function buildReport(){
       const isJeep = v.id==="139";
       html+=`<tr>
         <td class="vehicle-label">${v.id}</td>
-        <td class="vehicle-label">${v.icon} ${v.type}</td>
+        <td class="vehicle-label">${v.type}</td>
         <td style="background:var(--green-soft);color:var(--green);font-weight:700;">تم الفحص ✓</td>
         <td class="inspected-val ${fuelClass(d.diesel)}">${d.diesel}%</td>
         <td class="inspected-val">${isJeep ? "—" : d.water+"%"}</td>
@@ -244,7 +244,7 @@ function buildReport(){
     } else {
       html+=`<tr>
         <td class="vehicle-label">${v.id}</td>
-        <td class="vehicle-label">${v.icon} ${v.type}</td>
+        <td class="vehicle-label">${v.type}</td>
         <td class="not-inspected" colspan="10">لم يتم الفحص ✗</td>
         <td class="photo-col not-inspected">—</td>
       </tr>`;

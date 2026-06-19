@@ -78,6 +78,10 @@ main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
   border-radius:var(--radius);box-shadow:var(--shadow);
   margin-bottom:12px;overflow:hidden;
 }
+.vehicle-card.low-level{
+  background:rgba(211,60,28,0.08)!important;
+  border:1.5px solid rgba(211,60,28,0.3)!important;
+}
 .v-header{
   display:flex;align-items:center;justify-content:space-between;
   padding:14px 16px;border-bottom:1px solid var(--line);
@@ -260,8 +264,7 @@ function loadData(){
       const fuelLow=parseInt(d.diesel)<80;
       const noWater=v.id==="139"||v.id==="839";
       const waterLow=!noWater && parseInt(d.water)<80;
-      if(fuelLow||waterLow) card.style.background="rgba(211,60,28,0.08)";
-      if(fuelLow||waterLow) card.style.border="1.5px solid rgba(211,60,28,0.3)";
+      if(fuelLow||waterLow) card.classList.add("low-level");
 
       card.innerHTML=`
         <div class="v-header">

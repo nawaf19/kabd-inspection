@@ -225,16 +225,17 @@ function buildReport(){
     if(d){
       const ts=new Date(d.timestamp);
       const time=ts.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false});
+      const isJeep = v.id==="139";
       html+=`<tr>
         <td class="vehicle-label">${v.id}</td>
         <td class="vehicle-label">${v.icon} ${v.type}</td>
         <td style="background:var(--green-soft);color:var(--green);font-weight:700;">تم الفحص ✓</td>
         <td class="inspected-val ${fuelClass(d.diesel)}">${d.diesel}%</td>
-        <td class="inspected-val ${fuelClass(d.water)}">${d.water}%</td>
-        <td class="inspected-val">${d.hose1}</td>
-        <td class="inspected-val">${d.hose2}</td>
-        <td class="inspected-val">${d.mawza}</td>
-        <td class="inspected-val">${d.nozzle}</td>
+        <td class="inspected-val">${isJeep ? "—" : d.water+"%"}</td>
+        <td class="inspected-val">${isJeep ? "—" : d.hose1}</td>
+        <td class="inspected-val">${isJeep ? "—" : d.hose2}</td>
+        <td class="inspected-val">${isJeep ? "—" : d.mawza}</td>
+        <td class="inspected-val">${isJeep ? "—" : d.nozzle}</td>
         <td class="operator-cell">${d.operator||"—"}</td>
         <td class="time-cell">${time}</td>
         <td class="notes-cell">${d.notes||"—"}</td>

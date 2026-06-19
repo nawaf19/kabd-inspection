@@ -381,21 +381,6 @@
     <input type="text" id="operator" class="text-input" placeholder="اكتب اسم المشغل…" autocomplete="name">
   </section>
 
-  <!-- 9. إرسال إلى -->
-  <section class="card">
-    <div class="field-head">
-      <div class="field-num">9</div>
-      <div><div class="field-title">إرسال إلى</div><div class="field-sub">اختر المستلم</div></div>
-    </div>
-    <div class="select-wrap">
-      <select id="recipient" class="placeholder">
-        <option value="" selected disabled>اختر المستلم</option>
-        <option value="سعد رجب">سعد رجب</option>
-        <option value="أبو سعد">أبو سعد</option>
-        <option value="نواف معجب">نواف معجب</option>
-      </select>
-    </div>
-  </section>
 
 </main>
 
@@ -403,25 +388,15 @@
 <div class="sendbar">
   <div class="inner">
     <div class="err" id="err">الرجاء اختيار رقم الآلية قبل الإرسال.</div>
-    <button class="send-btn" id="send" type="button">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 0 1 8.413 3.488 11.824 11.824 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 0 0 1.51 5.26l-.999 3.648 3.477-.96z"/></svg>
-      إرسال إلى واتساب
+    <button class="send-btn" id="send" type="button" style="background:#1B7A3D;box-shadow:0 6px 18px rgba(27,122,61,.35);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      حفظ الفحص
     </button>
-    <div class="send-hint">
-      عند إرفاق صورة، اختر «واتساب» ثم المستلم من قائمة المشاركة.<br>
-      بدون صورة يُفتح المحادثة مباشرة على رقم المستلم المختار.
-    </div>
-    <a href="dashboard.html" style="display:block;text-align:center;margin-top:10px;color:#137C9E;font-weight:700;font-size:14px;text-decoration:none;">📊 لوحة متابعة الفحص</a>
+    <a href="dashboard.html" style="display:block;text-align:center;margin-top:12px;color:#137C9E;font-weight:700;font-size:14px;text-decoration:none;">📊 لوحة متابعة الفحص</a>
   </div>
 </div>
 
 <script>
-/* ===== الإعدادات ===== */
-const RECIPIENTS = {
-  "سعد رجب":   "96560779799",
-  "أبو سعد":   "96597879101",
-  "نواف معجب": "96597803370"
-};
 
 /* ===== العدّادات (Steppers) ===== */
 const counters = {};
@@ -460,8 +435,6 @@ paintSlider(diesel,dieselNum); paintSlider(water,waterNum);
 /* ===== القائمة المنسدلة ===== */
 const machine=document.getElementById("machine");
 machine.addEventListener("change",()=>machine.classList.remove("placeholder"));
-const recipient=document.getElementById("recipient");
-recipient.addEventListener("change",()=>recipient.classList.remove("placeholder"));
 
 /* ===== الصورة ===== */
 const photo=document.getElementById("photo");
@@ -528,16 +501,12 @@ function showErr(msg,focusEl){
   if(focusEl) focusEl.scrollIntoView({behavior:"smooth",block:"center"});
 }
 document.getElementById("send").addEventListener("click",async()=>{
-  if(!machine.value){ showErr("الرجاء اختيار رقم الآلية قبل الإرسال.",machine); return; }
+  if(!machine.value){ showErr("الرجاء اختيار رقم الآلية.",machine); return; }
   if(!operatorInput.value.trim()){ showErr("الرجاء كتابة اسم المشغل.",operatorInput); return; }
-  if(!recipient.value){ showErr("الرجاء اختيار المستلم في خانة «إرسال إلى».",recipient); return; }
   err.style.display="none";
 
-  const text=buildMessage();
   const file=photo.files[0];
-  const phone=RECIPIENTS[recipient.value] || RECIPIENTS[Object.keys(RECIPIENTS)[0]];
 
-  // حفظ بيانات الفحص
   const inspection = {
     machine: machine.value,
     diesel: diesel.value,
@@ -548,33 +517,33 @@ document.getElementById("send").addEventListener("click",async()=>{
     nozzle: counters.nozzle.v,
     notes: document.getElementById("notes").value.trim(),
     operator: operatorInput.value.trim(),
-    recipient: recipient.value,
     timestamp: new Date().toISOString(),
     photoData: null
   };
-  // حفظ الصورة كـ base64 للطباعة
+
+  function done(){
+    saveInspection(inspection);
+    // تأكيد الحفظ
+    const btn=document.getElementById("send");
+    btn.textContent="✓ تم حفظ الفحص";
+    btn.style.background="#1B7A3D";
+    setTimeout(()=>{
+      btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> حفظ الفحص';
+    }, 2000);
+  }
+
   if(file){
     try{
       const reader=new FileReader();
       reader.onload=function(e){
         inspection.photoData=e.target.result;
-        saveInspection(inspection);
+        done();
       };
       reader.readAsDataURL(file);
-    }catch(e){ saveInspection(inspection); }
+    }catch(e){ done(); }
   } else {
-    saveInspection(inspection);
+    done();
   }
-
-  if(file && navigator.canShare && navigator.canShare({files:[file]})){
-    try{
-      await navigator.share({title:"فحص آليات مركز كبد", text, files:[file]});
-      return;
-    }catch(e){
-      if(e && e.name==="AbortError") return;
-    }
-  }
-  window.location.href="https://wa.me/"+phone+"?text="+encodeURIComponent(text);
 });
 
 /* ===== PWA ===== */

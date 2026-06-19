@@ -135,10 +135,11 @@ main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
   text-decoration:none;margin-bottom:14px;
 }
 .back-link:hover{text-decoration:underline;}
-.v-photo{
-  width:50px;height:50px;border-radius:10px;
+.v-photo-wrap{display:block;margin-top:12px;}
+.v-photo-big{
+  width:100%;max-height:250px;border-radius:12px;
   object-fit:cover;border:1.5px solid var(--line-strong);
-  flex:none;
+  cursor:pointer;display:block;
 }
 
 .print-big-btn{
@@ -245,7 +246,6 @@ function loadData(){
       card.innerHTML=`
         <div class="v-header">
           <div class="v-id">
-            ${d.photoData ? `<img src="${d.photoData}" class="v-photo">` : ""}
             <div class="v-num mono">${v.id}</div>
             <div class="v-type">${v.icon} ${v.type}</div>
           </div>
@@ -279,6 +279,7 @@ function loadData(){
             </div>
           </div>
           ${d.notes ? `<div class="v-notes"><div class="v-notes-label">📝 ملاحظات</div>${d.notes}</div>` : ""}
+          ${d.photoData ? `<a href="${d.photoData}" target="_blank" class="v-photo-wrap"><img src="${d.photoData}" class="v-photo-big"></a>` : ""}
         </div>
         <div class="v-meta">
           <span>👷 ${d.operator||"—"}</span>

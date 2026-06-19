@@ -267,7 +267,7 @@ function loadData(){
               <div class="v-bar-top"><span class="v-label">⛽ البنزين</span><span class="v-value">${d.diesel}%</span></div>
               <div class="v-bar"><div class="v-bar-fill v-bar-fuel" style="width:${d.diesel}%"></div></div>
             </div>
-            <div class="v-bar-item">
+            ${v.id!=="139" ? `<div class="v-bar-item">
               <div class="v-bar-top"><span class="v-label">💧 الماء</span><span class="v-value">${d.water}%</span></div>
               <div class="v-bar"><div class="v-bar-fill v-bar-water" style="width:${d.water}%"></div></div>
             </div>
@@ -286,7 +286,7 @@ function loadData(){
             <div class="v-item">
               <span class="v-label">🔧 الفكنوزل</span>
               <span class="v-value">${d.nozzle}</span>
-            </div>
+            </div>` : ""}
           </div>
           ${d.notes ? `<div class="v-notes"><div class="v-notes-label">📝 ملاحظات</div>${d.notes}</div>` : ""}
           ${d.photoData ? `<a href="${d.photoData}" target="_blank" class="v-photo-wrap"><img src="${d.photoData}" class="v-photo-big"></a>` : ""}

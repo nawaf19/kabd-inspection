@@ -511,6 +511,15 @@ function buildMessage(){
   return m;
 }
 
+function saveInspection(ins){
+  try{
+    const KEY="kabd_inspections";
+    let all=JSON.parse(localStorage.getItem(KEY)||"{}");
+    all[ins.machine]=ins;
+    localStorage.setItem(KEY,JSON.stringify(all));
+  }catch(e){}
+}
+
 /* ===== الإرسال ===== */
 const err=document.getElementById("err");
 const operatorInput=document.getElementById("operator");
@@ -540,14 +549,22 @@ document.getElementById("send").addEventListener("click",async()=>{
     notes: document.getElementById("notes").value.trim(),
     operator: operatorInput.value.trim(),
     recipient: recipient.value,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    photoData: null
   };
-  try{
-    const KEY="kabd_inspections";
-    let all=JSON.parse(localStorage.getItem(KEY)||"{}");
-    all[machine.value]=inspection;
-    localStorage.setItem(KEY,JSON.stringify(all));
-  }catch(e){}
+  // حفظ الصورة كـ base64 للطباعة
+  if(file){
+    try{
+      const reader=new FileReader();
+      reader.onload=function(e){
+        inspection.photoData=e.target.result;
+        saveInspection(inspection);
+      };
+      reader.readAsDataURL(file);
+    }catch(e){ saveInspection(inspection); }
+  } else {
+    saveInspection(inspection);
+  }
 
   if(file && navigator.canShare && navigator.canShare({files:[file]})){
     try{

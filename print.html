@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>طباعة كشف الفحص — مركز كبد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9EAE4;--surface:#FFFFFF;--ink:#16181C;--muted:#6A6F77;
+  --line:#DDDED6;--line-strong:#C9CAC1;
+  --ember:#D33C1C;--ember-soft:#FBE7E0;
+  --water:#137C9E;--green:#1B7A3D;--green-soft:#E2F3E8;
+  --header:#16181C;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;
+  font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ===== شريط الأدوات (يختفي عند الطباعة) ===== */
+.toolbar{
+  position:sticky;top:0;z-index:30;
+  background:var(--header);color:#F4F3EE;
+  padding:16px 18px;
+  border-bottom:3px solid var(--ember);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+}
+.toolbar h1{margin:0;font-size:18px;font-weight:700;}
+.toolbar-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.t-btn{
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-family:inherit;font-size:13px;font-weight:600;
+  padding:10px 16px;border-radius:10px;cursor:pointer;
+  display:flex;align-items:center;gap:6px;transition:background .12s;
+}
+.t-btn:hover{background:rgba(255,255,255,.22);}
+.t-btn.primary{background:var(--ember);border-color:var(--ember);}
+.t-btn.primary:hover{background:#bb3318;}
+.t-btn svg{width:18px;height:18px;}
+.back-link{color:#9AA0A8;text-decoration:none;font-size:13px;font-weight:600;}
+.back-link:hover{color:#fff;}
+
+/* ===== الجدول ===== */
+.print-area{
+  max-width:900px;margin:20px auto;padding:0 14px;
+}
+.report{
+  background:#fff;border:2px solid #333;border-radius:0;
+  overflow:hidden;
+}
+.report-header{
+  text-align:center;padding:16px;border-bottom:2px solid #333;
+  background:#f5f5f0;
+}
+.report-header h2{margin:0 0 4px;font-size:20px;font-weight:700;}
+.report-header .sub{font-size:13px;color:var(--muted);}
+.report-meta{
+  display:flex;justify-content:space-between;padding:8px 16px;
+  border-bottom:2px solid #333;font-size:13px;font-weight:600;
+  background:#f5f5f0;
+}
+
+table{width:100%;border-collapse:collapse;}
+th,td{
+  border:1.5px solid #333;padding:8px 10px;text-align:center;
+  font-size:13px;vertical-align:middle;
+}
+th{
+  background:#16181C;color:#fff;font-weight:700;
+  font-size:12px;letter-spacing:.3px;
+}
+td{background:#fff;}
+.vehicle-label{
+  font-weight:700;font-size:14px;background:#f5f5f0;
+  white-space:nowrap;
+}
+.not-inspected{
+  color:var(--ember);font-weight:700;font-size:13px;
+}
+.inspected-val{
+  font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:14px;
+}
+.notes-cell{
+  text-align:right;font-size:12px;max-width:150px;
+  word-break:break-word;
+}
+.photo-cell img{
+  max-width:120px;max-height:90px;border-radius:4px;
+  border:1px solid #ccc;
+}
+.operator-cell{font-weight:600;font-size:12px;}
+.time-cell{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;
+  color:var(--muted);
+}
+
+/* ===== ألوان القيم ===== */
+.fuel-low{color:var(--ember);font-weight:700;}
+.fuel-mid{color:#b8860b;font-weight:600;}
+.fuel-ok{color:var(--green);font-weight:600;}
+
+/* ===== الصورة في التقرير ===== */
+.photo-section{
+  page-break-inside:avoid;
+  border-top:2px solid #333;padding:12px 16px;
+}
+.photo-section h3{margin:0 0 10px;font-size:14px;}
+.photo-section img{
+  max-width:100%;max-height:300px;border-radius:6px;
+  border:1px solid #ccc;display:block;margin:6px 0;
+}
+.photo-label{font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:600;}
+
+/* ===== طباعة ===== */
+@media print{
+  body{background:#fff;font-size:12px;}
+  .toolbar{display:none!important;}
+  .print-area{margin:0;padding:0;max-width:100%;}
+  .report{border:2px solid #000;page-break-inside:avoid;}
+  th,td{border-color:#000;padding:6px 8px;font-size:11px;}
+  th{background:#222!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .vehicle-label{background:#eee!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .report-header,.report-meta{background:#eee!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .fuel-low,.not-inspected{color:#c00!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .fuel-ok{color:#060!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .no-photo .photo-section{display:none!important;}
+  @page{size:A4 landscape;margin:10mm;}
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <div>
+    <a href="dashboard.html" class="back-link">→ العودة للمتابعة</a>
+    <h1>طباعة كشف جاهزية الآليات</h1>
+  </div>
+  <div class="toolbar-actions">
+    <button class="t-btn primary" onclick="printReport(true)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      طباعة مع الصور
+    </button>
+    <button class="t-btn" onclick="printReport(false)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      طباعة بدون صور
+    </button>
+  </div>
+</div>
+
+<div class="print-area">
+  <div class="report" id="report"></div>
+</div>
+
+<script>
+const VEHICLES = [
+  {id:"139", type:"جيب",   icon:"🚙"},
+  {id:"239", type:"إنقاذ", icon:"🚑"},
+  {id:"339", type:"بمب",   icon:"🚒"},
+  {id:"439", type:"تنكر",  icon:"🚛"},
+  {id:"539", type:"تنكر",  icon:"🚛"},
+  {id:"1239",type:"تريله", icon:"🚚"}
+];
+
+function fuelClass(v){
+  const n=parseInt(v);
+  if(n<=25) return "fuel-low";
+  if(n<=50) return "fuel-mid";
+  return "fuel-ok";
+}
+
+function buildReport(){
+  const KEY="kabd_inspections";
+  let data={};
+  try{ data=JSON.parse(localStorage.getItem(KEY)||"{}"); }catch(e){}
+
+  const now=new Date();
+  const dateStr=now.toLocaleDateString("ar-KW-u-nu-latn",{year:"numeric",month:"2-digit",day:"2-digit"});
+  const days=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+  const dayName=days[now.getDay()];
+
+  let html=`
+    <div class="report-header">
+      <h2>كشف جاهزية الآليات اليومي — مركز كبد للإطفاء</h2>
+      <div class="sub">CIVIL DEFENSE · KABD FIRE STATION</div>
+    </div>
+    <div class="report-meta">
+      <span>التاريخ: ${dateStr}</span>
+      <span>اليوم: ${dayName}</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>الآلية</th>
+          <th>النوع</th>
+          <th>الحالة</th>
+          <th>⛽ الديزل</th>
+          <th>💧 الماء</th>
+          <th>هوز إنج ونص</th>
+          <th>هوز إنجين ونص</th>
+          <th>الموزة</th>
+          <th>الفكنوزل</th>
+          <th>المشغل</th>
+          <th>الوقت</th>
+          <th>ملاحظات</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  VEHICLES.forEach(v=>{
+    const d=data[v.id];
+    if(d){
+      const ts=new Date(d.timestamp);
+      const time=ts.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false});
+      html+=`<tr>
+        <td class="vehicle-label">${v.id}</td>
+        <td class="vehicle-label">${v.icon} ${v.type}</td>
+        <td style="background:var(--green-soft);color:var(--green);font-weight:700;">تم الفحص ✓</td>
+        <td class="inspected-val ${fuelClass(d.diesel)}">${d.diesel}%</td>
+        <td class="inspected-val ${fuelClass(d.water)}">${d.water}%</td>
+        <td class="inspected-val">${d.hose1}</td>
+        <td class="inspected-val">${d.hose2}</td>
+        <td class="inspected-val">${d.mawza}</td>
+        <td class="inspected-val">${d.nozzle}</td>
+        <td class="operator-cell">${d.operator||"—"}</td>
+        <td class="time-cell">${time}</td>
+        <td class="notes-cell">${d.notes||"—"}</td>
+      </tr>`;
+    } else {
+      html+=`<tr>
+        <td class="vehicle-label">${v.id}</td>
+        <td class="vehicle-label">${v.icon} ${v.type}</td>
+        <td class="not-inspected" colspan="10">لم يتم الفحص ✗</td>
+      </tr>`;
+    }
+  });
+
+  html+=`</tbody></table>`;
+
+  // قسم الصور
+  let hasPhotos=false;
+  let photosHtml=`<div class="photo-section">
+    <h3>📷 صور الفحص</h3>`;
+
+  VEHICLES.forEach(v=>{
+    const d=data[v.id];
+    if(d && d.photoData){
+      hasPhotos=true;
+      photosHtml+=`
+        <div class="photo-label">${v.id} — ${v.type}</div>
+        <img src="${d.photoData}" alt="صورة فحص ${v.id}">
+      `;
+    }
+  });
+  photosHtml+=`</div>`;
+
+  if(hasPhotos){
+    html+=photosHtml;
+  }
+
+  document.getElementById("report").innerHTML=html;
+}
+
+function printReport(withPhotos){
+  const report=document.getElementById("report");
+  if(!withPhotos){
+    report.classList.add("no-photo");
+  } else {
+    report.classList.remove("no-photo");
+  }
+  setTimeout(()=>window.print(), 100);
+}
+
+buildReport();
+</script>
+</body>
+</html>

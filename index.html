@@ -376,9 +376,22 @@
   <section class="card">
     <div class="field-head">
       <div class="field-num">8</div>
-      <div><div class="field-title">اسم المشغل</div><div class="field-sub">يُحفظ تلقائياً — اكتبه مرة واحدة</div></div>
+      <div><div class="field-title">اسم المشغل</div><div class="field-sub">اختر اسم المشغل من القائمة</div></div>
     </div>
-    <input type="text" id="operator" class="text-input" placeholder="اكتب اسم المشغل…" autocomplete="name">
+    <div class="select-wrap">
+      <select id="operator" class="placeholder">
+        <option value="" selected disabled>اختر اسم المشغل</option>
+        <option value="عبد العزيز ابداح">عبد العزيز ابداح</option>
+        <option value="نواف ناصر">نواف ناصر</option>
+        <option value="عيد فلاح">عيد فلاح</option>
+        <option value="العيفان">العيفان</option>
+        <option value="عبدالرحمان طلال">عبدالرحمان طلال</option>
+        <option value="عبد الرحمان باتل">عبد الرحمان باتل</option>
+        <option value="مشعل فهد">مشعل فهد</option>
+        <option value="سالم">سالم</option>
+        <option value="مشاري">مشاري</option>
+      </select>
+    </div>
   </section>
 
 
@@ -465,10 +478,14 @@ const operatorField=document.getElementById("operator");
 const OP_KEY="kabd_operator_name";
 try{
   const saved=localStorage.getItem(OP_KEY);
-  if(saved) operatorField.value=saved;
+  if(saved){
+    operatorField.value=saved;
+    operatorField.classList.remove("placeholder");
+  }
 }catch(e){}
-operatorField.addEventListener("input",()=>{
-  try{ localStorage.setItem(OP_KEY, operatorField.value.trim()); }catch(e){}
+operatorField.addEventListener("change",()=>{
+  operatorField.classList.remove("placeholder");
+  try{ localStorage.setItem(OP_KEY, operatorField.value); }catch(e){}
 });
 photo.addEventListener("change",()=>{
   const f=photo.files[0];
@@ -521,7 +538,7 @@ function showErr(msg,focusEl){
 }
 document.getElementById("send").addEventListener("click",async()=>{
   if(!machine.value){ showErr("الرجاء اختيار رقم الآلية.",machine); return; }
-  if(!operatorInput.value.trim()){ showErr("الرجاء كتابة اسم المشغل.",operatorInput); return; }
+  if(!operatorInput.value){ showErr("الرجاء اختيار اسم المشغل.",operatorInput); return; }
   err.style.display="none";
 
   const file=photo.files[0];
@@ -535,7 +552,7 @@ document.getElementById("send").addEventListener("click",async()=>{
     mawza: counters.mawza.v,
     nozzle: counters.nozzle.v,
     notes: document.getElementById("notes").value.trim(),
-    operator: operatorInput.value.trim(),
+    operator: operatorInput.value,
     timestamp: new Date().toISOString(),
     photoData: null
   };

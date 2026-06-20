@@ -101,7 +101,13 @@ main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
   <div id="vehicles"></div>
 </main>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script>
+const firebaseConfig={apiKey:"AIzaSyBfi7BxhuMVehfmtvIOLm1MVYeXk_BWVz0",authDomain:"nawwaf-7258c.firebaseapp.com",databaseURL:"https://nawwaf-7258c-default-rtdb.firebaseio.com",projectId:"nawwaf-7258c",storageBucket:"nawwaf-7258c.firebasestorage.app",messagingSenderId:"391747168751",appId:"1:391747168751:web:01777a553f7250d4ce6e1a"};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.database();
+
 const VEHICLES=[
   {id:"139",type:"جيب الضابط",icon:"🚙"},
   {id:"239",type:"الإنقاذ",icon:"🚑"},
@@ -118,9 +124,10 @@ function statusHTML(val){
   return val==="تعمل"||val==="يعمل"?`<span class="status-ok">${val} ✓</span>`:`<span class="status-bad">${val} ✗</span>`;
 }
 
-function loadData(){
-  const KEY="kabd_inspections";
-  let data={}; try{data=JSON.parse(localStorage.getItem(KEY)||"{}");}catch(e){}
+function loadData(firebaseData){
+  let data=firebaseData||{};
+  if(!firebaseData){ try{data=JSON.parse(localStorage.getItem("kabd_inspections")||"{}");}catch(e){} }
+  latestData=data;
   const total=VEHICLES.length, done=VEHICLES.filter(v=>data[v.id]).length, pending=total-done;
 
   document.getElementById("stats").innerHTML=`
@@ -219,12 +226,13 @@ function loadData(){
 function clearAll(){
   if(!confirm("هل تريد مسح جميع بيانات الفحص؟")) return;
   try{localStorage.removeItem("kabd_inspections");}catch(e){}
-  loadData();
+  try{db.ref("inspections").remove();}catch(e){}
+  loadData({});
 }
 
+let latestData={};
 function exportData(){
-  const KEY="kabd_inspections";
-  let data={}; try{data=JSON.parse(localStorage.getItem(KEY)||"{}");}catch(e){}
+  let data=latestData;
   const now=new Date();
   const dateStr=now.toLocaleDateString("ar-KW-u-nu-latn",{year:"numeric",month:"2-digit",day:"2-digit"});
   const days=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
@@ -292,8 +300,11 @@ function exportData(){
   document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
 }
 
+db.ref("inspections").on("value",snap=>{
+  latestData=snap.val()||{};
+  loadData(latestData);
+});
 loadData();
-setInterval(loadData,30000);
 </script>
 </body>
 </html>

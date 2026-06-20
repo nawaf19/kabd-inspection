@@ -94,10 +94,16 @@ td{background:#fff;}
   <div class="report" id="report"></div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script>
-function buildReport(){
-  const KEY="kabd_inspections";
-  let data={}; try{data=JSON.parse(localStorage.getItem(KEY)||"{}");}catch(e){}
+const firebaseConfig={apiKey:"AIzaSyBfi7BxhuMVehfmtvIOLm1MVYeXk_BWVz0",authDomain:"nawwaf-7258c.firebaseapp.com",databaseURL:"https://nawwaf-7258c-default-rtdb.firebaseio.com",projectId:"nawwaf-7258c",storageBucket:"nawwaf-7258c.firebasestorage.app",messagingSenderId:"391747168751",appId:"1:391747168751:web:01777a553f7250d4ce6e1a"};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.database();
+
+function buildReport(fbData){
+  let data=fbData||{};
+  if(!fbData){ try{data=JSON.parse(localStorage.getItem("kabd_inspections")||"{}");}catch(e){} }
   const now=new Date();
   const dateStr=now.toLocaleDateString("ar-KW-u-nu-latn",{year:"numeric",month:"2-digit",day:"2-digit"});
   const days=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
@@ -174,7 +180,9 @@ function printReport(withPhotos){
   setTimeout(()=>window.print(),100);
 }
 
-buildReport();
+db.ref("inspections").once("value").then(snap=>{
+  buildReport(snap.val()||{});
+}).catch(()=>buildReport());
 </script>
 </body>
 </html>

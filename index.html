@@ -274,7 +274,16 @@ textarea:focus-visible{outline:2px solid var(--ember);outline-offset:2px;backgro
   <a href="dashboard.html" style="display:block;text-align:center;margin-top:12px;color:#137C9E;font-weight:700;font-size:14px;text-decoration:none;">📊 لوحة متابعة الفحص</a>
 </div></div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script>
+const firebaseConfig={apiKey:"AIzaSyBfi7BxhuMVehfmtvIOLm1MVYeXk_BWVz0",authDomain:"nawwaf-7258c.firebaseapp.com",databaseURL:"https://nawwaf-7258c-default-rtdb.firebaseio.com",projectId:"nawwaf-7258c",storageBucket:"nawwaf-7258c.firebasestorage.app",messagingSenderId:"391747168751",appId:"1:391747168751:web:01777a553f7250d4ce6e1a"};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.database();
+const inspRef=db.ref("inspections");
+let inspectedVehicles={};
+inspRef.on("value",snap=>{inspectedVehicles=snap.val()||{};});
+
 const counters={};
 document.querySelectorAll(".stepper").forEach(st=>{
   const key=st.dataset.counter, min=+st.dataset.min, max=+st.dataset.max;
@@ -315,7 +324,13 @@ paintSlider(diesel,dieselNum); paintSlider(water,waterNum); paintSlider(fillDies
 paintSlider(genFuelSlider,genFuelNum); paintSlider(hydFuelSlider,hydFuelNum);
 
 const machine=document.getElementById("machine");
-machine.addEventListener("change",()=>{ machine.classList.remove("placeholder"); updateVisibleFields(); });
+machine.addEventListener("change",()=>{
+  machine.classList.remove("placeholder");
+  if(inspectedVehicles[machine.value]){
+    showErr("⚠️ تم فحص هذه الآلية من قبل — "+inspectedVehicles[machine.value].operator,machine);
+  } else { err.style.display="none"; }
+  updateVisibleFields();
+});
 
 function updateVisibleFields(){
   const v=machine.value;
@@ -373,6 +388,7 @@ function getRadio(name){ return (document.querySelector('input[name="'+name+'"]:
 
 function saveInspection(ins){
   try{ const KEY="kabd_inspections"; let all=JSON.parse(localStorage.getItem(KEY)||"{}"); all[ins.machine]=ins; localStorage.setItem(KEY,JSON.stringify(all)); }catch(e){}
+  try{ db.ref("inspections/"+ins.machine).set(ins); }catch(e){}
 }
 
 const err=document.getElementById("err");

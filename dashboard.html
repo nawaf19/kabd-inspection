@@ -231,21 +231,60 @@ function exportData(){
   const dayName=days[now.getDay()];
   const fileDate=now.toISOString().slice(0,10);
 
-  let rows="";
-  VEHICLES.forEach(v=>{
+  function st(v){ return !v?"—":v==="تعمل"||v==="يعمل"?'<span style="color:#1B7A3D;font-weight:700;">'+v+'</span>':'<span style="color:#D33C1C;font-weight:700;">'+v+'</span>'; }
+  function cl(v){ return !v?"—":v==="نظيف"?'<span style="color:#1B7A3D;font-weight:700;">نظيف</span>':'<span style="color:#D33C1C;font-weight:700;">غير نظيف</span>'; }
+
+  const d139=data["139"], d239=data["239"], d339=data["339"];
+  const d439=data["439"], d539=data["539"], d2839=data["2839"], d731=data["731"], d839=data["839"];
+
+  let body=`<h2>كشف جاهزية الآليات اليومي — مركز كبد للإطفاء 939</h2><div class="sub">CIVIL DEFENSE · KABD FIRE STATION</div>
+<div class="meta"><span>التاريخ: ${dateStr}</span><span>اليوم: ${dayName}</span></div>
+<div class="toolbar"><button class="btn-photo" onclick="document.getElementById('rpt').classList.remove('no-photo');window.print();">طباعة مع الصور</button><button class="btn-nophoto" onclick="document.getElementById('rpt').classList.add('no-photo');window.print();">طباعة بدون صور</button></div><div id="rpt">`;
+
+  // 139
+  body+=`<div class="sec">جيب الضابط — 139</div>
+  <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>أجهزة اللاسلكي</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
+  if(d139){ body+=`<tr><td>${d139.operator||"—"}</td><td>${d139.diesel}%</td><td>${d139.radio||0}</td><td class="notes">${d139.notes||"—"}</td><td class="photo-col">${d139.photoData?'<img src="'+d139.photoData+'">':"—"}</td></tr>`; }
+  else { body+=`<tr><td colspan="4" class="nd">لم يتم الفحص</td><td class="photo-col nd">—</td></tr>`; }
+  body+=`</tbody></table>`;
+
+  // 239
+  body+=`<div class="sec">آلية الإنقاذ — 239</div>
+  <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>ليتات 1</th><th>ليتات 2</th><th>مولد الكهرباء</th><th>وقود المولد</th><th>الهيدروليك</th><th>وقود الهيدروليك</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
+  if(d239){ body+=`<tr><td>${d239.operator||"—"}</td><td>${d239.diesel}%</td><td>${d239.litat1||0}</td><td>${d239.litat2||0}</td><td>${st(d239.generator)}</td><td>${d239.genFuel||0}%</td><td>${st(d239.hydraulic)}</td><td>${d239.hydFuel||0}%</td><td class="notes">${d239.notes||"—"}</td><td class="photo-col">${d239.photoData?'<img src="'+d239.photoData+'">':"—"}</td></tr>`; }
+  else { body+=`<tr><td colspan="9" class="nd">لم يتم الفحص</td><td class="photo-col nd">—</td></tr>`; }
+  body+=`</tbody></table>`;
+
+  // 339
+  body+=`<div class="sec">آلية البمب — 339</div>
+  <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>مستوى الماء</th><th>هوز 1.5</th><th>هوز 2.5</th><th>الفكنوزل</th><th>الموزع</th><th>كاميرة حرارية</th><th>عدد الليتات</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
+  if(d339){ body+=`<tr><td>${d339.operator||"—"}</td><td>${d339.diesel}%</td><td>${d339.water}%</td><td>${d339.hose1}</td><td>${d339.hose2}</td><td>${d339.nozzle}</td><td>${d339.mawza}</td><td>${d339.thermalCam||0}</td><td>${d339.bricks339||0}</td><td class="notes">${d339.notes||"—"}</td><td class="photo-col">${d339.photoData?'<img src="'+d339.photoData+'">':"—"}</td></tr>`; }
+  else { body+=`<tr><td colspan="10" class="nd">لم يتم الفحص</td><td class="photo-col nd">—</td></tr>`; }
+  body+=`</tbody></table>`;
+
+  // تناكر + وانيت
+  body+=`<div class="sec">تناكر ماء / وانيت الخدمات — 439 · 539 · 2839 · 731</div>
+  <table><thead><tr><th>الآلية</th><th>النوع</th><th>اسم الفاحص</th><th>مستوى الوقود</th><th>مستوى الماء</th><th>هوز 1.5</th><th>هوز 2.5</th><th>الفكنوزل</th><th>الموزع</th><th>تنظيف</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
+  [{id:"439",type:"تنكر"},{id:"539",type:"تنكر"},{id:"2839",type:"تريلة"},{id:"731",type:"وانيت"}].forEach(v=>{
     const d=data[v.id];
-    if(!d){ rows+=`<tr><td style="font-weight:700;background:#f5f5f0;">${v.id}</td><td style="font-weight:700;background:#f5f5f0;">${v.type}</td><td colspan="6" style="color:#c00;font-weight:700;">لم يتم الفحص ✗</td></tr>`; return; }
-    const ts=new Date(d.timestamp);
-    const time=ts.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false});
-    rows+=`<tr><td style="font-weight:700;background:#f5f5f0;">${v.id}</td><td style="font-weight:700;background:#f5f5f0;">${v.type}</td><td style="background:#e2f3e8;color:#1B7A3D;font-weight:700;">تم ✓</td><td>${d.diesel}%</td><td>${d.operator||"—"}</td><td style="font-family:monospace;">${time}</td><td style="text-align:right;font-size:12px;">${d.notes||"—"}</td><td class="photo-col">${d.photoData?'<img src="'+d.photoData+'" style="max-width:140px;max-height:100px;border-radius:4px;border:1px solid #ccc;">':"—"}</td></tr>`;
+    if(d){
+      const isVan=v.id==="731";
+      body+=`<tr><td style="font-weight:700;background:#f5f5f0;">${v.id}</td><td style="font-weight:700;background:#f5f5f0;">${v.type}</td><td>${d.operator||"—"}</td><td>${d.diesel}%</td><td>${isVan?"—":d.water+"%"}</td><td>${isVan?"—":d.hose1}</td><td>${isVan?"—":d.hose2}</td><td>${isVan?"—":d.nozzle}</td><td>${isVan?"—":d.mawza}</td><td>${v.id==="2839"||v.id==="731"?cl(d.clean):"—"}</td><td class="notes">${d.notes||"—"}</td><td class="photo-col">${d.photoData?'<img src="'+d.photoData+'">':"—"}</td></tr>`;
+    } else {
+      body+=`<tr><td style="font-weight:700;background:#f5f5f0;">${v.id}</td><td style="font-weight:700;background:#f5f5f0;">${v.type}</td><td colspan="9" class="nd">لم يتم الفحص</td><td class="photo-col nd">—</td></tr>`;
+    }
   });
+  body+=`</tbody></table>`;
+
+  // 839
+  body+=`<div class="sec">آلية التنفس — 839</div>
+  <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>جهاز كامل</th><th>اسطوانة احتياط</th><th>ديزل مكينة تعبئة الاسطوانات</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
+  if(d839){ body+=`<tr><td>${d839.operator||"—"}</td><td>${d839.diesel}%</td><td>${d839.breathFull||0}</td><td>${d839.breathSpare||0}</td><td>${d839.fillDiesel||0}%</td><td class="notes">${d839.notes||"—"}</td><td class="photo-col">${d839.photoData?'<img src="'+d839.photoData+'">':"—"}</td></tr>`; }
+  else { body+=`<tr><td colspan="6" class="nd">لم يتم الفحص</td><td class="photo-col nd">—</td></tr>`; }
+  body+=`</tbody></table></div>`;
 
   const html=`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>فحص يوم ${fileDate}</title>
-<style>*{box-sizing:border-box;}body{font-family:Arial,sans-serif;font-size:13px;margin:20px;direction:rtl;background:#fff;}h2{text-align:center;margin:0 0 4px;}.sub{text-align:center;font-size:12px;color:#666;margin-bottom:10px;}.meta{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:10px;padding:6px 10px;background:#f5f5f0;border:1px solid #333;}table{width:100%;border-collapse:collapse;}th,td{border:1.5px solid #333;padding:6px 8px;text-align:center;font-size:12px;}th{background:#16181C;color:#fff;font-size:11px;}.no-photo .photo-col{display:none!important;}.toolbar{text-align:center;margin-bottom:20px;}.toolbar button{padding:10px 20px;font-size:14px;font-weight:700;border:none;border-radius:8px;cursor:pointer;margin:0 5px;}.btn-photo{background:#D33C1C;color:#fff;}.btn-nophoto{background:#555;color:#fff;}@media print{.toolbar{display:none!important;}@page{size:A4 landscape;margin:8mm;}}</style></head><body>
-<h2>كشف جاهزية الآليات اليومي — مركز كبد للإطفاء</h2><div class="sub">CIVIL DEFENSE · KABD FIRE STATION</div>
-<div class="meta"><span>التاريخ: ${dateStr}</span><span>اليوم: ${dayName}</span></div>
-<div class="toolbar"><button class="btn-photo" onclick="document.getElementById('rpt').classList.remove('no-photo');window.print();">طباعة مع الصور</button><button class="btn-nophoto" onclick="document.getElementById('rpt').classList.add('no-photo');window.print();">طباعة بدون صور</button></div>
-<div id="rpt"><table><thead><tr><th>الآلية</th><th>النوع</th><th>الحالة</th><th>الوقود</th><th>الفاحص</th><th>الوقت</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>${rows}</tbody></table></div></body></html>`;
+<style>*{box-sizing:border-box;}body{font-family:Arial,sans-serif;font-size:13px;margin:20px;direction:rtl;background:#fff;}h2{text-align:center;margin:0 0 4px;font-size:18px;}.sub{text-align:center;font-size:12px;color:#666;margin-bottom:10px;}.meta{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:14px;padding:6px 10px;background:#f5f5f0;border:1px solid #333;}.sec{background:#16181C;color:#fff;padding:8px 14px;font-weight:700;font-size:13px;border:1.5px solid #333;border-bottom:none;margin-top:14px;}table{width:100%;border-collapse:collapse;}th,td{border:1.5px solid #333;padding:6px 8px;text-align:center;font-size:12px;}th{background:#2a2d33;color:#fff;font-size:11px;}.nd{color:#c00;font-weight:700;}.notes{text-align:right;font-size:11px;max-width:120px;word-break:break-word;}img{max-width:120px;max-height:80px;border-radius:4px;border:1px solid #ccc;}.no-photo .photo-col{display:none!important;}.toolbar{text-align:center;margin-bottom:16px;}.toolbar button{padding:10px 20px;font-size:14px;font-weight:700;border:none;border-radius:8px;cursor:pointer;margin:0 5px;}.btn-photo{background:#D33C1C;color:#fff;}.btn-nophoto{background:#555;color:#fff;}@media print{.toolbar{display:none!important;}@page{size:A4 landscape;margin:8mm;}}</style></head><body>${body}</body></html>`;
 
   const blob=new Blob([html],{type:"text/html;charset=utf-8"});
   const url=URL.createObjectURL(blob);

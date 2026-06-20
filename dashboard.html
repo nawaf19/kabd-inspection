@@ -153,13 +153,12 @@ function loadData(){
         details=`<div class="v-item"><span class="v-label">📻 أجهزة اللاسلكي</span><span class="v-value">${d.radio||0}</span></div>`;
       } else if(v.id==="239"){
         details=`
-          <div class="v-item"><span class="v-label">مفاتيح المصاعد</span><span class="v-value">${statusHTML(d.elevatorKeys)}</span></div>
-          <div class="v-item"><span class="v-label">فتح الأبواب</span><span class="v-value">${statusHTML(d.doorOpen)}</span></div>
-          <div class="v-item"><span class="v-label">عدد الليتات</span><span class="v-value">${d.bricks239||0}</span></div>
-          <div class="v-item"><span class="v-label">وقود مضخة الماء</span><span class="v-value">${d.pumpFuel||0}%</span></div>
-          <div class="v-item"><span class="v-label">وقود مولد الكهرباء</span><span class="v-value">${d.genFuel||0}%</span></div>
-          <div class="v-item"><span class="v-label">مقياس الهيدروليك</span><span class="v-value">${d.hydraulicPct||0}%</span></div>
-          <div class="v-item"><span class="v-label">الوقود</span><span class="v-value">${d.rescueFuel||0}%</span></div>`;
+          <div class="v-item"><span class="v-label">ليتات 1</span><span class="v-value">${d.litat1||0}</span></div>
+          <div class="v-item"><span class="v-label">ليتات 2</span><span class="v-value">${d.litat2||0}</span></div>
+          <div class="v-item"><span class="v-label">مولد الكهرباء</span><span class="v-value">${statusHTML(d.generator)}</span></div>
+          <div class="v-item"><span class="v-label">وقود المولد</span><span class="v-value">${d.genFuel||0}%</span></div>
+          <div class="v-item"><span class="v-label">المكينة الهيدروليك</span><span class="v-value">${statusHTML(d.hydraulic)}</span></div>
+          <div class="v-item"><span class="v-label">وقود الهيدروليك</span><span class="v-value">${d.hydFuel||0}%</span></div>`;
       } else if(v.id==="339"){
         details=`
           <div class="v-bar-item"><div class="v-bar-top"><span class="v-label">💧 الماء</span><span class="v-value">${d.water}%</span></div><div class="v-bar"><div class="v-bar-fill v-bar-water" style="width:${d.water}%"></div></div></div>

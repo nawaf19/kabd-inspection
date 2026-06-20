@@ -85,6 +85,8 @@ textarea:focus-visible{outline:2px solid var(--ember);outline-offset:2px;backgro
 .send-btn:active{transform:scale(.98);}
 .send-btn svg{width:22px;height:22px;}
 .err{display:none;background:var(--ember-soft);color:#9a2a12;border:1px solid #f0b9a9;border-radius:10px;padding:10px 14px;font-size:13.5px;font-weight:600;margin-bottom:10px;}
+.num-input{width:100%;padding:14px;font-size:22px;text-align:center;background:#F7F7F3;border:1.5px solid var(--line-strong);border-radius:12px;color:var(--ink);}
+.num-input:focus-visible{outline:2px solid var(--ember);outline-offset:2px;background:#fff;}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;}}
 </style>
 </head>
@@ -155,21 +157,43 @@ textarea:focus-visible{outline:2px solid var(--ember);outline-offset:2px;backgro
     <div class="stepper-row"><div class="lbl">عدد الليتات</div><div class="stepper" data-counter="bricks339" data-min="0" data-max="50"><button type="button" data-step="-1">−</button><div class="val mono">0</div><button type="button" data-step="1">+</button></div></div>
   </section>
 
-  <!-- معدات الإنقاذ 239 — السطر الأول -->
+  <!-- عدد الليتات (239) -->
   <section class="card" id="sec-rescue" style="display:none;">
-    <div class="field-head"><div class="field-num">3</div><div><div class="field-title">معدات الإنقاذ</div><div class="field-sub">حالة المعدات والأبواب</div></div></div>
-    <div class="toggle-row"><div class="lbl">مفاتيح المصاعد</div><div class="toggle-btns"><label><input type="radio" name="elevatorKeys" value="تعمل"> تعمل</label><label><input type="radio" name="elevatorKeys" value="لا تعمل"> لا تعمل</label></div></div>
-    <div class="toggle-row"><div class="lbl">فتح الأبواب</div><div class="toggle-btns"><label><input type="radio" name="doorOpen" value="تعمل"> تعمل</label><label><input type="radio" name="doorOpen" value="لا تعمل"> لا تعمل</label></div></div>
-    <div class="stepper-row"><div class="lbl">عدد الليتات</div><div class="stepper" data-counter="bricks239" data-min="0" data-max="50"><button type="button" data-step="-1">−</button><div class="val mono">0</div><button type="button" data-step="1">+</button></div></div>
+    <div class="field-head"><div class="field-num">3</div><div><div class="field-title">عدد الليتات</div><div class="field-sub">أدخل العدد في كل خانة</div></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px;">ليتات 1</div>
+        <input type="number" id="litat1" min="0" max="999" value="0" class="num-input mono">
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px;">ليتات 2</div>
+        <input type="number" id="litat2" min="0" max="999" value="0" class="num-input mono">
+      </div>
+    </div>
   </section>
 
-  <!-- معدات الإنقاذ 239 — السطر الثاني (وقود المعدات) -->
+  <!-- مولد الكهرباء (239) -->
   <section class="card" id="sec-rescue2" style="display:none;">
-    <div class="field-head"><div class="field-num">4</div><div><div class="field-title">وقود معدات الإنقاذ</div><div class="field-sub">نسبة الوقود والهيدروليك لكل معدة</div></div></div>
-    <div class="stepper-row"><div class="lbl">وقود مضخة الماء %</div><div class="stepper" data-counter="pumpFuel" data-min="0" data-max="100"><button type="button" data-step="-1">−</button><div class="val mono">0</div><button type="button" data-step="1">+</button></div></div>
-    <div class="stepper-row"><div class="lbl">وقود مولد الكهرباء %</div><div class="stepper" data-counter="genFuel" data-min="0" data-max="100"><button type="button" data-step="-1">−</button><div class="val mono">0</div><button type="button" data-step="1">+</button></div></div>
-    <div class="stepper-row"><div class="lbl">مقياس الهيدروليك %</div><div class="stepper" data-counter="hydraulicPct" data-min="0" data-max="100"><button type="button" data-step="-1">−</button><div class="val mono">0</div><button type="button" data-step="1">+</button></div></div>
-    <div class="stepper-row"><div class="lbl">الوقود %</div><div class="stepper" data-counter="rescueFuel" data-min="0" data-max="100"><button type="button" data-step="-1">−</button><div class="val mono">0</div><button type="button" data-step="1">+</button></div></div>
+    <div class="field-head"><div class="field-num">4</div><div><div class="field-title">مولد الكهرباء</div><div class="field-sub">حالة المولد ونسبة الوقود</div></div></div>
+    <div class="toggle-row"><div class="lbl">مولد الكهرباء</div><div class="toggle-btns"><label><input type="radio" name="generator" value="يعمل"> يعمل</label><label><input type="radio" name="generator" value="لا يعمل"> لا يعمل</label></div></div>
+    <div style="margin-top:12px;">
+      <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:8px;">مستوى وقود المولد</div>
+      <div class="gauge-top"><div class="gauge-read"><span id="genFuelNum">50</span><span>%</span></div></div>
+      <div class="slider"><input type="range" id="genFuelSlider" min="0" max="100" value="50" style="--accent:var(--ember);"></div>
+      <div class="ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+    </div>
+  </section>
+
+  <!-- المكينة الهيدروليك (239) -->
+  <section class="card" id="sec-hydraulic" style="display:none;">
+    <div class="field-head"><div class="field-num">5</div><div><div class="field-title">المكينة الهيدروليك</div><div class="field-sub">حالة المكينة ونسبة الوقود</div></div></div>
+    <div class="toggle-row"><div class="lbl">المكينة الهيدروليك</div><div class="toggle-btns"><label><input type="radio" name="hydraulic" value="يعمل"> يعمل</label><label><input type="radio" name="hydraulic" value="لا يعمل"> لا يعمل</label></div></div>
+    <div style="margin-top:12px;">
+      <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:8px;">مستوى وقود الهيدروليك</div>
+      <div class="gauge-top"><div class="gauge-read"><span id="hydFuelNum">50</span><span>%</span></div></div>
+      <div class="slider"><input type="range" id="hydFuelSlider" min="0" max="100" value="50" style="--accent:var(--ember);"></div>
+      <div class="ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+    </div>
   </section>
 
   <!-- أجهزة اللاسلكي (139) -->
@@ -280,17 +304,22 @@ function paintSlider(el,num){
 const diesel=document.getElementById("diesel"), dieselNum=document.getElementById("dieselNum");
 const water=document.getElementById("water"), waterNum=document.getElementById("waterNum");
 const fillDieselEl=document.getElementById("fillDiesel"), fillDieselNum=document.getElementById("fillDieselNum");
+const genFuelSlider=document.getElementById("genFuelSlider"), genFuelNum=document.getElementById("genFuelNum");
+const hydFuelSlider=document.getElementById("hydFuelSlider"), hydFuelNum=document.getElementById("hydFuelNum");
 diesel.addEventListener("input",()=>paintSlider(diesel,dieselNum));
 water.addEventListener("input",()=>paintSlider(water,waterNum));
 fillDieselEl.addEventListener("input",()=>paintSlider(fillDieselEl,fillDieselNum));
+genFuelSlider.addEventListener("input",()=>paintSlider(genFuelSlider,genFuelNum));
+hydFuelSlider.addEventListener("input",()=>paintSlider(hydFuelSlider,hydFuelNum));
 paintSlider(diesel,dieselNum); paintSlider(water,waterNum); paintSlider(fillDieselEl,fillDieselNum);
+paintSlider(genFuelSlider,genFuelNum); paintSlider(hydFuelSlider,hydFuelNum);
 
 const machine=document.getElementById("machine");
 machine.addEventListener("change",()=>{ machine.classList.remove("placeholder"); updateVisibleFields(); });
 
 function updateVisibleFields(){
   const v=machine.value;
-  const ids=["sec-water","sec-hoses","sec-nozzles","sec-rescue","sec-rescue2","sec-radio","sec-breathing","sec-fillDiesel","sec-pump339","sec-clean"];
+  const ids=["sec-water","sec-hoses","sec-nozzles","sec-rescue","sec-rescue2","sec-hydraulic","sec-radio","sec-breathing","sec-fillDiesel","sec-pump339","sec-clean"];
   ids.forEach(id=>document.getElementById(id).style.display="none");
 
   const ft=document.getElementById("fuel-title"), fs=document.getElementById("fuel-sub"), ftag=document.getElementById("fuel-tag");
@@ -302,6 +331,7 @@ function updateVisibleFields(){
     ft.textContent="البنزين"; fs.textContent="نسبة البنزين في الخزان"; ftag.textContent="GASOLINE";
     document.getElementById("sec-rescue").style.display="";
     document.getElementById("sec-rescue2").style.display="";
+    document.getElementById("sec-hydraulic").style.display="";
   } else if(v==="339"){
     ft.textContent="البنزين"; fs.textContent="نسبة البنزين في الخزان"; ftag.textContent="GASOLINE";
     document.getElementById("sec-water").style.display="";
@@ -362,13 +392,12 @@ document.getElementById("send").addEventListener("click",()=>{
     mawza: counters.mawza?counters.mawza.v:0,
     nozzle: counters.nozzle?counters.nozzle.v:0,
     radio: counters.radio?counters.radio.v:0,
-    elevatorKeys: getRadio("elevatorKeys"),
-    doorOpen: getRadio("doorOpen"),
-    bricks239: counters.bricks239?counters.bricks239.v:0,
-    pumpFuel: counters.pumpFuel?counters.pumpFuel.v:0,
-    genFuel: counters.genFuel?counters.genFuel.v:0,
-    hydraulicPct: counters.hydraulicPct?counters.hydraulicPct.v:0,
-    rescueFuel: counters.rescueFuel?counters.rescueFuel.v:0,
+    litat1: document.getElementById("litat1").value,
+    litat2: document.getElementById("litat2").value,
+    generator: getRadio("generator"),
+    genFuel: genFuelSlider.value,
+    hydraulic: getRadio("hydraulic"),
+    hydFuel: hydFuelSlider.value,
     thermalCam: counters.thermalCam?counters.thermalCam.v:0,
     bricks339: counters.bricks339?counters.bricks339.v:0,
     breathFull: counters.breathFull?counters.breathFull.v:0,

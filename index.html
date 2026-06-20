@@ -155,15 +155,21 @@ textarea:focus-visible{outline:2px solid var(--ember);outline-offset:2px;backgro
     <div class="stepper-row"><div class="lbl">عدد اللبنات</div><div class="stepper" data-counter="bricks339" data-min="0" data-max="50"><button type="button" data-step="-1">−</button><div class="val mono">0</div><button type="button" data-step="1">+</button></div></div>
   </section>
 
-  <!-- معدات الإنقاذ 239 -->
+  <!-- معدات الإنقاذ 239 — السطر الأول -->
   <section class="card" id="sec-rescue" style="display:none;">
-    <div class="field-head"><div class="field-num">3</div><div><div class="field-title">معدات الإنقاذ</div><div class="field-sub">حالة المعدات</div></div></div>
+    <div class="field-head"><div class="field-num">3</div><div><div class="field-title">معدات الإنقاذ</div><div class="field-sub">حالة المعدات والأبواب</div></div></div>
     <div class="toggle-row"><div class="lbl">مفاتيح المصاعد</div><div class="toggle-btns"><label><input type="radio" name="elevatorKeys" value="تعمل"> تعمل</label><label><input type="radio" name="elevatorKeys" value="لا تعمل"> لا تعمل</label></div></div>
     <div class="toggle-row"><div class="lbl">فتح الأبواب</div><div class="toggle-btns"><label><input type="radio" name="doorOpen" value="تعمل"> تعمل</label><label><input type="radio" name="doorOpen" value="لا تعمل"> لا تعمل</label></div></div>
-    <div class="toggle-row"><div class="lbl">مولد الكهرباء</div><div class="toggle-btns"><label><input type="radio" name="generator" value="تعمل"> يعمل</label><label><input type="radio" name="generator" value="لا تعمل"> لا يعمل</label></div></div>
-    <div class="toggle-row"><div class="lbl">مقياس الهيدروليك</div><div class="toggle-btns"><label><input type="radio" name="hydraulic" value="تعمل"> يعمل</label><label><input type="radio" name="hydraulic" value="لا تعمل"> لا يعمل</label></div></div>
-    <div class="toggle-row"><div class="lbl">مضخة الماء</div><div class="toggle-btns"><label><input type="radio" name="pump" value="تعمل"> تعمل</label><label><input type="radio" name="pump" value="لا تعمل"> لا تعمل</label></div></div>
     <div class="stepper-row"><div class="lbl">عدد اللبنات</div><div class="stepper" data-counter="bricks239" data-min="0" data-max="50"><button type="button" data-step="-1">−</button><div class="val mono">0</div><button type="button" data-step="1">+</button></div></div>
+  </section>
+
+  <!-- معدات الإنقاذ 239 — السطر الثاني (وقود المعدات) -->
+  <section class="card" id="sec-rescue2" style="display:none;">
+    <div class="field-head"><div class="field-num">4</div><div><div class="field-title">وقود معدات الإنقاذ</div><div class="field-sub">نسبة الوقود والهيدروليك لكل معدة</div></div></div>
+    <div class="stepper-row"><div class="lbl">وقود مضخة الماء %</div><div class="stepper" data-counter="pumpFuel" data-min="0" data-max="100"><button type="button" data-step="-1">−</button><div class="val mono">0</div><button type="button" data-step="1">+</button></div></div>
+    <div class="stepper-row"><div class="lbl">وقود مولد الكهرباء %</div><div class="stepper" data-counter="genFuel" data-min="0" data-max="100"><button type="button" data-step="-1">−</button><div class="val mono">0</div><button type="button" data-step="1">+</button></div></div>
+    <div class="stepper-row"><div class="lbl">مقياس الهيدروليك %</div><div class="stepper" data-counter="hydraulicPct" data-min="0" data-max="100"><button type="button" data-step="-1">−</button><div class="val mono">0</div><button type="button" data-step="1">+</button></div></div>
+    <div class="stepper-row"><div class="lbl">الوقود %</div><div class="stepper" data-counter="rescueFuel" data-min="0" data-max="100"><button type="button" data-step="-1">−</button><div class="val mono">0</div><button type="button" data-step="1">+</button></div></div>
   </section>
 
   <!-- أجهزة اللاسلكي (139) -->
@@ -284,7 +290,7 @@ machine.addEventListener("change",()=>{ machine.classList.remove("placeholder");
 
 function updateVisibleFields(){
   const v=machine.value;
-  const ids=["sec-water","sec-hoses","sec-nozzles","sec-rescue","sec-radio","sec-breathing","sec-fillDiesel","sec-pump339","sec-clean"];
+  const ids=["sec-water","sec-hoses","sec-nozzles","sec-rescue","sec-rescue2","sec-radio","sec-breathing","sec-fillDiesel","sec-pump339","sec-clean"];
   ids.forEach(id=>document.getElementById(id).style.display="none");
 
   const ft=document.getElementById("fuel-title"), fs=document.getElementById("fuel-sub"), ftag=document.getElementById("fuel-tag");
@@ -295,6 +301,7 @@ function updateVisibleFields(){
   } else if(v==="239"){
     ft.textContent="البنزين"; fs.textContent="نسبة البنزين في الخزان"; ftag.textContent="GASOLINE";
     document.getElementById("sec-rescue").style.display="";
+    document.getElementById("sec-rescue2").style.display="";
   } else if(v==="339"){
     ft.textContent="البنزين"; fs.textContent="نسبة البنزين في الخزان"; ftag.textContent="GASOLINE";
     document.getElementById("sec-water").style.display="";
@@ -357,10 +364,11 @@ document.getElementById("send").addEventListener("click",()=>{
     radio: counters.radio?counters.radio.v:0,
     elevatorKeys: getRadio("elevatorKeys"),
     doorOpen: getRadio("doorOpen"),
-    generator: getRadio("generator"),
-    hydraulic: getRadio("hydraulic"),
-    pump: getRadio("pump"),
     bricks239: counters.bricks239?counters.bricks239.v:0,
+    pumpFuel: counters.pumpFuel?counters.pumpFuel.v:0,
+    genFuel: counters.genFuel?counters.genFuel.v:0,
+    hydraulicPct: counters.hydraulicPct?counters.hydraulicPct.v:0,
+    rescueFuel: counters.rescueFuel?counters.rescueFuel.v:0,
     thermalCam: counters.thermalCam?counters.thermalCam.v:0,
     bricks339: counters.bricks339?counters.bricks339.v:0,
     breathFull: counters.breathFull?counters.breathFull.v:0,

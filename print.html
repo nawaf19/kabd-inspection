@@ -128,10 +128,11 @@ function buildReport(){
 
   // === 2. آلية الإنقاذ 239 ===
   html+=`<div class="section-title">آلية الإنقاذ — 239</div>
-  <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>مفاتيح المصاعد</th><th>فتح الأبواب</th><th>مولد الكهرباء</th><th>مقياس الهيدروليك</th><th>مضخة الماء</th><th>عدد اللبنات</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
+  <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>مفاتيح المصاعد</th><th>فتح الأبواب</th><th>عدد اللبنات</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
   if(d239){
-    html+=`<tr><td class="val">${d239.operator||"—"}</td><td class="val">${d239.diesel}%</td><td>${st(d239.elevatorKeys)}</td><td>${st(d239.doorOpen)}</td><td>${st(d239.generator)}</td><td>${st(d239.hydraulic)}</td><td>${st(d239.pump)}</td><td class="val">${d239.bricks239||0}</td><td class="notes-cell">${d239.notes||"—"}</td><td class="photo-col">${d239.photoData?`<img src="${d239.photoData}" class="photo-cell">`:"—"}</td></tr>`;
-  } else { html+=`<tr><td colspan="9" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
+    html+=`<tr><td class="val">${d239.operator||"—"}</td><td class="val">${d239.diesel}%</td><td>${st(d239.elevatorKeys)}</td><td>${st(d239.doorOpen)}</td><td class="val">${d239.bricks239||0}</td><td class="notes-cell">${d239.notes||"—"}</td><td class="photo-col">${d239.photoData?`<img src="${d239.photoData}" class="photo-cell">`:"—"}</td></tr>`;
+    html+=`<tr><td colspan="1" style="background:#f5f5f0;font-weight:700;font-size:11px;">السطر الثاني</td><td class="val">وقود مضخة الماء: ${d239.pumpFuel||0}%</td><td class="val">مولد الكهرباء: ${d239.genFuel||0}%</td><td class="val">هيدروليك: ${d239.hydraulicPct||0}%</td><td class="val">الوقود: ${d239.rescueFuel||0}%</td><td colspan="1">—</td><td class="photo-col">—</td></tr>`;
+  } else { html+=`<tr><td colspan="6" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
   html+=`</tbody></table>`;
 
   // === 3. آلية البمب 339 ===

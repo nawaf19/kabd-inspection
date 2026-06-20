@@ -150,7 +150,7 @@ function buildReport(){
     const d=data[v.id];
     if(d){
       const isVan=v.id==="731";
-      html+=`<tr><td class="vl">${v.id}</td><td class="vl">${v.type}</td><td class="val">${d.operator||"—"}</td><td class="val">${d.diesel}%</td><td class="val">${isVan?"—":d.water+"%"}</td><td class="val">${isVan?"—":d.hose1}</td><td class="val">${isVan?"—":d.hose2}</td><td class="val">${isVan?"—":d.nozzle}</td><td class="val">${isVan?"—":d.mawza}</td><td>${v.id==="2839"?cl(d.clean):"—"}</td><td class="notes-cell">${d.notes||"—"}</td><td class="photo-col">${d.photoData?`<img src="${d.photoData}" class="photo-cell">`:"—"}</td></tr>`;
+      html+=`<tr><td class="vl">${v.id}</td><td class="vl">${v.type}</td><td class="val">${d.operator||"—"}</td><td class="val">${d.diesel}%</td><td class="val">${isVan?"—":d.water+"%"}</td><td class="val">${isVan?"—":d.hose1}</td><td class="val">${isVan?"—":d.hose2}</td><td class="val">${isVan?"—":d.nozzle}</td><td class="val">${isVan?"—":d.mawza}</td><td>${v.id==="2839"||v.id==="731"?cl(d.clean):"—"}</td><td class="notes-cell">${d.notes||"—"}</td><td class="photo-col">${d.photoData?`<img src="${d.photoData}" class="photo-cell">`:"—"}</td></tr>`;
     } else {
       html+=`<tr><td class="vl">${v.id}</td><td class="vl">${v.type}</td><td colspan="9" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`;
     }

@@ -183,6 +183,9 @@ function loadData(){
           <div class="v-item"><span class="v-label">الموزع</span><span class="v-value">${d.mawza}</span></div>
           <div class="v-item"><span class="v-label">الفكنوزل</span><span class="v-value">${d.nozzle}</span></div>
           <div class="v-item"><span class="v-label">التنظيف</span><span class="v-value">${d.clean==="نظيف"?'<span class="status-ok">نظيف ✓</span>':d.clean==="غير نظيف"?'<span class="status-bad">غير نظيف ✗</span>':"—"}</span></div>`;
+      } else if(v.id==="731"){
+        details=`
+          <div class="v-item"><span class="v-label">التنظيف</span><span class="v-value">${d.clean==="نظيف"?'<span class="status-ok">نظيف ✓</span>':d.clean==="غير نظيف"?'<span class="status-bad">غير نظيف ✗</span>':"—"}</span></div>`;
       } else if(v.id==="839"){
         details=`
           <div class="v-item"><span class="v-label">جهاز كامل</span><span class="v-value">${d.breathFull||0}</span></div>

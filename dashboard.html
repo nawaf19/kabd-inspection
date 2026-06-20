@@ -24,234 +24,109 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{margin:0;padding:0;}
-body{
-  background:var(--bg);color:var(--ink);
-  font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;
-  font-size:16px;line-height:1.5;
-  padding-bottom:40px;
-  -webkit-font-smoothing:antialiased;
-}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;font-size:16px;line-height:1.5;padding-bottom:40px;-webkit-font-smoothing:antialiased;}
 .mono{font-family:"IBM Plex Mono",monospace;font-feature-settings:"tnum";}
-
-header{
-  position:sticky;top:0;z-index:30;
-  background:var(--header);color:#F4F3EE;
-  padding:calc(env(safe-area-inset-top) + 16px) 18px 16px;
-  border-bottom:3px solid var(--water);
-}
-.h-eyebrow{
-  font-family:"IBM Plex Mono",monospace;
-  font-size:11px;letter-spacing:2px;color:#9AA0A8;text-transform:uppercase;
-  display:flex;align-items:center;gap:8px;
-}
-.h-eyebrow::before{
-  content:"";width:8px;height:8px;border-radius:50%;
-  background:var(--water);display:inline-block;
-  box-shadow:0 0 0 3px rgba(19,124,158,.25);
-}
+header{position:sticky;top:0;z-index:30;background:var(--header);color:#F4F3EE;padding:calc(env(safe-area-inset-top) + 16px) 18px 16px;border-bottom:3px solid var(--water);}
+.h-eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:2px;color:#9AA0A8;text-transform:uppercase;display:flex;align-items:center;gap:8px;}
+.h-eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--water);display:inline-block;box-shadow:0 0 0 3px rgba(19,124,158,.25);}
 header h1{margin:6px 0 0;font-size:22px;font-weight:700;letter-spacing:-.2px;}
 .h-sub{font-size:13px;color:#9AA0A8;margin-top:4px;}
-.h-actions{display:flex;gap:10px;margin-top:12px;}
-.h-btn{
-  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
-  color:#F4F3EE;font-family:inherit;font-size:13px;font-weight:600;
-  padding:8px 14px;border-radius:10px;cursor:pointer;
-  display:flex;align-items:center;gap:6px;
-  transition:background .12s;
-}
+.h-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.h-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#F4F3EE;font-family:inherit;font-size:13px;font-weight:600;padding:8px 14px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .12s;}
 .h-btn:active{background:rgba(255,255,255,.2);}
 .h-btn svg{width:16px;height:16px;}
-
 main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
-
 .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
-.stat{
-  background:var(--surface);border:1px solid var(--line);
-  border-radius:14px;padding:14px;text-align:center;
-  box-shadow:var(--shadow);
-}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center;box-shadow:var(--shadow);}
 .stat-num{font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:28px;line-height:1;}
 .stat-label{font-size:12px;color:var(--muted);margin-top:4px;font-weight:600;}
-
-.vehicle-card{
-  background:var(--surface);border:1px solid var(--line);
-  border-radius:var(--radius);box-shadow:var(--shadow);
-  margin-bottom:12px;overflow:hidden;
-}
-.vehicle-card.low-level{
-  background:rgba(211,60,28,0.10)!important;
-  border:2px solid rgba(211,60,28,0.35)!important;
-}
+.vehicle-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;}
+.vehicle-card.low-level{background:rgba(211,60,28,0.10)!important;border:2px solid rgba(211,60,28,0.35)!important;}
 .vehicle-card.low-level .v-header{background:rgba(211,60,28,0.06);}
 .vehicle-card.low-level .v-body{background:transparent;}
 .vehicle-card.low-level .v-meta{background:rgba(211,60,28,0.06);}
 .vehicle-card.low-level .v-notes{background:rgba(211,60,28,0.06);}
-.v-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 16px;border-bottom:1px solid var(--line);
-}
+.v-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);}
 .v-id{display:flex;align-items:center;gap:10px;}
-.v-num{
-  font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:18px;
-  background:var(--ink);color:#fff;padding:4px 12px;border-radius:8px;
-}
+.v-num{font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:18px;background:var(--ink);color:#fff;padding:4px 12px;border-radius:8px;}
 .v-type{font-weight:700;font-size:15px;}
-.v-status{
-  font-size:12px;font-family:"IBM Plex Mono",monospace;letter-spacing:.5px;
-  font-weight:600;padding:5px 12px;border-radius:999px;
-}
+.v-status{font-size:12px;font-family:"IBM Plex Mono",monospace;letter-spacing:.5px;font-weight:600;padding:5px 12px;border-radius:999px;}
 .v-status.done{background:var(--green-soft);color:var(--green);}
 .v-status.pending{background:var(--ember-soft);color:var(--ember);}
-
 .v-body{padding:14px 16px;}
 .v-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;}
-.v-item{display:flex;justify-content:space-between;align-items:center;
-  padding:6px 0;border-bottom:1px solid var(--line);}
+.v-item{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);}
 .v-item:last-child{border-bottom:none;}
 .v-label{font-size:13px;color:var(--muted);font-weight:500;}
 .v-value{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:14px;}
-
-.v-notes{
-  margin-top:10px;padding:10px 12px;
-  background:#F7F7F3;border-radius:10px;
-  font-size:13.5px;line-height:1.6;
-}
+.v-notes{margin-top:10px;padding:10px 12px;background:#F7F7F3;border-radius:10px;font-size:13.5px;line-height:1.6;}
 .v-notes-label{font-weight:700;font-size:12px;color:var(--muted);margin-bottom:4px;}
-
-.v-meta{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:10px 16px;background:#FAFAF7;border-top:1px solid var(--line);
-  font-size:12px;color:var(--muted);
-}
-
-.pending-body{
-  padding:30px 16px;text-align:center;color:var(--muted);
-}
+.v-meta{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#FAFAF7;border-top:1px solid var(--line);font-size:12px;color:var(--muted);}
+.pending-body{padding:30px 16px;text-align:center;color:var(--muted);}
 .pending-icon{font-size:36px;margin-bottom:6px;}
 .pending-text{font-weight:600;font-size:15px;color:var(--ember);}
-
-.empty-all{
-  text-align:center;padding:60px 20px;color:var(--muted);
-}
-.empty-all .icon{font-size:48px;margin-bottom:10px;}
-.empty-all .msg{font-size:16px;font-weight:600;}
-.empty-all .sub{font-size:13px;margin-top:6px;}
-
-.back-link{
-  display:inline-flex;align-items:center;gap:6px;
-  color:var(--water);font-weight:600;font-size:14px;
-  text-decoration:none;margin-bottom:14px;
-}
-.back-link:hover{text-decoration:underline;}
 .v-bar-item{grid-column:1/-1;padding:6px 0;}
 .v-bar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-.v-bar{
-  height:12px;border-radius:999px;background:#EAEAE3;
-  border:1px solid var(--line-strong);overflow:hidden;
-}
+.v-bar{height:12px;border-radius:999px;background:#EAEAE3;border:1px solid var(--line-strong);overflow:hidden;}
 .v-bar-fill{height:100%;border-radius:999px;transition:width .3s;}
 .v-bar-fuel{background:var(--ember);}
 .v-bar-water{background:var(--water);}
-
 .v-photo-wrap{display:block;margin-top:12px;}
-.v-photo-big{
-  width:100%;max-height:250px;border-radius:12px;
-  object-fit:cover;border:1.5px solid var(--line-strong);
-  cursor:pointer;display:block;
-}
-
-.print-big-btn{
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  width:100%;padding:16px;margin-bottom:16px;
-  background:var(--ink);color:#fff;
-  font-family:inherit;font-size:17px;font-weight:700;
-  border-radius:14px;text-decoration:none;
-  box-shadow:0 4px 14px rgba(22,24,28,.3);
-  transition:transform .08s,background .12s;
-}
-.print-big-btn:active{transform:scale(.98);background:#2a2d33;}
+.v-photo-big{width:100%;max-height:250px;border-radius:12px;object-fit:cover;border:1.5px solid var(--line-strong);cursor:pointer;display:block;}
+.print-big-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px;margin-bottom:16px;background:var(--ink);color:#fff;font-family:inherit;font-size:17px;font-weight:700;border-radius:14px;text-decoration:none;box-shadow:0 4px 14px rgba(22,24,28,.3);transition:transform .08s;}
+.print-big-btn:active{transform:scale(.98);}
 .print-big-btn svg{width:22px;height:22px;}
-
-@media(max-width:480px){
-  .stats{grid-template-columns:1fr 1fr 1fr;}
-  .stat-num{font-size:22px;}
-  .v-grid{grid-template-columns:1fr;}
-}
+.status-ok{color:var(--green);font-weight:700;}
+.status-bad{color:var(--ember);font-weight:700;}
+@media(max-width:480px){.stats{grid-template-columns:1fr 1fr 1fr;}.stat-num{font-size:22px;}.v-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
-
 <header>
   <div class="h-eyebrow">CIVIL DEFENSE · KABD</div>
   <h1>متابعة فحص الآليات</h1>
   <div class="h-sub" id="lastUpdate"></div>
   <div class="h-actions">
-    <button class="h-btn" onclick="loadData()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-      تحديث
-    </button>
-    <button class="h-btn" onclick="clearAll()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-      مسح الكل
-    </button>
-    <a href="index.html" class="h-btn" style="text-decoration:none;">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-      فحص جديد
-    </a>
-    <a href="print.html" class="h-btn" style="text-decoration:none;">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-      طباعة
-    </a>
-    <button class="h-btn" onclick="exportData()" style="background:rgba(19,124,158,.3);border-color:rgba(19,124,158,.5);">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      تخزين البيانات
-    </button>
+    <button class="h-btn" onclick="loadData()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> تحديث</button>
+    <button class="h-btn" onclick="clearAll()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> مسح الكل</button>
+    <a href="index.html" class="h-btn" style="text-decoration:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg> فحص جديد</a>
+    <a href="print.html" class="h-btn" style="text-decoration:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> طباعة</a>
+    <button class="h-btn" onclick="exportData()" style="background:rgba(19,124,158,.3);border-color:rgba(19,124,158,.5);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> تخزين البيانات</button>
   </div>
 </header>
 
 <main>
   <div class="stats" id="stats"></div>
-  <a href="print.html" class="print-big-btn">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-    طباعة كشف الفحص
-  </a>
+  <a href="print.html" class="print-big-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> طباعة كشف الفحص</a>
   <div id="vehicles"></div>
 </main>
 
 <script>
-const VEHICLES = [
-  {id:"139", type:"جيب",   icon:"🚙"},
-  {id:"239", type:"إنقاذ", icon:"🚑"},
-  {id:"339", type:"بمب",   icon:"🚒"},
-  {id:"439", type:"تنكر",  icon:"🚛"},
-  {id:"539", type:"تنكر",  icon:"🚛"},
-  {id:"839", type:"التنفس",icon:"🚐"},
-  {id:"1239",type:"تريله", icon:"🚚"}
+const VEHICLES=[
+  {id:"139",type:"جيب الضابط",icon:"🚙"},
+  {id:"239",type:"الإنقاذ",icon:"🚑"},
+  {id:"339",type:"البمب",icon:"🚒"},
+  {id:"439",type:"تنكر",icon:"🚛"},
+  {id:"539",type:"تنكر",icon:"🚛"},
+  {id:"839",type:"التنفس",icon:"🫁"},
+  {id:"2839",type:"تريلة",icon:"🚚"},
+  {id:"731",type:"وانيت الخدمات",icon:"🚐"}
 ];
+
+function statusHTML(val){
+  if(!val) return "—";
+  return val==="تعمل"||val==="يعمل"?`<span class="status-ok">${val} ✓</span>`:`<span class="status-bad">${val} ✗</span>`;
+}
 
 function loadData(){
   const KEY="kabd_inspections";
-  let data={};
-  try{ data=JSON.parse(localStorage.getItem(KEY)||"{}"); }catch(e){}
-
-  const total=VEHICLES.length;
-  const done=VEHICLES.filter(v=>data[v.id]).length;
-  const pending=total-done;
+  let data={}; try{data=JSON.parse(localStorage.getItem(KEY)||"{}");}catch(e){}
+  const total=VEHICLES.length, done=VEHICLES.filter(v=>data[v.id]).length, pending=total-done;
 
   document.getElementById("stats").innerHTML=`
-    <div class="stat">
-      <div class="stat-num" style="color:var(--ink)">${total}</div>
-      <div class="stat-label">إجمالي الآليات</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" style="color:var(--green)">${done}</div>
-      <div class="stat-label">تم الفحص</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" style="color:var(--ember)">${pending}</div>
-      <div class="stat-label">لم يتم الفحص</div>
-    </div>
-  `;
+    <div class="stat"><div class="stat-num" style="color:var(--ink)">${total}</div><div class="stat-label">إجمالي الآليات</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--green)">${done}</div><div class="stat-label">تم الفحص</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--ember)">${pending}</div><div class="stat-label">لم يتم الفحص</div></div>`;
 
   const container=document.getElementById("vehicles");
   container.innerHTML="";
@@ -265,198 +140,118 @@ function loadData(){
       const ts=new Date(d.timestamp);
       const date=ts.toLocaleDateString("ar-KW-u-nu-latn",{year:"numeric",month:"2-digit",day:"2-digit"});
       const time=ts.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false});
+
+      const hasWater=["339","439","539","2839"].includes(v.id);
       const fuelLow=parseInt(d.diesel)<80;
-      const noWater=v.id==="139"||v.id==="839";
-      const waterLow=!noWater && parseInt(d.water)<80;
+      const waterLow=hasWater&&parseInt(d.water)<80;
       if(fuelLow||waterLow) card.classList.add("low-level");
 
+      const fuelLabel=v.id==="839"?"الديزل":"البنزين";
+      let details="";
+
+      if(v.id==="139"){
+        details=`<div class="v-item"><span class="v-label">📻 أجهزة اللاسلكي</span><span class="v-value">${d.radio||0}</span></div>`;
+      } else if(v.id==="239"){
+        details=`
+          <div class="v-item"><span class="v-label">مفاتيح المصاعد</span><span class="v-value">${statusHTML(d.elevatorKeys)}</span></div>
+          <div class="v-item"><span class="v-label">فتح الأبواب</span><span class="v-value">${statusHTML(d.doorOpen)}</span></div>
+          <div class="v-item"><span class="v-label">مولد الكهرباء</span><span class="v-value">${statusHTML(d.generator)}</span></div>
+          <div class="v-item"><span class="v-label">مقياس الهيدروليك</span><span class="v-value">${statusHTML(d.hydraulic)}</span></div>
+          <div class="v-item"><span class="v-label">مضخة الماء</span><span class="v-value">${statusHTML(d.pump)}</span></div>
+          <div class="v-item"><span class="v-label">عدد اللبنات</span><span class="v-value">${d.bricks239||0}</span></div>`;
+      } else if(v.id==="339"){
+        details=`
+          <div class="v-bar-item"><div class="v-bar-top"><span class="v-label">💧 الماء</span><span class="v-value">${d.water}%</span></div><div class="v-bar"><div class="v-bar-fill v-bar-water" style="width:${d.water}%"></div></div></div>
+          <div class="v-item"><span class="v-label">هوز 1.5</span><span class="v-value">${d.hose1}</span></div>
+          <div class="v-item"><span class="v-label">هوز 2.5</span><span class="v-value">${d.hose2}</span></div>
+          <div class="v-item"><span class="v-label">الموزع</span><span class="v-value">${d.mawza}</span></div>
+          <div class="v-item"><span class="v-label">الفكنوزل</span><span class="v-value">${d.nozzle}</span></div>
+          <div class="v-item"><span class="v-label">كاميرة حرارية</span><span class="v-value">${d.thermalCam||0}</span></div>
+          <div class="v-item"><span class="v-label">عدد اللبنات</span><span class="v-value">${d.bricks339||0}</span></div>`;
+      } else if(v.id==="439"||v.id==="539"){
+        details=`
+          <div class="v-bar-item"><div class="v-bar-top"><span class="v-label">💧 الماء</span><span class="v-value">${d.water}%</span></div><div class="v-bar"><div class="v-bar-fill v-bar-water" style="width:${d.water}%"></div></div></div>
+          <div class="v-item"><span class="v-label">هوز 1.5</span><span class="v-value">${d.hose1}</span></div>
+          <div class="v-item"><span class="v-label">هوز 2.5</span><span class="v-value">${d.hose2}</span></div>
+          <div class="v-item"><span class="v-label">الموزع</span><span class="v-value">${d.mawza}</span></div>
+          <div class="v-item"><span class="v-label">الفكنوزل</span><span class="v-value">${d.nozzle}</span></div>`;
+      } else if(v.id==="2839"){
+        details=`
+          <div class="v-bar-item"><div class="v-bar-top"><span class="v-label">💧 الماء</span><span class="v-value">${d.water}%</span></div><div class="v-bar"><div class="v-bar-fill v-bar-water" style="width:${d.water}%"></div></div></div>
+          <div class="v-item"><span class="v-label">هوز 1.5</span><span class="v-value">${d.hose1}</span></div>
+          <div class="v-item"><span class="v-label">هوز 2.5</span><span class="v-value">${d.hose2}</span></div>
+          <div class="v-item"><span class="v-label">الموزع</span><span class="v-value">${d.mawza}</span></div>
+          <div class="v-item"><span class="v-label">الفكنوزل</span><span class="v-value">${d.nozzle}</span></div>
+          <div class="v-item"><span class="v-label">التنظيف</span><span class="v-value">${d.clean==="نظيف"?'<span class="status-ok">نظيف ✓</span>':d.clean==="غير نظيف"?'<span class="status-bad">غير نظيف ✗</span>':"—"}</span></div>`;
+      } else if(v.id==="839"){
+        details=`
+          <div class="v-item"><span class="v-label">جهاز كامل</span><span class="v-value">${d.breathFull||0}</span></div>
+          <div class="v-item"><span class="v-label">اسطوانة احتياط</span><span class="v-value">${d.breathSpare||0}</span></div>
+          <div class="v-item"><span class="v-label">ديزل مكينة التعبئة</span><span class="v-value">${d.fillDiesel||0}%</span></div>`;
+      }
+
       card.innerHTML=`
-        <div class="v-header">
-          <div class="v-id">
-            <div class="v-num mono">${v.id}</div>
-            <div class="v-type">${v.icon} ${v.type}</div>
-          </div>
-          <div class="v-status done">تم الفحص</div>
-        </div>
+        <div class="v-header"><div class="v-id"><div class="v-num mono">${v.id}</div><div class="v-type">${v.icon} ${v.type}</div></div><div class="v-status done">تم الفحص</div></div>
         <div class="v-body">
           <div class="v-grid">
-            <div class="v-bar-item">
-              <div class="v-bar-top"><span class="v-label">⛽ ${v.id==="839"?"الديزل":"البنزين"}</span><span class="v-value">${d.diesel}%</span></div>
-              <div class="v-bar"><div class="v-bar-fill v-bar-fuel" style="width:${d.diesel}%"></div></div>
-            </div>
-            ${v.id==="239" ? `<div class="v-bar-item">
-              <div class="v-bar-top"><span class="v-label">💧 الماء</span><span class="v-value">${d.water}%</span></div>
-              <div class="v-bar"><div class="v-bar-fill v-bar-water" style="width:${d.water}%"></div></div>
-            </div>
-            <div class="v-item">
-              <span class="v-label">⚙️ المضخة الخلفية</span>
-              <span class="v-value" style="color:${d.pump==="تعمل"?"var(--green)":"var(--ember)"};font-weight:700;">${d.pump||"—"}</span>
-            </div>` : v.id==="839" ? `<div class="v-item">
-              <span class="v-label">🫁 عدد أجهزة التنفس</span>
-              <span class="v-value">${d.breathing||0}</span>
-            </div>` : v.id!=="139" ? `<div class="v-bar-item">
-              <div class="v-bar-top"><span class="v-label">💧 الماء</span><span class="v-value">${d.water}%</span></div>
-              <div class="v-bar"><div class="v-bar-fill v-bar-water" style="width:${d.water}%"></div></div>
-            </div>
-            <div class="v-item">
-              <span class="v-label">هوز إنج ونص</span>
-              <span class="v-value">${d.hose1}</span>
-            </div>
-            <div class="v-item">
-              <span class="v-label">هوز إنجين ونص</span>
-              <span class="v-value">${d.hose2}</span>
-            </div>
-            <div class="v-item">
-              <span class="v-label">🔧 الموزع</span>
-              <span class="v-value">${d.mawza}</span>
-            </div>
-            <div class="v-item">
-              <span class="v-label">🔧 الفكنوزل</span>
-              <span class="v-value">${d.nozzle}</span>
-            </div>` : ""}
+            <div class="v-bar-item"><div class="v-bar-top"><span class="v-label">⛽ ${fuelLabel}</span><span class="v-value">${d.diesel}%</span></div><div class="v-bar"><div class="v-bar-fill v-bar-fuel" style="width:${d.diesel}%"></div></div></div>
+            ${details}
           </div>
-          ${d.notes ? `<div class="v-notes"><div class="v-notes-label">📝 ملاحظات</div>${d.notes}</div>` : ""}
-          ${d.photoData ? `<a href="${d.photoData}" target="_blank" class="v-photo-wrap"><img src="${d.photoData}" class="v-photo-big"></a>` : ""}
+          ${d.notes?`<div class="v-notes"><div class="v-notes-label">📝 ملاحظات</div>${d.notes}</div>`:""}
+          ${d.photoData?`<a href="${d.photoData}" target="_blank" class="v-photo-wrap"><img src="${d.photoData}" class="v-photo-big"></a>`:""}
         </div>
-        <div class="v-meta">
-          <span>👷 ${d.operator||"—"}</span>
-          <span>📩 ${d.recipient||"—"}</span>
-          <span class="mono">${date} — ${time}</span>
-        </div>
-      `;
+        <div class="v-meta"><span>👷 ${d.operator||"—"}</span><span class="mono">${date} — ${time}</span></div>`;
     } else {
       card.innerHTML=`
-        <div class="v-header">
-          <div class="v-id">
-            <div class="v-num mono">${v.id}</div>
-            <div class="v-type">${v.icon} ${v.type}</div>
-          </div>
-          <div class="v-status pending">لم يتم الفحص</div>
-        </div>
-        <div class="pending-body">
-          <div class="pending-icon">⏳</div>
-          <div class="pending-text">لم يتم الفحص بعد</div>
-        </div>
-      `;
+        <div class="v-header"><div class="v-id"><div class="v-num mono">${v.id}</div><div class="v-type">${v.icon} ${v.type}</div></div><div class="v-status pending">لم يتم الفحص</div></div>
+        <div class="pending-body"><div class="pending-icon">⏳</div><div class="pending-text">لم يتم الفحص بعد</div></div>`;
     }
     container.appendChild(card);
   });
 
   const now=new Date();
-  document.getElementById("lastUpdate").textContent=
-    "آخر تحديث: "+now.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
+  document.getElementById("lastUpdate").textContent="آخر تحديث: "+now.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
 }
 
 function clearAll(){
   if(!confirm("هل تريد مسح جميع بيانات الفحص؟")) return;
-  try{ localStorage.removeItem("kabd_inspections"); }catch(e){}
+  try{localStorage.removeItem("kabd_inspections");}catch(e){}
   loadData();
 }
 
 function exportData(){
   const KEY="kabd_inspections";
-  let data={};
-  try{ data=JSON.parse(localStorage.getItem(KEY)||"{}"); }catch(e){}
-
+  let data={}; try{data=JSON.parse(localStorage.getItem(KEY)||"{}");}catch(e){}
   const now=new Date();
   const dateStr=now.toLocaleDateString("ar-KW-u-nu-latn",{year:"numeric",month:"2-digit",day:"2-digit"});
   const days=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
   const dayName=days[now.getDay()];
   const fileDate=now.toISOString().slice(0,10);
 
-  function fc(v){ const n=parseInt(v); if(n<=25)return"color:#c00;font-weight:700"; if(n<=50)return"color:#b8860b;font-weight:600"; return"color:#060;font-weight:600"; }
-
   let rows="";
   VEHICLES.forEach(v=>{
     const d=data[v.id];
-    if(d){
-      const ts=new Date(d.timestamp);
-      const time=ts.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false});
-      const noHoses=v.id==="139"||v.id==="239"||v.id==="839";
-      const noWater=v.id==="139"||v.id==="839";
-      rows+=`<tr>
-        <td style="font-weight:700;background:#f5f5f0;">${v.id}</td>
-        <td style="font-weight:700;background:#f5f5f0;">${v.type}</td>
-        <td style="background:#e2f3e8;color:#1B7A3D;font-weight:700;">تم الفحص ✓</td>
-        <td style="${fc(d.diesel)}">${d.diesel}%</td>
-        <td>${noWater?"—":d.water+"%"}</td>
-        <td>${noHoses?"—":d.hose1}</td>
-        <td>${noHoses?"—":d.hose2}</td>
-        <td>${noHoses?"—":d.mawza}</td>
-        <td>${noHoses?"—":d.nozzle}</td>
-        <td>${v.id==="839"?(d.breathing||0):"—"}</td>
-        <td style="${v.id==="239"&&d.pump?(d.pump==="تعمل"?"color:green;font-weight:700":"color:red;font-weight:700"):""}">${v.id==="239"?(d.pump||"—"):"—"}</td>
-        <td>${d.operator||"—"}</td>
-        <td style="font-family:monospace;font-size:11px;">${time}</td>
-        <td style="text-align:right;font-size:12px;">${d.notes||"—"}</td>
-        <td class="photo-col">${d.photoData?'<img src="'+d.photoData+'" style="max-width:140px;max-height:100px;border-radius:4px;border:1px solid #ccc;">':"—"}</td>
-      </tr>`;
-    } else {
-      rows+=`<tr>
-        <td style="font-weight:700;background:#f5f5f0;">${v.id}</td>
-        <td style="font-weight:700;background:#f5f5f0;">${v.type}</td>
-        <td colspan="12" style="color:#c00;font-weight:700;">لم يتم الفحص ✗</td>
-        <td class="photo-col" style="color:#c00;">—</td>
-      </tr>`;
-    }
+    if(!d){ rows+=`<tr><td style="font-weight:700;background:#f5f5f0;">${v.id}</td><td style="font-weight:700;background:#f5f5f0;">${v.type}</td><td colspan="6" style="color:#c00;font-weight:700;">لم يتم الفحص ✗</td></tr>`; return; }
+    const ts=new Date(d.timestamp);
+    const time=ts.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false});
+    rows+=`<tr><td style="font-weight:700;background:#f5f5f0;">${v.id}</td><td style="font-weight:700;background:#f5f5f0;">${v.type}</td><td style="background:#e2f3e8;color:#1B7A3D;font-weight:700;">تم ✓</td><td>${d.diesel}%</td><td>${d.operator||"—"}</td><td style="font-family:monospace;">${time}</td><td style="text-align:right;font-size:12px;">${d.notes||"—"}</td><td class="photo-col">${d.photoData?'<img src="'+d.photoData+'" style="max-width:140px;max-height:100px;border-radius:4px;border:1px solid #ccc;">':"—"}</td></tr>`;
   });
 
-  const html=`<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<title>فحص يوم ${fileDate}</title>
-<style>
-*{box-sizing:border-box;}
-body{font-family:Arial,"Segoe UI",sans-serif;font-size:13px;margin:20px;direction:rtl;background:#fff;}
-h2{text-align:center;margin:0 0 4px;}
-.sub{text-align:center;font-size:12px;color:#666;margin-bottom:10px;}
-.meta{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:10px;padding:6px 10px;background:#f5f5f0;border:1px solid #333;}
-table{width:100%;border-collapse:collapse;margin-bottom:20px;}
-th,td{border:1.5px solid #333;padding:6px 8px;text-align:center;font-size:12px;vertical-align:middle;}
-th{background:#16181C;color:#fff;font-weight:700;font-size:11px;}
-.no-photo .photo-col{display:none!important;}
-.toolbar{text-align:center;margin-bottom:20px;}
-.toolbar button{padding:10px 20px;font-size:14px;font-weight:700;border:none;border-radius:8px;cursor:pointer;margin:0 5px;}
-.btn-photo{background:#D33C1C;color:#fff;}
-.btn-nophoto{background:#555;color:#fff;}
-@media print{.toolbar{display:none!important;} @page{size:A4 landscape;margin:8mm;}}
-</style>
-</head>
-<body>
-<h2>كشف جاهزية الآليات اليومي — مركز كبد للإطفاء</h2>
-<div class="sub">CIVIL DEFENSE · KABD FIRE STATION</div>
+  const html=`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>فحص يوم ${fileDate}</title>
+<style>*{box-sizing:border-box;}body{font-family:Arial,sans-serif;font-size:13px;margin:20px;direction:rtl;background:#fff;}h2{text-align:center;margin:0 0 4px;}.sub{text-align:center;font-size:12px;color:#666;margin-bottom:10px;}.meta{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:10px;padding:6px 10px;background:#f5f5f0;border:1px solid #333;}table{width:100%;border-collapse:collapse;}th,td{border:1.5px solid #333;padding:6px 8px;text-align:center;font-size:12px;}th{background:#16181C;color:#fff;font-size:11px;}.no-photo .photo-col{display:none!important;}.toolbar{text-align:center;margin-bottom:20px;}.toolbar button{padding:10px 20px;font-size:14px;font-weight:700;border:none;border-radius:8px;cursor:pointer;margin:0 5px;}.btn-photo{background:#D33C1C;color:#fff;}.btn-nophoto{background:#555;color:#fff;}@media print{.toolbar{display:none!important;}@page{size:A4 landscape;margin:8mm;}}</style></head><body>
+<h2>كشف جاهزية الآليات اليومي — مركز كبد للإطفاء</h2><div class="sub">CIVIL DEFENSE · KABD FIRE STATION</div>
 <div class="meta"><span>التاريخ: ${dateStr}</span><span>اليوم: ${dayName}</span></div>
-<div class="toolbar">
-  <button class="btn-photo" onclick="document.getElementById('rpt').classList.remove('no-photo');window.print();">طباعة مع الصور</button>
-  <button class="btn-nophoto" onclick="document.getElementById('rpt').classList.add('no-photo');window.print();">طباعة بدون صور</button>
-</div>
-<div id="rpt">
-<table>
-<thead><tr>
-  <th>الآلية</th><th>النوع</th><th>الحالة</th><th>⛽ البنزين</th><th>💧 الماء</th>
-  <th>هوز إنج ونص</th><th>هوز إنجين ونص</th><th>الموزع</th><th>الفكنوزل</th>
-  <th>أجهزة التنفس</th><th>المضخة الخلفية</th><th>المشغل</th><th>الوقت</th><th>ملاحظات</th>
-  <th class="photo-col">صورة</th>
-</tr></thead>
-<tbody>${rows}</tbody>
-</table>
-</div>
-</body></html>`;
+<div class="toolbar"><button class="btn-photo" onclick="document.getElementById('rpt').classList.remove('no-photo');window.print();">طباعة مع الصور</button><button class="btn-nophoto" onclick="document.getElementById('rpt').classList.add('no-photo');window.print();">طباعة بدون صور</button></div>
+<div id="rpt"><table><thead><tr><th>الآلية</th><th>النوع</th><th>الحالة</th><th>الوقود</th><th>الفاحص</th><th>الوقت</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>${rows}</tbody></table></div></body></html>`;
 
   const blob=new Blob([html],{type:"text/html;charset=utf-8"});
   const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
-  a.href=url;
-  a.download="فحص يوم "+fileDate+".html";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  const a=document.createElement("a"); a.href=url; a.download="فحص يوم "+fileDate+".html";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
 }
 
 loadData();
-setInterval(loadData, 30000);
+setInterval(loadData,30000);
 </script>
 </body>
 </html>

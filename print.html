@@ -17,29 +17,12 @@
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
-body{
-  background:var(--bg);color:var(--ink);
-  font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;
-  font-size:14px;line-height:1.5;
-  -webkit-font-smoothing:antialiased;
-}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
 
-/* ===== شريط الأدوات (يختفي عند الطباعة) ===== */
-.toolbar{
-  position:sticky;top:0;z-index:30;
-  background:var(--header);color:#F4F3EE;
-  padding:16px 18px;
-  border-bottom:3px solid var(--ember);
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
-}
+.toolbar{position:sticky;top:0;z-index:30;background:var(--header);color:#F4F3EE;padding:16px 18px;border-bottom:3px solid var(--ember);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
 .toolbar h1{margin:0;font-size:18px;font-weight:700;}
 .toolbar-actions{display:flex;gap:8px;flex-wrap:wrap;}
-.t-btn{
-  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
-  color:#fff;font-family:inherit;font-size:13px;font-weight:600;
-  padding:10px 16px;border-radius:10px;cursor:pointer;
-  display:flex;align-items:center;gap:6px;transition:background .12s;
-}
+.t-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-family:inherit;font-size:13px;font-weight:600;padding:10px 16px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .12s;}
 .t-btn:hover{background:rgba(255,255,255,.22);}
 .t-btn.primary{background:var(--ember);border-color:var(--ember);}
 .t-btn.primary:hover{background:#bb3318;}
@@ -47,96 +30,44 @@ body{
 .back-link{color:#9AA0A8;text-decoration:none;font-size:13px;font-weight:600;}
 .back-link:hover{color:#fff;}
 
-/* ===== الجدول ===== */
-.print-area{
-  max-width:900px;margin:20px auto;padding:0 14px;
-}
-.report{
-  background:#fff;border:2px solid #333;border-radius:0;
-  overflow:hidden;
-}
-.report-header{
-  text-align:center;padding:16px;border-bottom:2px solid #333;
-  background:#f5f5f0;
-}
+.print-area{max-width:1100px;margin:20px auto;padding:0 14px;}
+.report{background:#fff;border:2px solid #333;overflow:hidden;}
+.report-header{text-align:center;padding:16px;border-bottom:2px solid #333;background:#f5f5f0;}
 .report-header h2{margin:0 0 4px;font-size:20px;font-weight:700;}
 .report-header .sub{font-size:13px;color:var(--muted);}
-.report-meta{
-  display:flex;justify-content:space-between;padding:8px 16px;
-  border-bottom:2px solid #333;font-size:13px;font-weight:600;
-  background:#f5f5f0;
-}
+.report-meta{display:flex;justify-content:space-between;padding:8px 16px;border-bottom:2px solid #333;font-size:13px;font-weight:600;background:#f5f5f0;}
+
+.section-title{background:#16181C;color:#fff;padding:8px 16px;font-weight:700;font-size:14px;border-bottom:2px solid #333;}
 
 table{width:100%;border-collapse:collapse;}
-th,td{
-  border:1.5px solid #333;padding:8px 10px;text-align:center;
-  font-size:13px;vertical-align:middle;
-}
-th{
-  background:#16181C;color:#fff;font-weight:700;
-  font-size:12px;letter-spacing:.3px;
-}
+th,td{border:1.5px solid #333;padding:6px 8px;text-align:center;font-size:12px;vertical-align:middle;}
+th{background:#2a2d33;color:#fff;font-weight:700;font-size:11px;letter-spacing:.3px;}
 td{background:#fff;}
-.vehicle-label{
-  font-weight:700;font-size:14px;background:#f5f5f0;
-  white-space:nowrap;
-}
-.not-inspected{
-  color:var(--ember);font-weight:700;font-size:13px;
-}
-.inspected-val{
-  font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:14px;
-}
-.notes-cell{
-  text-align:right;font-size:12px;max-width:150px;
-  word-break:break-word;
-}
-.photo-cell img{
-  max-width:120px;max-height:90px;border-radius:4px;
-  border:1px solid #ccc;
-}
-.table-photo{
-  max-width:140px;max-height:100px;border-radius:4px;
-  border:1px solid #ccc;display:block;margin:0 auto;
-}
+.vl{font-weight:700;font-size:13px;background:#f5f5f0;white-space:nowrap;}
+.not-done{color:var(--ember);font-weight:700;font-size:13px;}
+.done-status{background:var(--green-soft);color:var(--green);font-weight:700;}
+.val{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:13px;}
+.notes-cell{text-align:right;font-size:11px;max-width:120px;word-break:break-word;}
+.ok{color:var(--green);font-weight:700;}
+.bad{color:var(--ember);font-weight:700;}
+.photo-cell img{max-width:120px;max-height:80px;border-radius:4px;border:1px solid #ccc;}
 .no-photo .photo-col{display:none!important;}
-.operator-cell{font-weight:600;font-size:12px;}
-.time-cell{
-  font-family:"IBM Plex Mono",monospace;font-size:11px;
-  color:var(--muted);
-}
+.time-cell{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);}
 
-/* ===== ألوان القيم ===== */
-.fuel-low{color:var(--ember);font-weight:700;}
-.fuel-mid{color:#b8860b;font-weight:600;}
-.fuel-ok{color:var(--green);font-weight:600;}
-
-/* ===== الصورة في التقرير ===== */
-.photo-section{
-  page-break-inside:avoid;
-  border-top:2px solid #333;padding:12px 16px;
-}
-.photo-section h3{margin:0 0 10px;font-size:14px;}
-.photo-section img{
-  max-width:100%;max-height:300px;border-radius:6px;
-  border:1px solid #ccc;display:block;margin:6px 0;
-}
-.photo-label{font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:600;}
-
-/* ===== طباعة ===== */
 @media print{
-  body{background:#fff;font-size:12px;}
+  body{background:#fff;font-size:11px;}
   .toolbar{display:none!important;}
   .print-area{margin:0;padding:0;max-width:100%;}
   .report{border:2px solid #000;page-break-inside:avoid;}
-  th,td{border-color:#000;padding:6px 8px;font-size:11px;}
+  th,td{border-color:#000;padding:4px 6px;font-size:10px;}
   th{background:#222!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  .vehicle-label{background:#eee!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  .report-header,.report-meta{background:#eee!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  .fuel-low,.not-inspected{color:#c00!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  .fuel-ok{color:#060!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .vl{background:#eee!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .report-header,.report-meta,.section-title{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .section-title{background:#222!important;color:#fff!important;}
+  .done-status{background:#e2f3e8!important;color:#060!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .not-done{color:#c00!important;}
   .no-photo .photo-col{display:none!important;}
-  @page{size:A4 landscape;margin:10mm;}
+  @page{size:A4 landscape;margin:8mm;}
 }
 </style>
 </head>
@@ -164,111 +95,83 @@ td{background:#fff;}
 </div>
 
 <script>
-const VEHICLES = [
-  {id:"139", type:"جيب"},
-  {id:"239", type:"إنقاذ"},
-  {id:"339", type:"بمب"},
-  {id:"439", type:"تنكر"},
-  {id:"539", type:"تنكر"},
-  {id:"839", type:"التنفس"},
-  {id:"1239",type:"تريله"}
-];
-
-function fuelClass(v){
-  const n=parseInt(v);
-  if(n<=25) return "fuel-low";
-  if(n<=50) return "fuel-mid";
-  return "fuel-ok";
-}
-
 function buildReport(){
   const KEY="kabd_inspections";
-  let data={};
-  try{ data=JSON.parse(localStorage.getItem(KEY)||"{}"); }catch(e){}
-
+  let data={}; try{data=JSON.parse(localStorage.getItem(KEY)||"{}");}catch(e){}
   const now=new Date();
   const dateStr=now.toLocaleDateString("ar-KW-u-nu-latn",{year:"numeric",month:"2-digit",day:"2-digit"});
   const days=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
   const dayName=days[now.getDay()];
 
+  function st(v){ return !v?"—":v==="تعمل"||v==="يعمل"?'<span class="ok">'+v+'</span>':'<span class="bad">'+v+'</span>'; }
+  function cl(v){ return !v?"—":v==="نظيف"?'<span class="ok">نظيف</span>':'<span class="bad">غير نظيف</span>'; }
+  function inspRow(id,d){ return d?`<td class="done-status">تم ✓</td>`:`<td class="not-done">✗</td>`; }
+  function timeStr(d){ if(!d) return ""; const t=new Date(d.timestamp); return t.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false}); }
+
+  const d139=data["139"], d239=data["239"], d339=data["339"];
+  const d439=data["439"], d539=data["539"], d2839=data["2839"], d731=data["731"], d839=data["839"];
+
   let html=`
     <div class="report-header">
-      <h2>كشف جاهزية الآليات اليومي — مركز كبد للإطفاء</h2>
+      <h2>كشف جاهزية الآليات اليومي — مركز كبد للإطفاء 939</h2>
       <div class="sub">CIVIL DEFENSE · KABD FIRE STATION</div>
     </div>
-    <div class="report-meta">
-      <span>التاريخ: ${dateStr}</span>
-      <span>اليوم: ${dayName}</span>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>الآلية</th>
-          <th>النوع</th>
-          <th>الحالة</th>
-          <th>⛽ البنزين</th>
-          <th>💧 الماء</th>
-          <th>هوز إنج ونص</th>
-          <th>هوز إنجين ونص</th>
-          <th>الموزع</th>
-          <th>الفكنوزل</th>
-          <th>أجهزة التنفس</th>
-          <th>المضخة الخلفية</th>
-          <th>المشغل</th>
-          <th>الوقت</th>
-          <th>ملاحظات</th>
-          <th class="photo-col">صورة</th>
-        </tr>
-      </thead>
-      <tbody>
-  `;
+    <div class="report-meta"><span>التاريخ: ${dateStr}</span><span>اليوم: ${dayName}</span></div>`;
 
-  VEHICLES.forEach(v=>{
+  // === 1. جيب الضابط 139 ===
+  html+=`<div class="section-title">جيب الضابط — 139</div>
+  <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>أجهزة اللاسلكي</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
+  if(d139){
+    html+=`<tr><td class="val">${d139.operator||"—"}</td><td class="val">${d139.diesel}%</td><td class="val">${d139.radio||0}</td><td class="notes-cell">${d139.notes||"—"}</td><td class="photo-col">${d139.photoData?`<img src="${d139.photoData}" class="photo-cell">`:"—"}</td></tr>`;
+  } else { html+=`<tr><td colspan="4" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
+  html+=`</tbody></table>`;
+
+  // === 2. آلية الإنقاذ 239 ===
+  html+=`<div class="section-title">آلية الإنقاذ — 239</div>
+  <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>مفاتيح المصاعد</th><th>فتح الأبواب</th><th>مولد الكهرباء</th><th>مقياس الهيدروليك</th><th>مضخة الماء</th><th>عدد اللبنات</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
+  if(d239){
+    html+=`<tr><td class="val">${d239.operator||"—"}</td><td class="val">${d239.diesel}%</td><td>${st(d239.elevatorKeys)}</td><td>${st(d239.doorOpen)}</td><td>${st(d239.generator)}</td><td>${st(d239.hydraulic)}</td><td>${st(d239.pump)}</td><td class="val">${d239.bricks239||0}</td><td class="notes-cell">${d239.notes||"—"}</td><td class="photo-col">${d239.photoData?`<img src="${d239.photoData}" class="photo-cell">`:"—"}</td></tr>`;
+  } else { html+=`<tr><td colspan="9" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
+  html+=`</tbody></table>`;
+
+  // === 3. آلية البمب 339 ===
+  html+=`<div class="section-title">آلية البمب — 339</div>
+  <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>مستوى الماء</th><th>هوز 1.5</th><th>هوز 2.5</th><th>الفكنوزل</th><th>الموزع</th><th>كاميرة حرارية</th><th>عدد اللبنات</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
+  if(d339){
+    html+=`<tr><td class="val">${d339.operator||"—"}</td><td class="val">${d339.diesel}%</td><td class="val">${d339.water}%</td><td class="val">${d339.hose1}</td><td class="val">${d339.hose2}</td><td class="val">${d339.nozzle}</td><td class="val">${d339.mawza}</td><td class="val">${d339.thermalCam||0}</td><td class="val">${d339.bricks339||0}</td><td class="notes-cell">${d339.notes||"—"}</td><td class="photo-col">${d339.photoData?`<img src="${d339.photoData}" class="photo-cell">`:"—"}</td></tr>`;
+  } else { html+=`<tr><td colspan="10" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
+  html+=`</tbody></table>`;
+
+  // === 4. تناكر ماء / وانيت الخدمات ===
+  html+=`<div class="section-title">تناكر ماء / وانيت الخدمات — 439 · 539 · 2839 · 731</div>
+  <table><thead><tr><th>الآلية</th><th>النوع</th><th>اسم الفاحص</th><th>مستوى الوقود</th><th>مستوى الماء</th><th>هوز 1.5</th><th>هوز 2.5</th><th>الفكنوزل</th><th>الموزع</th><th>تنظيف</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
+
+  [{id:"439",type:"تنكر"},{id:"539",type:"تنكر"},{id:"2839",type:"تريلة"},{id:"731",type:"وانيت"}].forEach(v=>{
     const d=data[v.id];
     if(d){
-      const ts=new Date(d.timestamp);
-      const time=ts.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false});
-      const noHoses = v.id==="139" || v.id==="239" || v.id==="839";
-      const noWater = v.id==="139" || v.id==="839";
-      html+=`<tr>
-        <td class="vehicle-label">${v.id}</td>
-        <td class="vehicle-label">${v.type}</td>
-        <td style="background:var(--green-soft);color:var(--green);font-weight:700;">تم الفحص ✓</td>
-        <td class="inspected-val ${fuelClass(d.diesel)}">${d.diesel}%</td>
-        <td class="inspected-val">${noWater ? "—" : d.water+"%"}</td>
-        <td class="inspected-val">${noHoses ? "—" : d.hose1}</td>
-        <td class="inspected-val">${noHoses ? "—" : d.hose2}</td>
-        <td class="inspected-val">${noHoses ? "—" : d.mawza}</td>
-        <td class="inspected-val">${noHoses ? "—" : d.nozzle}</td>
-        <td class="inspected-val">${v.id==="839" ? (d.breathing||0) : "—"}</td>
-        <td class="inspected-val" style="${v.id==="239" && d.pump ? (d.pump==="تعمل"?"color:green;font-weight:700":"color:red;font-weight:700") : ""}">${v.id==="239" ? (d.pump||"—") : "—"}</td>
-        <td class="operator-cell">${d.operator||"—"}</td>
-        <td class="time-cell">${time}</td>
-        <td class="notes-cell">${d.notes||"—"}</td>
-        <td class="photo-col">${d.photoData ? `<img src="${d.photoData}" class="table-photo">` : "—"}</td>
-      </tr>`;
+      const isVan=v.id==="731";
+      html+=`<tr><td class="vl">${v.id}</td><td class="vl">${v.type}</td><td class="val">${d.operator||"—"}</td><td class="val">${d.diesel}%</td><td class="val">${isVan?"—":d.water+"%"}</td><td class="val">${isVan?"—":d.hose1}</td><td class="val">${isVan?"—":d.hose2}</td><td class="val">${isVan?"—":d.nozzle}</td><td class="val">${isVan?"—":d.mawza}</td><td>${v.id==="2839"?cl(d.clean):"—"}</td><td class="notes-cell">${d.notes||"—"}</td><td class="photo-col">${d.photoData?`<img src="${d.photoData}" class="photo-cell">`:"—"}</td></tr>`;
     } else {
-      html+=`<tr>
-        <td class="vehicle-label">${v.id}</td>
-        <td class="vehicle-label">${v.type}</td>
-        <td class="not-inspected" colspan="12">لم يتم الفحص ✗</td>
-        <td class="photo-col not-inspected">—</td>
-      </tr>`;
+      html+=`<tr><td class="vl">${v.id}</td><td class="vl">${v.type}</td><td colspan="9" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`;
     }
   });
-
   html+=`</tbody></table>`;
+
+  // === 5. آلية التنفس 839 ===
+  html+=`<div class="section-title">آلية التنفس — 839</div>
+  <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>جهاز كامل</th><th>اسطوانة احتياط</th><th>ديزل مكينة تعبئة الاسطوانات</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
+  if(d839){
+    html+=`<tr><td class="val">${d839.operator||"—"}</td><td class="val">${d839.diesel}%</td><td class="val">${d839.breathFull||0}</td><td class="val">${d839.breathSpare||0}</td><td class="val">${d839.fillDiesel||0}%</td><td class="notes-cell">${d839.notes||"—"}</td><td class="photo-col">${d839.photoData?`<img src="${d839.photoData}" class="photo-cell">`:"—"}</td></tr>`;
+  } else { html+=`<tr><td colspan="6" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
+  html+=`</tbody></table>`;
+
   document.getElementById("report").innerHTML=html;
 }
 
 function printReport(withPhotos){
   const report=document.getElementById("report");
-  if(!withPhotos){
-    report.classList.add("no-photo");
-  } else {
-    report.classList.remove("no-photo");
-  }
-  setTimeout(()=>window.print(), 100);
+  if(!withPhotos){ report.classList.add("no-photo"); } else { report.classList.remove("no-photo"); }
+  setTimeout(()=>window.print(),100);
 }
 
 buildReport();

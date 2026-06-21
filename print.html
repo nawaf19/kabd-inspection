@@ -58,8 +58,27 @@ td{background:#fff;}
   .notes-cell{max-width:60px;font-size:7px;}
   .val{font-size:7.5px;}
   .no-photo .photo-col{display:none!important;}
+  #reports-area{display:none!important;}
   @page{size:A4 portrait;margin:5mm;}
 }
+
+#reports-area{max-width:1100px;margin:16px auto;padding:0 14px;display:none;}
+.rpt-section-title{background:#D33C1C;color:#fff;padding:12px 20px;font-size:16px;font-weight:700;text-align:center;margin-bottom:0;border-radius:4px 4px 0 0;}
+.rpt-card{background:#fff;border:2px solid #000;margin-bottom:24px;overflow:hidden;}
+.rpt-card-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:8px 16px;border-bottom:2px solid #000;background:#f8f8f8;font-weight:700;font-size:12px;}
+.rpt-type-badge{display:inline-block;padding:3px 10px;border-radius:4px;font-weight:700;font-size:12px;}
+.rpt-type-fire{background:#D33C1C;color:#fff;}
+.rpt-type-rescue{background:#1a56db;color:#fff;}
+.rpt-type-service{background:#057a55;color:#fff;}
+.rpt-type-other{background:#6b7280;color:#fff;}
+.rpt-table{width:100%;border-collapse:collapse;}
+.rpt-table th{background:#e8e8e8;font-size:10px;font-weight:700;padding:5px 8px;border:1px solid #000;text-align:center;}
+.rpt-table td{font-size:11px;padding:5px 8px;border:1px solid #000;text-align:center;vertical-align:middle;}
+.rpt-vehicles{font-size:11px;font-weight:600;padding:7px 16px;border-top:1.5px solid #ccc;background:#fafafa;}
+.rpt-photos{display:flex;flex-wrap:wrap;gap:6px;padding:8px 16px;border-top:1.5px solid #ccc;}
+.rpt-photos img{max-height:90px;border:1px solid #ccc;border-radius:4px;}
+.rpt-no-data{text-align:center;padding:40px;color:#666;font-size:14px;background:#fff;border:2px solid #ddd;border-radius:8px;}
+.rpt-loading{text-align:center;padding:30px;color:#aaa;font-size:14px;}
 </style>
 </head>
 <body>
@@ -78,11 +97,19 @@ td{background:#fff;}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       طباعة بدون صور
     </button>
+    <button class="t-btn" id="rptToggleBtn" onclick="toggleReports()" style="background:rgba(211,60,28,.3);border-color:rgba(211,60,28,.5);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="11" x2="8" y2="11"/><line x1="12" y1="15" x2="8" y2="15"/></svg>
+      بيانات البلاغ
+    </button>
   </div>
 </div>
 
 <div class="print-area">
   <div class="report" id="report"></div>
+</div>
+
+<div id="reports-area">
+  <div id="rpts-container"></div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -174,6 +201,75 @@ function buildReport(fbData){
   html+=`</tbody></table>`;
 
   document.getElementById("report").innerHTML=html;
+}
+
+let reportsVisible=false,reportsLoaded=false;
+
+function toggleReports(){
+  const area=document.getElementById("reports-area");
+  const btn=document.getElementById("rptToggleBtn");
+  reportsVisible=!reportsVisible;
+  area.style.display=reportsVisible?"block":"none";
+  if(reportsVisible){
+    btn.style.background="rgba(211,60,28,.75)";
+    btn.style.borderColor="rgba(211,60,28,.9)";
+    if(!reportsLoaded){loadReports();reportsLoaded=true;}
+  } else {
+    btn.style.background="rgba(211,60,28,.3)";
+    btn.style.borderColor="rgba(211,60,28,.5)";
+  }
+}
+
+function loadReports(){
+  const container=document.getElementById("rpts-container");
+  container.innerHTML='<p class="rpt-loading">جاري تحميل البيانات...</p>';
+  db.ref("reports").once("value").then(snap=>{
+    const data=snap.val();
+    if(!data){
+      container.innerHTML='<div class="rpt-no-data">لا توجد بيانات بلاغات محفوظة</div>';
+      return;
+    }
+    const entries=Object.entries(data).sort((a,b)=>(b[1].timestamp||0)-(a[1].timestamp||0));
+    const typeMap={
+      "حريق":{label:"حريق 🔥",cls:"rpt-type-fire"},
+      "إنقاذ":{label:"إنقاذ 🚑",cls:"rpt-type-rescue"},
+      "خدمات عامة":{label:"خدمات عامة 🔧",cls:"rpt-type-service"},
+      "أخرى":{label:"أخرى",cls:"rpt-type-other"}
+    };
+    let html=`<div class="rpt-section-title">سجل بيانات البلاغات — مركز كبد للإطفاء 939</div>`;
+    entries.forEach(([key,r],idx)=>{
+      const ts=r.timestamp?new Date(r.timestamp):null;
+      const dateStr=ts?ts.toLocaleDateString("ar-KW-u-nu-latn",{year:"numeric",month:"2-digit",day:"2-digit"}):"—";
+      const timeVal=ts?ts.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false}):"—";
+      const t=typeMap[r.type]||{label:r.type||"—",cls:"rpt-type-other"};
+      const addr=r.address||{};
+      const vehicles=(r.vehicles||[]).join("  |  ");
+      const photos=r.photos||[];
+      html+=`
+      <div class="rpt-card">
+        <div class="rpt-card-header">
+          <span>بلاغ #${entries.length-idx} — <span class="rpt-type-badge ${t.cls}">${t.label}</span></span>
+          <span>${dateStr} — ${timeVal}</span>
+          <span>رقم المبلغ: ${r.callerNum||"—"}</span>
+        </div>
+        <table class="rpt-table"><thead><tr>
+          <th>المحافظة</th><th>المنطقة</th><th>القطعة</th><th>الشارع</th><th>الجادة</th>
+          <th>المبنى</th><th>الشقة</th><th>المحل</th><th>وصف إضافي</th>
+        </tr></thead><tbody><tr>
+          <td>${addr.governorate||"—"}</td><td>${addr.area||"—"}</td>
+          <td>${addr.block||"—"}</td><td>${addr.street||"—"}</td>
+          <td>${addr.avenue||"—"}</td><td>${addr.building||"—"}</td>
+          <td>${addr.apartment||"—"}</td><td>${addr.shop||"—"}</td>
+          <td>${addr.description||"—"}</td>
+        </tr></tbody></table>
+        ${vehicles?`<div class="rpt-vehicles">الآليات المستخدمة: ${vehicles}</div>`:""}
+        ${photos.length?`<div class="rpt-photos">${photos.map(p=>`<img src="${p}">`).join("")}</div>`:""}
+      </div>`;
+    });
+    container.innerHTML=html;
+  }).catch(()=>{
+    container.innerHTML='<div class="rpt-no-data">حدث خطأ أثناء تحميل البيانات</div>';
+  });
 }
 
 function printReport(withPhotos){

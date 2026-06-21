@@ -19,38 +19,86 @@
   --ember:#D33C1C;--ember-soft:#FBE7E0;
   --water:#137C9E;--water-soft:#E1F0F5;
   --green:#1B7A3D;--green-soft:#E2F3E8;
-  --header:#16181C;--radius:16px;
-  --shadow:0 1px 2px rgba(22,24,28,.05), 0 8px 24px rgba(22,24,28,.06);
+  --header:#16181C;--radius:18px;
+  --shadow:0 1px 2px rgba(22,24,28,.05), 0 8px 24px rgba(22,24,28,.08);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{margin:0;padding:0;}
-body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;font-size:16px;line-height:1.5;padding-bottom:40px;-webkit-font-smoothing:antialiased;}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;font-size:16px;line-height:1.5;padding-bottom:60px;-webkit-font-smoothing:antialiased;}
 .mono{font-family:"IBM Plex Mono",monospace;font-feature-settings:"tnum";}
-header{position:sticky;top:0;z-index:30;background:var(--header);color:#F4F3EE;padding:calc(env(safe-area-inset-top) + 16px) 18px 16px;border-bottom:3px solid var(--water);}
-.h-eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:2px;color:#9AA0A8;text-transform:uppercase;display:flex;align-items:center;gap:8px;}
-.h-eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--water);display:inline-block;box-shadow:0 0 0 3px rgba(19,124,158,.25);}
-header h1{margin:6px 0 0;font-size:22px;font-weight:700;letter-spacing:-.2px;}
-.h-sub{font-size:13px;color:#9AA0A8;margin-top:4px;}
-.h-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
-.h-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#F4F3EE;font-family:inherit;font-size:13px;font-weight:600;padding:8px 14px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .12s;}
-.h-btn:active{background:rgba(255,255,255,.2);}
-.h-btn svg{width:16px;height:16px;}
-main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
-.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
+
+/* ── Header ── */
+header{position:sticky;top:0;z-index:30;background:var(--header);color:#F4F3EE;padding:calc(env(safe-area-inset-top)+14px) 18px 14px;border-bottom:3px solid var(--water);}
+.h-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+.h-eyebrow{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:2px;color:#9AA0A8;text-transform:uppercase;display:flex;align-items:center;gap:7px;margin-bottom:4px;}
+.h-eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--water);display:inline-block;box-shadow:0 0 0 3px rgba(19,124,158,.25);}
+header h1{margin:0;font-size:20px;font-weight:700;}
+.h-shift{font-size:14px;font-weight:700;color:#F4F3EE;margin-top:3px;}
+.h-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+#dashUserBadge{display:none;background:rgba(255,255,255,.12);border-radius:999px;padding:4px 12px;font-size:12px;font-weight:600;color:#E0E4EA;white-space:nowrap;}
+.h-settings-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#F4F3EE;padding:8px 12px;border-radius:10px;cursor:pointer;font-size:15px;display:flex;align-items:center;gap:6px;font-family:inherit;font-size:13px;font-weight:600;}
+.h-settings-btn:active{background:rgba(255,255,255,.2);}
+.h-quick{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+.h-q-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#D0D4DA;font-family:inherit;font-size:12px;font-weight:600;padding:7px 12px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:5px;text-decoration:none;transition:background .1s;}
+.h-q-btn:active{background:rgba(255,255,255,.18);}
+.h-q-btn svg{width:14px;height:14px;flex:none;}
+#lastUpdate{font-size:11px;color:#6A7380;margin-top:5px;}
+
+/* ── Main layout ── */
+main{max-width:680px;margin:0 auto;padding:20px 14px 0;}
+
+/* ── Section label ── */
+.section-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-family:"IBM Plex Mono",monospace;margin:28px 0 10px 4px;}
+.section-label:first-child{margin-top:0;}
+
+/* ── Big navigation cards ── */
+.nav-card{display:flex;align-items:center;gap:16px;width:100%;background:var(--surface);border:1.5px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 20px;margin-bottom:10px;cursor:pointer;text-decoration:none;color:var(--ink);font-family:inherit;text-align:right;transition:transform .08s, box-shadow .1s;position:relative;overflow:hidden;}
+.nav-card:active{transform:scale(.985);box-shadow:0 1px 4px rgba(22,24,28,.1);}
+.nav-card-icon-wrap{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;font-size:28px;flex:none;}
+.nav-card-body{flex:1;min-width:0;}
+.nav-card-title{font-size:18px;font-weight:700;line-height:1.2;}
+.nav-card-sub{font-size:13px;color:var(--muted);margin-top:3px;}
+.nav-card-badge{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;margin-top:6px;display:inline-block;}
+.nav-card-arrow{font-size:20px;color:var(--muted);flex:none;transition:transform .2s;}
+
+/* Inspection card */
+.nav-card.insp{border-color:rgba(19,124,158,.3);}
+.nav-card.insp .nav-card-icon-wrap{background:var(--water-soft);}
+.nav-card.insp.open .nav-card-arrow{transform:rotate(90deg);}
+
+/* Print card */
+.nav-card.print-nav{border-color:rgba(22,24,28,.2);}
+.nav-card.print-nav .nav-card-icon-wrap{background:#F0F0EB;}
+
+/* Report add card */
+.nav-card.rpt-add{border-color:rgba(211,60,28,.25);}
+.nav-card.rpt-add .nav-card-icon-wrap{background:var(--ember-soft);}
+
+/* Report view card */
+.nav-card.rpt-view{border-color:rgba(211,60,28,.15);}
+.nav-card.rpt-view .nav-card-icon-wrap{background:#FFF3F0;}
+
+/* New inspection card */
+.nav-card.new-insp{border-color:rgba(27,122,61,.2);}
+.nav-card.new-insp .nav-card-icon-wrap{background:var(--green-soft);}
+
+/* ── Inspection panel (collapsible) ── */
+#insp-panel{display:none;margin-bottom:4px;}
+#insp-panel.open{display:block;}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;}
 .stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center;box-shadow:var(--shadow);}
-.stat-num{font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:28px;line-height:1;}
+.stat-num{font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:30px;line-height:1;}
 .stat-label{font-size:12px;color:var(--muted);margin-top:4px;font-weight:600;}
+
+/* ── Vehicle cards ── */
 .vehicle-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;}
-.vehicle-card.low-level{background:rgba(211,60,28,0.10)!important;border:2px solid rgba(211,60,28,0.35)!important;}
-.vehicle-card.low-level .v-header{background:rgba(211,60,28,0.06);}
-.vehicle-card.low-level .v-body{background:transparent;}
-.vehicle-card.low-level .v-meta{background:rgba(211,60,28,0.06);}
-.vehicle-card.low-level .v-notes{background:rgba(211,60,28,0.06);}
+.vehicle-card.low-level{background:rgba(211,60,28,.07)!important;border:2px solid rgba(211,60,28,.3)!important;}
+.vehicle-card.low-level .v-header{background:rgba(211,60,28,.05);}
 .v-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);}
 .v-id{display:flex;align-items:center;gap:10px;}
 .v-num{font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:18px;background:var(--ink);color:#fff;padding:4px 12px;border-radius:8px;}
 .v-type{font-weight:700;font-size:15px;}
-.v-status{font-size:12px;font-family:"IBM Plex Mono",monospace;letter-spacing:.5px;font-weight:600;padding:5px 12px;border-radius:999px;}
+.v-status{font-size:12px;font-family:"IBM Plex Mono",monospace;font-weight:600;padding:5px 12px;border-radius:999px;}
 .v-status.done{background:var(--green-soft);color:var(--green);}
 .v-status.pending{background:var(--ember-soft);color:var(--ember);}
 .v-body{padding:14px 16px;}
@@ -62,8 +110,7 @@ main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
 .v-notes{margin-top:10px;padding:10px 12px;background:#F7F7F3;border-radius:10px;font-size:13.5px;line-height:1.6;}
 .v-notes-label{font-weight:700;font-size:12px;color:var(--muted);margin-bottom:4px;}
 .v-meta{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#FAFAF7;border-top:1px solid var(--line);font-size:12px;color:var(--muted);}
-.pending-body{padding:30px 16px;text-align:center;color:var(--muted);}
-.pending-icon{font-size:36px;margin-bottom:6px;}
+.pending-body{padding:28px 16px;text-align:center;color:var(--muted);}
 .pending-text{font-weight:600;font-size:15px;color:var(--ember);}
 .v-bar-item{grid-column:1/-1;padding:6px 0;}
 .v-bar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
@@ -73,13 +120,11 @@ main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
 .v-bar-water{background:var(--water);}
 .v-photo-wrap{display:block;margin-top:12px;}
 .v-photo-big{width:100%;max-height:250px;border-radius:12px;object-fit:cover;border:1.5px solid var(--line-strong);cursor:pointer;display:block;}
-.print-big-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px;margin-bottom:16px;background:var(--ink);color:#fff;font-family:inherit;font-size:17px;font-weight:700;border-radius:14px;text-decoration:none;box-shadow:0 4px 14px rgba(22,24,28,.3);transition:transform .08s;}
-.print-big-btn:active{transform:scale(.98);}
-.print-big-btn svg{width:22px;height:22px;}
 .status-ok{color:var(--green);font-weight:700;}
 .status-bad{color:var(--ember);font-weight:700;}
-@media(max-width:480px){.stats{grid-template-columns:1fr 1fr 1fr;}.stat-num{font-size:22px;}.v-grid{grid-template-columns:1fr;}}
-/* Employee add page */
+@media(max-width:480px){.v-grid{grid-template-columns:1fr;}}
+
+/* ── Employee overlay ── */
 #emp-overlay{position:fixed;inset:0;z-index:100;background:var(--bg);overflow-y:auto;display:none;padding:calc(env(safe-area-inset-top)+24px) 14px 60px;}
 .emp-page{max-width:480px;margin:0 auto;}
 .emp-back{display:flex;align-items:center;gap:8px;background:none;border:none;color:var(--water);font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;padding:0;margin-bottom:20px;}
@@ -103,10 +148,11 @@ main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
 .emp-list-name{font-weight:700;font-size:15px;}
 .emp-list-meta{font-size:12px;color:var(--muted);font-family:"IBM Plex Mono",monospace;margin-top:2px;}
 .emp-list-actions{display:flex;gap:8px;flex:none;}
-.emp-action-btn{width:38px;height:38px;border:1.5px solid var(--line-strong);background:#F7F7F3;border-radius:10px;font-size:17px;cursor:pointer;display:grid;place-items:center;transition:background .12s;}
+.emp-action-btn{width:38px;height:38px;border:1.5px solid var(--line-strong);background:#F7F7F3;border-radius:10px;font-size:17px;cursor:pointer;display:grid;place-items:center;}
 .emp-action-btn.edit:active{background:var(--water-soft);}
 .emp-action-btn.del:active{background:var(--ember-soft);}
-/* Report form overlay */
+
+/* ── Report form overlay ── */
 #rpt-overlay{position:fixed;inset:0;z-index:100;background:var(--bg);overflow-y:auto;display:none;padding:calc(env(safe-area-inset-top)+24px) 14px 60px;}
 .rpt-page{max-width:560px;margin:0 auto;}
 .rpt-back{display:flex;align-items:center;gap:8px;background:none;border:none;color:var(--ember);font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;padding:0;margin-bottom:20px;}
@@ -132,7 +178,8 @@ main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
 .rpt-save-btn{width:100%;border:none;border-radius:14px;cursor:pointer;background:var(--ember);color:#fff;font-family:inherit;font-weight:700;font-size:18px;padding:18px;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 6px 18px rgba(211,60,28,.3);transition:transform .08s;}
 .rpt-save-btn:active{transform:scale(.98);}
 #rptMsg{display:none;border-radius:10px;padding:12px 14px;font-size:14px;font-weight:600;margin-top:12px;text-align:center;}
-/* Dashboard login */
+
+/* ── Dashboard login ── */
 #dash-login{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
 .dash-login-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px 24px;width:100%;max-width:400px;}
 .dash-login-logo{text-align:center;margin-bottom:24px;}
@@ -143,14 +190,15 @@ main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
 #dashLoginErr{display:none;background:var(--ember-soft);color:#9a2a12;border:1px solid #f0b9a9;border-radius:10px;padding:10px 14px;font-size:13.5px;font-weight:600;margin-top:12px;text-align:center;}
 #dashLoginBtn{margin-top:16px;width:100%;border:none;border-radius:12px;cursor:pointer;background:var(--water);color:#fff;font-family:inherit;font-weight:700;font-size:17px;padding:16px;transition:transform .08s,background .12s;}
 #dashLoginBtn:active{transform:scale(.98);}
-#dashUserBadge{display:none;margin-top:6px;background:rgba(255,255,255,.12);border-radius:999px;padding:4px 12px;font-size:12px;font-weight:600;color:#E0E4EA;}
 </style>
 </head>
 <body>
+
+<!-- Dashboard login overlay -->
 <div id="dash-login">
   <div class="dash-login-card">
     <div class="dash-login-logo">
-      <div style="font-size:40px;">📊</div>
+      <div style="font-size:42px;">🛡️</div>
       <div class="site-name">لوحة متابعة الفحص</div>
       <div class="sub">مركز كبد للإطفاء 939 · ضباط فقط</div>
     </div>
@@ -160,23 +208,45 @@ main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
     <button id="dashLoginBtn" type="button">دخول →</button>
   </div>
 </div>
+
+<!-- Header -->
 <header>
-  <div class="h-eyebrow">CIVIL DEFENSE · KABD</div>
-  <h1>متابعة فحص الآليات</h1>
-  <div id="dashUserBadge"></div>
-  <div class="h-sub" id="shiftBadge" style="margin-top:4px;font-size:14px;font-weight:700;color:#F4F3EE;"></div>
-  <div class="h-sub" id="lastUpdate"></div>
-  <div class="h-actions">
-    <button class="h-btn" onclick="refreshNow()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> تحديث</button>
-    <button class="h-btn" onclick="clearAll()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> مسح الكل</button>
-    <a href="index.html" class="h-btn" style="text-decoration:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg> فحص جديد</a>
-    <a href="print.html" class="h-btn" style="text-decoration:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> طباعة</a>
-    <button class="h-btn" onclick="exportData()" style="background:rgba(19,124,158,.3);border-color:rgba(19,124,158,.5);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> تخزين البيانات</button>
-    <button class="h-btn" onclick="openEmpPage()" style="background:rgba(27,122,61,.25);border-color:rgba(27,122,61,.45);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> إضافة موظف</button>
-    <button class="h-btn" onclick="openRptPage()" style="background:rgba(211,60,28,.25);border-color:rgba(211,60,28,.45);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="11" x2="8" y2="11"/><line x1="12" y1="15" x2="8" y2="15"/></svg> بيانات البلاغ</button>
+  <div class="h-top">
+    <div>
+      <div class="h-eyebrow">CIVIL DEFENSE · KABD 939</div>
+      <h1>مركز كبد للإطفاء</h1>
+      <div class="h-shift" id="shiftBadge"></div>
+    </div>
+    <div class="h-right">
+      <div id="dashUserBadge"></div>
+      <button class="h-settings-btn" onclick="openEmpPage()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        الموظفون
+      </button>
+    </div>
   </div>
+  <div class="h-quick">
+    <button class="h-q-btn" onclick="refreshNow()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      تحديث
+    </button>
+    <a href="index.html" class="h-q-btn" style="text-decoration:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      فحص جديد
+    </a>
+    <button class="h-q-btn" onclick="exportData()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      تخزين
+    </button>
+    <button class="h-q-btn" onclick="clearAll()" style="color:#F4A89A;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      مسح الكل
+    </button>
+  </div>
+  <div id="lastUpdate"></div>
 </header>
 
+<!-- Report form overlay -->
 <div id="rpt-overlay">
   <div class="rpt-page">
     <button class="rpt-back" onclick="closeRptPage()">← رجوع للداشبورد</button>
@@ -234,6 +304,7 @@ main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
   </div>
 </div>
 
+<!-- Employee overlay -->
 <div id="emp-overlay">
   <div class="emp-page">
     <button class="emp-back" onclick="closeEmpPage()">← رجوع للداشبورد</button>
@@ -265,10 +336,59 @@ main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
   </div>
 </div>
 
+<!-- Main content -->
 <main>
-  <div class="stats" id="stats"></div>
-  <a href="print.html" class="print-big-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> طباعة كشف الفحص</a>
-  <div id="vehicles"></div>
+
+  <!-- ── قسم 1: الفحص اليومي ── -->
+  <div class="section-label">الفحص اليومي</div>
+
+  <button class="nav-card insp" id="inspToggleCard" onclick="toggleInspection()">
+    <div class="nav-card-icon-wrap">🚒</div>
+    <div class="nav-card-body">
+      <div class="nav-card-title">كشف الفحص اليومي</div>
+      <div class="nav-card-sub" id="inspSummaryText">اضغط لعرض بيانات الآليات</div>
+    </div>
+    <svg id="inspArrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;color:var(--muted);flex:none;transition:transform .2s;"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+
+  <div id="insp-panel">
+    <div class="stats" id="stats"></div>
+    <div id="vehicles"></div>
+  </div>
+
+  <!-- ── قسم 2: الطباعة ── -->
+  <div class="section-label">الطباعة</div>
+
+  <a href="print.html" class="nav-card print-nav">
+    <div class="nav-card-icon-wrap">🖨️</div>
+    <div class="nav-card-body">
+      <div class="nav-card-title">طباعة كشف الفحص</div>
+      <div class="nav-card-sub">عرض وطباعة الكشف الرسمي للآليات</div>
+    </div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;color:var(--muted);flex:none;"><polyline points="15 18 9 12 15 6"/></svg>
+  </a>
+
+  <!-- ── قسم 3: البلاغات ── -->
+  <div class="section-label">البلاغات</div>
+
+  <button class="nav-card rpt-add" onclick="openRptPage()">
+    <div class="nav-card-icon-wrap">📋</div>
+    <div class="nav-card-body">
+      <div class="nav-card-title">تسجيل بلاغ جديد</div>
+      <div class="nav-card-sub">إدخال بيانات حادث الحريق أو الإنقاذ</div>
+    </div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;color:var(--muted);flex:none;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </button>
+
+  <a href="print.html" class="nav-card rpt-view" id="rptViewCard">
+    <div class="nav-card-icon-wrap">📂</div>
+    <div class="nav-card-body">
+      <div class="nav-card-title">سجل البلاغات المحفوظة</div>
+      <div class="nav-card-sub" id="rptCountText">عرض جميع البلاغات المسجلة</div>
+    </div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;color:var(--muted);flex:none;"><polyline points="15 18 9 12 15 6"/></svg>
+  </a>
+
 </main>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -294,11 +414,38 @@ function statusHTML(val){
   return val==="تعمل"||val==="يعمل"?`<span class="status-ok">${val} ✓</span>`:`<span class="status-bad">${val} ✗</span>`;
 }
 
+let inspPanelOpen=false;
+
+function toggleInspection(){
+  inspPanelOpen=!inspPanelOpen;
+  const panel=document.getElementById("insp-panel");
+  const card=document.getElementById("inspToggleCard");
+  const arrow=document.getElementById("inspArrow");
+  panel.style.display=inspPanelOpen?"block":"none";
+  if(inspPanelOpen){
+    card.classList.add("open");
+    arrow.style.transform="rotate(90deg)";
+  } else {
+    card.classList.remove("open");
+    arrow.style.transform="";
+  }
+}
+
 function loadData(firebaseData){
   let data=firebaseData||{};
   if(!firebaseData){ try{data=JSON.parse(localStorage.getItem("kabd_inspections")||"{}");}catch(e){} }
   latestData=data;
   const total=VEHICLES.length, done=VEHICLES.filter(v=>data[v.id]).length, pending=total-done;
+
+  // Update summary text on the inspection card
+  const summaryEl=document.getElementById("inspSummaryText");
+  if(done===total){
+    summaryEl.innerHTML='<span style="color:var(--green);font-weight:700;">✓ تم فحص جميع الآليات ('+total+'/'+total+')</span>';
+  } else if(done===0){
+    summaryEl.innerHTML='<span style="color:var(--muted);">لم يتم فحص أي آلية بعد</span>';
+  } else {
+    summaryEl.innerHTML='<span style="color:var(--water);font-weight:700;">'+done+' من '+total+' تم فحصها</span>'+(pending?' · <span style="color:var(--ember);">'+pending+' متبقية</span>':"");
+  }
 
   document.getElementById("stats").innerHTML=`
     <div class="stat"><div class="stat-num" style="color:var(--ink)">${total}</div><div class="stat-label">إجمالي الآليات</div></div>
@@ -385,13 +532,21 @@ function loadData(firebaseData){
     } else {
       card.innerHTML=`
         <div class="v-header"><div class="v-id"><div class="v-num mono">${v.id}</div><div class="v-type">${v.icon} ${v.type}</div></div><div class="v-status pending">لم يتم الفحص</div></div>
-        <div class="pending-body"><div class="pending-icon">⏳</div><div class="pending-text">لم يتم الفحص بعد</div></div>`;
+        <div class="pending-body"><div style="font-size:32px;margin-bottom:6px;">⏳</div><div class="pending-text">لم يتم الفحص بعد</div></div>`;
     }
     container.appendChild(card);
   });
 
   const now=new Date();
   document.getElementById("lastUpdate").textContent="آخر تحديث: "+now.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
+}
+
+function loadReportCount(){
+  db.ref("reports").once("value").then(snap=>{
+    const data=snap.val();
+    const count=data?Object.keys(data).length:0;
+    document.getElementById("rptCountText").textContent=count?"عرض "+count+" بلاغ مسجل":"لا توجد بلاغات مسجلة بعد";
+  }).catch(()=>{});
 }
 
 function clearAll(){
@@ -430,28 +585,24 @@ function exportData(){
 <div class="meta"><span>التاريخ: ${dateStr}</span><span>اليوم: ${dayName}</span><span style="font-weight:800;">القسم: ${shift}</span></div>
 <div class="toolbar"><button class="btn-photo" onclick="document.getElementById('rpt').classList.remove('no-photo');window.print();">طباعة مع الصور</button><button class="btn-nophoto" onclick="document.getElementById('rpt').classList.add('no-photo');window.print();">طباعة بدون صور</button></div><div id="rpt">`;
 
-  // 139
   body+=`<div class="sec">جيب الضابط — 139</div>
   <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>أجهزة اللاسلكي</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
   if(d139){ body+=`<tr><td>${d139.operator||"—"}</td><td>${d139.diesel}%</td><td>${d139.radio||0}</td><td class="notes">${d139.notes||"—"}</td><td class="photo-col">${pc(d139)}</td></tr>`; }
   else { body+=`<tr><td colspan="4" class="nd">لم يتم الفحص</td><td class="photo-col nd">—</td></tr>`; }
   body+=`</tbody></table>`;
 
-  // 239
   body+=`<div class="sec">آلية الإنقاذ — 239</div>
   <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>ليتات 1</th><th>ليتات 2</th><th>مولد الكهرباء</th><th>وقود المولد</th><th>الهيدروليك</th><th>وقود الهيدروليك</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
   if(d239){ body+=`<tr><td>${d239.operator||"—"}</td><td>${d239.diesel}%</td><td>${d239.litat1||0}</td><td>${d239.litat2||0}</td><td>${st(d239.generator)}</td><td>${d239.genFuel||0}%</td><td>${st(d239.hydraulic)}</td><td>${d239.hydFuel||0}%</td><td class="notes">${d239.notes||"—"}</td><td class="photo-col">${pc(d239)}</td></tr>`; }
   else { body+=`<tr><td colspan="9" class="nd">لم يتم الفحص</td><td class="photo-col nd">—</td></tr>`; }
   body+=`</tbody></table>`;
 
-  // 339
   body+=`<div class="sec">آلية البمب — 339</div>
   <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>مستوى الماء</th><th>الفوم</th><th>هوز 1.5</th><th>هوز 2.5</th><th>الفكنوزل</th><th>الموزع</th><th>كاميرة حرارية</th><th>عدد الليتات</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
   if(d339){ body+=`<tr><td>${d339.operator||"—"}</td><td>${d339.diesel}%</td><td>${d339.water}%</td><td style="color:#A07800;font-weight:700;">${d339.foam||0}%</td><td>${d339.hose1}</td><td>${d339.hose2}</td><td>${d339.nozzle}</td><td>${d339.mawza}</td><td>${d339.thermalCam||0}</td><td>${d339.bricks339||0}</td><td class="notes">${d339.notes||"—"}</td><td class="photo-col">${pc(d339)}</td></tr>`; }
   else { body+=`<tr><td colspan="11" class="nd">لم يتم الفحص</td><td class="photo-col nd">—</td></tr>`; }
   body+=`</tbody></table>`;
 
-  // تناكر + وانيت
   body+=`<div class="sec">تناكر ماء / وانيت الخدمات — 439 · 539 · 2839 · 731</div>
   <table><thead><tr><th>الآلية</th><th>النوع</th><th>اسم الفاحص</th><th>مستوى الوقود</th><th>مستوى الماء</th><th>هوز 1.5</th><th>هوز 2.5</th><th>الفكنوزل</th><th>الموزع</th><th>تنظيف</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
   [{id:"439",type:"تنكر"},{id:"539",type:"تنكر"},{id:"2839",type:"تريلة"},{id:"731",type:"وانيت"}].forEach(v=>{
@@ -465,7 +616,6 @@ function exportData(){
   });
   body+=`</tbody></table>`;
 
-  // 839
   body+=`<div class="sec">آلية التنفس — 839</div>
   <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>جهاز كامل</th><th>اسطوانة احتياط</th><th>ديزل مكينة تعبئة الاسطوانات</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
   if(d839){ body+=`<tr><td>${d839.operator||"—"}</td><td>${d839.diesel}%</td><td>${d839.breathFull||0}</td><td>${d839.breathSpare||0}</td><td>${d839.fillDiesel||0}%</td><td class="notes">${d839.notes||"—"}</td><td class="photo-col">${pc(d839)}</td></tr>`; }
@@ -491,7 +641,7 @@ function getShift(date){
 }
 (function(){
   const s=getShift(new Date());
-  document.getElementById("shiftBadge").textContent="القسم: "+s;
+  document.getElementById("shiftBadge").textContent="القسم الحالي: "+s;
 })();
 
 function refreshNow(){
@@ -513,6 +663,7 @@ function applyDashLogin(name,role){
   b.style.display="inline-block";
   db.ref("inspections").on("value",snap=>{latestData=snap.val()||{};loadData(latestData);});
   loadData();
+  loadReportCount();
 }
 
 function doDashLogin(){
@@ -520,15 +671,12 @@ function doDashLogin(){
   const num=toWD(raw);
   const err=document.getElementById("dashLoginErr");
   err.style.display="none";
-
-  // Check hardcoded admins first
   if(DASH_ADMINS[num]){
     const a=DASH_ADMINS[num];
     sessionStorage.setItem("kabd_dash_user",JSON.stringify({fileNum:num,...a}));
     applyDashLogin(a.name,a.role);
     return;
   }
-  // Check Firebase for ضابط role
   document.getElementById("dashLoginBtn").textContent="جاري التحقق…";
   db.ref("employees/"+num).once("value").then(snap=>{
     document.getElementById("dashLoginBtn").textContent="دخول →";
@@ -551,10 +699,7 @@ document.getElementById("dashFileInput").addEventListener("keydown",e=>{if(e.key
 (function(){
   const stored=sessionStorage.getItem("kabd_dash_user");
   if(stored){
-    try{
-      const u=JSON.parse(stored);
-      applyDashLogin(u.name,u.role);
-    }catch(e){}
+    try{const u=JSON.parse(stored);applyDashLogin(u.name,u.role);}catch(e){}
   }
 })();
 
@@ -597,12 +742,13 @@ function saveReport(){
   db.ref("reports").push(report).then(()=>{
     msg.style.cssText="display:block;background:var(--green-soft);color:var(--green);border:1px solid #b2d9bf;";msg.textContent="✓ تم حفظ بيانات البلاغ";
     document.getElementById("rptSaveBtn").textContent="✓ تم الحفظ";
+    loadReportCount();
     setTimeout(()=>{document.getElementById("rptSaveBtn").innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> حفظ بيانات البلاغ';},2500);
   }).catch(()=>{msg.style.cssText="display:block;background:var(--ember-soft);color:#9a2a12;border:1px solid #f0b9a9;";msg.textContent="حدث خطأ — تحقق من الاتصال وحاول مجدداً";});
 }
 
+/* ─── Employee Management ─── */
 let empList={}, editingKey=null;
-
 function resetEmpForm(){
   document.getElementById("empName").value="";
   document.getElementById("empFile").value="";
@@ -611,44 +757,20 @@ function resetEmpForm(){
   document.getElementById("empSaveBtn").textContent="حفظ الموظف";
   editingKey=null;
 }
-
-function openEmpPage(){
-  resetEmpForm();
-  document.getElementById("emp-overlay").style.display="block";
-  loadEmpList();
-}
-
-function closeEmpPage(){
-  document.getElementById("emp-overlay").style.display="none";
-  resetEmpForm();
-}
-
+function openEmpPage(){resetEmpForm();document.getElementById("emp-overlay").style.display="block";loadEmpList();}
+function closeEmpPage(){document.getElementById("emp-overlay").style.display="none";resetEmpForm();}
 function loadEmpList(){
-  db.ref("employees").once("value").then(snap=>{
-    empList=snap.val()||{};
-    renderEmpList();
-  });
+  db.ref("employees").once("value").then(snap=>{empList=snap.val()||{};renderEmpList();});
 }
-
 function renderEmpList(){
   const container=document.getElementById("empListContainer");
   const keys=Object.keys(empList);
-  if(!keys.length){
-    container.innerHTML='<div style="text-align:center;color:var(--muted);padding:20px;font-size:14px;">لا يوجد موظفون مضافون بعد</div>';
-    return;
-  }
+  if(!keys.length){container.innerHTML='<div style="text-align:center;color:var(--muted);padding:20px;font-size:14px;">لا يوجد موظفون مضافون بعد</div>';return;}
   container.innerHTML=keys.map(k=>{
     const e=empList[k];
-    return `<div class="emp-list-item">
-      <div><div class="emp-list-name">${e.name}</div><div class="emp-list-meta">${k} · ${e.role}</div></div>
-      <div class="emp-list-actions">
-        <button class="emp-action-btn edit" onclick="editEmployee('${k}')" title="تعديل">✏️</button>
-        <button class="emp-action-btn del" onclick="deleteEmployee('${k}')" title="حذف">🗑️</button>
-      </div>
-    </div>`;
+    return `<div class="emp-list-item"><div><div class="emp-list-name">${e.name}</div><div class="emp-list-meta">${k} · ${e.role}</div></div><div class="emp-list-actions"><button class="emp-action-btn edit" onclick="editEmployee('${k}')" title="تعديل">✏️</button><button class="emp-action-btn del" onclick="deleteEmployee('${k}')" title="حذف">🗑️</button></div></div>`;
   }).join("");
 }
-
 function editEmployee(key){
   const emp=empList[key];
   editingKey=key;
@@ -660,38 +782,26 @@ function editEmployee(key){
   document.getElementById("empMsg").style.display="none";
   document.getElementById("empName").scrollIntoView({behavior:"smooth",block:"center"});
 }
-
 function deleteEmployee(key){
   const name=(empList[key]||{}).name||key;
   if(!confirm("هل تريد حذف الموظف: "+name+"؟")) return;
   db.ref("employees/"+key).remove().then(()=>loadEmpList()).catch(()=>alert("حدث خطأ أثناء الحذف"));
 }
-
 function saveEmployee(){
   const name=document.getElementById("empName").value.trim();
   const rawFile=document.getElementById("empFile").value.trim();
   const file=rawFile.replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-0x0660));
   const role=(document.querySelector('[name="empRole"]:checked')||{}).value||"";
   const msg=document.getElementById("empMsg");
-  if(!name||!file||!role){
-    msg.style.cssText="display:block;background:var(--ember-soft);color:#9a2a12;border:1px solid #f0b9a9;";
-    msg.textContent="يرجى تعبئة جميع الحقول";
-    return;
-  }
-  msg.style.cssText="display:block;background:#f0f0f0;color:var(--muted);border:1px solid var(--line);";
-  msg.textContent="جاري الحفظ…";
+  if(!name||!file||!role){msg.style.cssText="display:block;background:var(--ember-soft);color:#9a2a12;border:1px solid #f0b9a9;";msg.textContent="يرجى تعبئة جميع الحقول";return;}
+  msg.style.cssText="display:block;background:#f0f0f0;color:var(--muted);border:1px solid var(--line);";msg.textContent="جاري الحفظ…";
   const ops=[];
   if(editingKey&&editingKey!==file) ops.push(db.ref("employees/"+editingKey).remove());
   ops.push(db.ref("employees/"+file).set({name,role}));
   Promise.all(ops).then(()=>{
-    msg.style.cssText="display:block;background:var(--green-soft);color:var(--green);border:1px solid #b2d9bf;";
-    msg.textContent="✓ تم الحفظ — "+name+" ("+role+")";
-    resetEmpForm();
-    loadEmpList();
-  }).catch(()=>{
-    msg.style.cssText="display:block;background:var(--ember-soft);color:#9a2a12;border:1px solid #f0b9a9;";
-    msg.textContent="حدث خطأ — تحقق من الاتصال وحاول مجدداً";
-  });
+    msg.style.cssText="display:block;background:var(--green-soft);color:var(--green);border:1px solid #b2d9bf;";msg.textContent="✓ تم الحفظ — "+name+" ("+role+")";
+    resetEmpForm();loadEmpList();
+  }).catch(()=>{msg.style.cssText="display:block;background:var(--ember-soft);color:#9a2a12;border:1px solid #f0b9a9;";msg.textContent="حدث خطأ — تحقق من الاتصال وحاول مجدداً";});
 }
 </script>
 </body>

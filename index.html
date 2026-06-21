@@ -253,12 +253,12 @@ textarea:focus-visible{outline:2px solid var(--ember);outline-offset:2px;backgro
     <textarea id="notes" placeholder="اكتب ملاحظاتك هنا…"></textarea>
   </section>
 
-  <!-- صورة -->
+  <!-- صور -->
   <section class="card">
-    <div class="field-head"><div class="field-num">📷</div><div><div class="field-title">صورة</div><div class="field-sub">صوّر أو أرفق صورة</div></div></div>
-    <label class="photo-btn" for="photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg> إرفاق / تصوير صورة</label>
-    <input type="file" id="photo" accept="image/*" capture="environment" hidden>
-    <div class="preview" id="preview"><button class="rm" id="removePhoto" type="button">×</button><img id="previewImg" alt="معاينة"></div>
+    <div class="field-head"><div class="field-num">📷</div><div><div class="field-title">صور</div><div class="field-sub">يمكن إرفاق أكثر من صورة</div></div></div>
+    <label class="photo-btn" for="photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg> إرفاق / تصوير صور</label>
+    <input type="file" id="photo" accept="image/*" multiple hidden>
+    <div id="photoGrid" style="margin-top:12px;display:none;grid-template-columns:1fr 1fr;gap:8px;"></div>
   </section>
 
   <!-- اسم الفاحص -->
@@ -401,14 +401,32 @@ function updateVisibleFields(){
 }
 
 const photo=document.getElementById("photo");
-const preview=document.getElementById("preview");
-const previewImg=document.getElementById("previewImg");
+const photoGrid=document.getElementById("photoGrid");
+let photos=[];
+
+function renderPhotos(){
+  if(!photos.length){photoGrid.style.display="none";return;}
+  photoGrid.style.display="grid";
+  photoGrid.innerHTML=photos.map((src,i)=>`<div style="position:relative;"><img src="${src}" style="width:100%;border-radius:10px;border:1px solid var(--line);display:block;"><button type="button" onclick="removePhoto(${i})" style="position:absolute;top:6px;left:6px;background:rgba(22,24,28,.85);color:#fff;border:none;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;display:grid;place-items:center;">×</button></div>`).join("");
+}
+
+function removePhoto(i){photos.splice(i,1);renderPhotos();}
+
+photo.addEventListener("change",()=>{
+  const files=Array.from(photo.files);
+  let loaded=0;
+  files.forEach(file=>{
+    const r=new FileReader();
+    r.onload=e=>{photos.push(e.target.result);loaded++;if(loaded===files.length)renderPhotos();};
+    r.readAsDataURL(file);
+  });
+  photo.value="";
+});
+
 const operatorField=document.getElementById("operator");
 const OP_KEY="kabd_operator_name";
 try{ const s=localStorage.getItem(OP_KEY); if(s){ operatorField.value=s; operatorField.classList.remove("placeholder"); } }catch(e){}
 operatorField.addEventListener("change",()=>{ operatorField.classList.remove("placeholder"); try{localStorage.setItem(OP_KEY,operatorField.value);}catch(e){} });
-photo.addEventListener("change",()=>{ const f=photo.files[0]; if(f){previewImg.src=URL.createObjectURL(f);preview.style.display="block";} });
-document.getElementById("removePhoto").addEventListener("click",()=>{ photo.value="";preview.style.display="none";previewImg.src=""; });
 
 function getRadio(name){ return (document.querySelector('input[name="'+name+'"]:checked')||{}).value||""; }
 
@@ -425,7 +443,6 @@ document.getElementById("send").addEventListener("click",()=>{
   if(!operatorField.value){ showErr("الرجاء اختيار اسم الفاحص.",operatorField); return; }
   err.style.display="none";
 
-  const file=photo.files[0];
   const inspection={
     machine: machine.value,
     diesel: diesel.value,
@@ -450,7 +467,8 @@ document.getElementById("send").addEventListener("click",()=>{
     notes: document.getElementById("notes").value.trim(),
     operator: operatorField.value,
     timestamp: new Date().toISOString(),
-    photoData: null
+    photosData: photos.slice(),
+    photoData: photos.length?photos[0]:null
   };
 
   function done(){
@@ -461,9 +479,7 @@ document.getElementById("send").addEventListener("click",()=>{
     setTimeout(()=>{ btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> حفظ الفحص'; },2000);
   }
 
-  if(file){
-    try{ const r=new FileReader(); r.onload=function(e){ inspection.photoData=e.target.result; done(); }; r.readAsDataURL(file); }catch(e){ done(); }
-  } else { done(); }
+  done();
 });
 
 (function setupPWA(){

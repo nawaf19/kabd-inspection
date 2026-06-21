@@ -106,12 +106,38 @@ main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
 .emp-action-btn{width:38px;height:38px;border:1.5px solid var(--line-strong);background:#F7F7F3;border-radius:10px;font-size:17px;cursor:pointer;display:grid;place-items:center;transition:background .12s;}
 .emp-action-btn.edit:active{background:var(--water-soft);}
 .emp-action-btn.del:active{background:var(--ember-soft);}
+/* Dashboard login */
+#dash-login{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+.dash-login-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px 24px;width:100%;max-width:400px;}
+.dash-login-logo{text-align:center;margin-bottom:24px;}
+.dash-login-logo .site-name{font-weight:700;font-size:18px;margin-top:8px;}
+.dash-login-logo .sub{font-size:13px;color:var(--muted);}
+#dashFileInput{width:100%;padding:16px;font-size:22px;text-align:center;background:#F7F7F3;border:1.5px solid var(--line-strong);border-radius:12px;color:var(--ink);font-family:"IBM Plex Mono",monospace;letter-spacing:4px;direction:ltr;}
+#dashFileInput:focus-visible{outline:2px solid var(--water);outline-offset:2px;background:#fff;}
+#dashLoginErr{display:none;background:var(--ember-soft);color:#9a2a12;border:1px solid #f0b9a9;border-radius:10px;padding:10px 14px;font-size:13.5px;font-weight:600;margin-top:12px;text-align:center;}
+#dashLoginBtn{margin-top:16px;width:100%;border:none;border-radius:12px;cursor:pointer;background:var(--water);color:#fff;font-family:inherit;font-weight:700;font-size:17px;padding:16px;transition:transform .08s,background .12s;}
+#dashLoginBtn:active{transform:scale(.98);}
+#dashUserBadge{display:none;margin-top:6px;background:rgba(255,255,255,.12);border-radius:999px;padding:4px 12px;font-size:12px;font-weight:600;color:#E0E4EA;}
 </style>
 </head>
 <body>
+<div id="dash-login">
+  <div class="dash-login-card">
+    <div class="dash-login-logo">
+      <div style="font-size:40px;">📊</div>
+      <div class="site-name">لوحة متابعة الفحص</div>
+      <div class="sub">مركز كبد للإطفاء 939 · ضباط فقط</div>
+    </div>
+    <label style="font-weight:700;font-size:14px;display:block;margin-bottom:8px;" for="dashFileInput">رقم الملف</label>
+    <input type="text" id="dashFileInput" inputmode="numeric" placeholder="أدخل رقم ملفك" autocomplete="off">
+    <div id="dashLoginErr">ليس لديك صلاحية الدخول — تواصل مع المسؤول</div>
+    <button id="dashLoginBtn" type="button">دخول →</button>
+  </div>
+</div>
 <header>
   <div class="h-eyebrow">CIVIL DEFENSE · KABD</div>
   <h1>متابعة فحص الآليات</h1>
+  <div id="dashUserBadge"></div>
   <div class="h-sub" id="shiftBadge" style="margin-top:4px;font-size:14px;font-weight:700;color:#F4F3EE;"></div>
   <div class="h-sub" id="lastUpdate"></div>
   <div class="h-actions">
@@ -391,11 +417,62 @@ function refreshNow(){
   });
 }
 
-db.ref("inspections").on("value",snap=>{
-  latestData=snap.val()||{};
-  loadData(latestData);
-});
-loadData();
+/* ─── Dashboard Login ─── */
+const DASH_ADMINS={"232344":{name:"صاحب الموقع",role:"مشغل الآلية"}};
+
+function toWD(s){return s.replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-0x0660));}
+
+function applyDashLogin(name,role){
+  document.getElementById("dash-login").style.display="none";
+  const b=document.getElementById("dashUserBadge");
+  b.textContent=name+" · "+role;
+  b.style.display="inline-block";
+  db.ref("inspections").on("value",snap=>{latestData=snap.val()||{};loadData(latestData);});
+  loadData();
+}
+
+function doDashLogin(){
+  const raw=document.getElementById("dashFileInput").value.trim();
+  const num=toWD(raw);
+  const err=document.getElementById("dashLoginErr");
+  err.style.display="none";
+
+  // Check hardcoded admins first
+  if(DASH_ADMINS[num]){
+    const a=DASH_ADMINS[num];
+    sessionStorage.setItem("kabd_dash_user",JSON.stringify({fileNum:num,...a}));
+    applyDashLogin(a.name,a.role);
+    return;
+  }
+  // Check Firebase for ضابط role
+  document.getElementById("dashLoginBtn").textContent="جاري التحقق…";
+  db.ref("employees/"+num).once("value").then(snap=>{
+    document.getElementById("dashLoginBtn").textContent="دخول →";
+    const emp=snap.val();
+    if(emp&&emp.role==="ضابط"){
+      sessionStorage.setItem("kabd_dash_user",JSON.stringify({fileNum:num,...emp}));
+      applyDashLogin(emp.name,emp.role);
+    } else {
+      err.style.display="block";
+    }
+  }).catch(()=>{
+    document.getElementById("dashLoginBtn").textContent="دخول →";
+    err.style.display="block";
+  });
+}
+
+document.getElementById("dashLoginBtn").addEventListener("click",doDashLogin);
+document.getElementById("dashFileInput").addEventListener("keydown",e=>{if(e.key==="Enter")doDashLogin();});
+
+(function(){
+  const stored=sessionStorage.getItem("kabd_dash_user");
+  if(stored){
+    try{
+      const u=JSON.parse(stored);
+      applyDashLogin(u.name,u.role);
+    }catch(e){}
+  }
+})();
 
 let empList={}, editingKey=null;
 

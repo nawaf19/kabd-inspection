@@ -140,8 +140,22 @@ textarea:focus-visible{outline:2px solid var(--ember);outline-offset:2px;backgro
   <!-- الأهواز والموزع والفكنوزل (339, 439, 539, 2839) -->
   <section class="card" id="sec-hoses" style="display:none;">
     <div class="field-head"><div class="field-num">4</div><div><div class="field-title">الأهواز</div><div class="field-sub">عدد الأهواز لكل نوع</div></div></div>
-    <div class="stepper-row"><div class="lbl">هوز 1.5</div><div class="stepper" data-counter="hose1" data-min="0" data-max="20"><button type="button" data-step="-1">−</button><div class="val mono">0</div><button type="button" data-step="1">+</button></div></div>
-    <div class="stepper-row"><div class="lbl">هوز 2.5</div><div class="stepper" data-counter="hose2" data-min="0" data-max="20"><button type="button" data-step="-1">−</button><div class="val mono">0</div><button type="button" data-step="1">+</button></div></div>
+    <div style="margin-bottom:18px;">
+      <div class="gauge-top">
+        <div style="display:flex;align-items:baseline;gap:8px;"><div class="gauge-read"><span id="hose1Num">0</span></div><span style="font-size:14px;font-weight:600;color:var(--muted);">هوز 1.5"</span></div>
+        <div class="gauge-tag" style="background:var(--ember-soft);color:var(--ember);">HOSE 1.5"</div>
+      </div>
+      <div class="slider"><input type="range" id="hose1Slider" min="0" max="10" value="0" style="--accent:var(--ember);"></div>
+      <div class="ticks"><span>0</span><span>2</span><span>4</span><span>6</span><span>8</span><span>10</span></div>
+    </div>
+    <div>
+      <div class="gauge-top">
+        <div style="display:flex;align-items:baseline;gap:8px;"><div class="gauge-read"><span id="hose2Num">0</span></div><span style="font-size:14px;font-weight:600;color:var(--muted);">هوز 2.5"</span></div>
+        <div class="gauge-tag" style="background:var(--water-soft);color:var(--water);">HOSE 2.5"</div>
+      </div>
+      <div class="slider"><input type="range" id="hose2Slider" min="0" max="10" value="0" style="--accent:var(--water);"></div>
+      <div class="ticks"><span>0</span><span>2</span><span>4</span><span>6</span><span>8</span><span>10</span></div>
+    </div>
   </section>
 
   <section class="card" id="sec-nozzles" style="display:none;">
@@ -348,6 +362,11 @@ const breathSpareSlider=document.getElementById("breathSpareSlider"), breathSpar
 breathFullSlider.addEventListener("input",()=>paintSliderN(breathFullSlider,breathFullNum,1,50));
 breathSpareSlider.addEventListener("input",()=>paintSliderN(breathSpareSlider,breathSpareNum,1,50));
 paintSliderN(breathFullSlider,breathFullNum,1,50); paintSliderN(breathSpareSlider,breathSpareNum,1,50);
+const hose1Slider=document.getElementById("hose1Slider"), hose1Num=document.getElementById("hose1Num");
+const hose2Slider=document.getElementById("hose2Slider"), hose2Num=document.getElementById("hose2Num");
+hose1Slider.addEventListener("input",()=>paintSliderN(hose1Slider,hose1Num,0,10));
+hose2Slider.addEventListener("input",()=>paintSliderN(hose2Slider,hose2Num,0,10));
+paintSliderN(hose1Slider,hose1Num,0,10); paintSliderN(hose2Slider,hose2Num,0,10);
 
 const machine=document.getElementById("machine");
 machine.addEventListener("change",()=>{
@@ -447,8 +466,8 @@ document.getElementById("send").addEventListener("click",()=>{
     machine: machine.value,
     diesel: diesel.value,
     water: water.value,
-    hose1: counters.hose1?counters.hose1.v:0,
-    hose2: counters.hose2?counters.hose2.v:0,
+    hose1: hose1Slider.value,
+    hose2: hose2Slider.value,
     mawza: counters.mawza?counters.mawza.v:0,
     nozzle: counters.nozzle?counters.nozzle.v:0,
     radio: counters.radio?counters.radio.v:0,

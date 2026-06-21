@@ -113,6 +113,7 @@ function buildReport(fbData){
   function cl(v){ return !v?"—":v==="نظيف"?'<span class="ok">نظيف</span>':'<span class="bad">غير نظيف</span>'; }
   function inspRow(id,d){ return d?`<td class="done-status">تم ✓</td>`:`<td class="not-done">✗</td>`; }
   function timeStr(d){ if(!d) return ""; const t=new Date(d.timestamp); return t.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false}); }
+  function photosCell(d){ const srcs=d.photosData&&d.photosData.length?d.photosData:[d.photoData].filter(Boolean); return srcs.length?srcs.map(s=>`<img src="${s}" class="photo-cell" style="display:block;margin:2px 0;">`).join(""):"—"; }
 
   const d139=data["139"], d239=data["239"], d339=data["339"];
   const d439=data["439"], d539=data["539"], d2839=data["2839"], d731=data["731"], d839=data["839"];
@@ -128,7 +129,7 @@ function buildReport(fbData){
   html+=`<div class="section-title">جيب الضابط — 139</div>
   <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>أجهزة اللاسلكي</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
   if(d139){
-    html+=`<tr><td class="val">${d139.operator||"—"}</td><td class="val">${d139.diesel}%</td><td class="val">${d139.radio||0}</td><td class="notes-cell">${d139.notes||"—"}</td><td class="photo-col">${d139.photoData?`<img src="${d139.photoData}" class="photo-cell">`:"—"}</td></tr>`;
+    html+=`<tr><td class="val">${d139.operator||"—"}</td><td class="val">${d139.diesel}%</td><td class="val">${d139.radio||0}</td><td class="notes-cell">${d139.notes||"—"}</td><td class="photo-col">${photosCell(d139)}</td></tr>`;
   } else { html+=`<tr><td colspan="4" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
   html+=`</tbody></table>`;
 
@@ -136,7 +137,7 @@ function buildReport(fbData){
   html+=`<div class="section-title">آلية الإنقاذ — 239</div>
   <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>ليتات 1</th><th>ليتات 2</th><th>مولد الكهرباء</th><th>وقود المولد</th><th>الهيدروليك</th><th>وقود الهيدروليك</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
   if(d239){
-    html+=`<tr><td class="val">${d239.operator||"—"}</td><td class="val">${d239.diesel}%</td><td class="val">${d239.litat1||0}</td><td class="val">${d239.litat2||0}</td><td>${st(d239.generator)}</td><td class="val">${d239.genFuel||0}%</td><td>${st(d239.hydraulic)}</td><td class="val">${d239.hydFuel||0}%</td><td class="notes-cell">${d239.notes||"—"}</td><td class="photo-col">${d239.photoData?`<img src="${d239.photoData}" class="photo-cell">`:"—"}</td></tr>`;
+    html+=`<tr><td class="val">${d239.operator||"—"}</td><td class="val">${d239.diesel}%</td><td class="val">${d239.litat1||0}</td><td class="val">${d239.litat2||0}</td><td>${st(d239.generator)}</td><td class="val">${d239.genFuel||0}%</td><td>${st(d239.hydraulic)}</td><td class="val">${d239.hydFuel||0}%</td><td class="notes-cell">${d239.notes||"—"}</td><td class="photo-col">${photosCell(d239)}</td></tr>`;
   } else { html+=`<tr><td colspan="9" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
   html+=`</tbody></table>`;
 
@@ -144,7 +145,7 @@ function buildReport(fbData){
   html+=`<div class="section-title">آلية البمب — 339</div>
   <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>مستوى الماء</th><th>هوز 1.5</th><th>هوز 2.5</th><th>الفكنوزل</th><th>الموزع</th><th>كاميرة حرارية</th><th>عدد الليتات</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
   if(d339){
-    html+=`<tr><td class="val">${d339.operator||"—"}</td><td class="val">${d339.diesel}%</td><td class="val">${d339.water}%</td><td class="val">${d339.hose1}</td><td class="val">${d339.hose2}</td><td class="val">${d339.nozzle}</td><td class="val">${d339.mawza}</td><td class="val">${d339.thermalCam||0}</td><td class="val">${d339.bricks339||0}</td><td class="notes-cell">${d339.notes||"—"}</td><td class="photo-col">${d339.photoData?`<img src="${d339.photoData}" class="photo-cell">`:"—"}</td></tr>`;
+    html+=`<tr><td class="val">${d339.operator||"—"}</td><td class="val">${d339.diesel}%</td><td class="val">${d339.water}%</td><td class="val">${d339.hose1}</td><td class="val">${d339.hose2}</td><td class="val">${d339.nozzle}</td><td class="val">${d339.mawza}</td><td class="val">${d339.thermalCam||0}</td><td class="val">${d339.bricks339||0}</td><td class="notes-cell">${d339.notes||"—"}</td><td class="photo-col">${photosCell(d339)}</td></tr>`;
   } else { html+=`<tr><td colspan="10" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
   html+=`</tbody></table>`;
 
@@ -156,7 +157,7 @@ function buildReport(fbData){
     const d=data[v.id];
     if(d){
       const isVan=v.id==="731";
-      html+=`<tr><td class="vl">${v.id}</td><td class="vl">${v.type}</td><td class="val">${d.operator||"—"}</td><td class="val">${d.diesel}%</td><td class="val">${isVan?"—":d.water+"%"}</td><td class="val">${isVan?"—":d.hose1}</td><td class="val">${isVan?"—":d.hose2}</td><td class="val">${isVan?"—":d.nozzle}</td><td class="val">${isVan?"—":d.mawza}</td><td>${v.id==="2839"||v.id==="731"?cl(d.clean):"—"}</td><td class="notes-cell">${d.notes||"—"}</td><td class="photo-col">${d.photoData?`<img src="${d.photoData}" class="photo-cell">`:"—"}</td></tr>`;
+      html+=`<tr><td class="vl">${v.id}</td><td class="vl">${v.type}</td><td class="val">${d.operator||"—"}</td><td class="val">${d.diesel}%</td><td class="val">${isVan?"—":d.water+"%"}</td><td class="val">${isVan?"—":d.hose1}</td><td class="val">${isVan?"—":d.hose2}</td><td class="val">${isVan?"—":d.nozzle}</td><td class="val">${isVan?"—":d.mawza}</td><td>${v.id==="2839"||v.id==="731"?cl(d.clean):"—"}</td><td class="notes-cell">${d.notes||"—"}</td><td class="photo-col">${photosCell(d)}</td></tr>`;
     } else {
       html+=`<tr><td class="vl">${v.id}</td><td class="vl">${v.type}</td><td colspan="9" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`;
     }
@@ -167,7 +168,7 @@ function buildReport(fbData){
   html+=`<div class="section-title">آلية التنفس — 839</div>
   <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>جهاز كامل</th><th>اسطوانة احتياط</th><th>ديزل مكينة تعبئة الاسطوانات</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
   if(d839){
-    html+=`<tr><td class="val">${d839.operator||"—"}</td><td class="val">${d839.diesel}%</td><td class="val">${d839.breathFull||0}</td><td class="val">${d839.breathSpare||0}</td><td class="val">${d839.fillDiesel||0}%</td><td class="notes-cell">${d839.notes||"—"}</td><td class="photo-col">${d839.photoData?`<img src="${d839.photoData}" class="photo-cell">`:"—"}</td></tr>`;
+    html+=`<tr><td class="val">${d839.operator||"—"}</td><td class="val">${d839.diesel}%</td><td class="val">${d839.breathFull||0}</td><td class="val">${d839.breathSpare||0}</td><td class="val">${d839.fillDiesel||0}%</td><td class="notes-cell">${d839.notes||"—"}</td><td class="photo-col">${photosCell(d839)}</td></tr>`;
   } else { html+=`<tr><td colspan="6" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
   html+=`</tbody></table>`;
 

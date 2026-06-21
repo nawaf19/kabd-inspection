@@ -85,6 +85,7 @@ main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
 <header>
   <div class="h-eyebrow">CIVIL DEFENSE · KABD</div>
   <h1>متابعة فحص الآليات</h1>
+  <div class="h-sub" id="shiftBadge" style="margin-top:4px;font-size:14px;font-weight:700;color:#F4F3EE;"></div>
   <div class="h-sub" id="lastUpdate"></div>
   <div class="h-actions">
     <button class="h-btn" onclick="refreshNow()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> تحديث</button>
@@ -243,12 +244,21 @@ function exportData(){
   function st(v){ return !v?"—":v==="تعمل"||v==="يعمل"?'<span style="color:#1B7A3D;font-weight:700;">'+v+'</span>':'<span style="color:#D33C1C;font-weight:700;">'+v+'</span>'; }
   function cl(v){ return !v?"—":v==="نظيف"?'<span style="color:#1B7A3D;font-weight:700;">نظيف</span>':'<span style="color:#D33C1C;font-weight:700;">غير نظيف</span>'; }
   function pc(d){ const srcs=d.photosData&&d.photosData.length?d.photosData:[d.photoData].filter(Boolean); return srcs.length?srcs.map(s=>'<img src="'+s+'" style="display:block;margin:2px 0;max-width:120px;max-height:80px;">').join(""):"—"; }
+  function getShift(date){
+    const shifts=['أ','ب','ج'];
+    const ref=new Date('2026-06-21');
+    const refDay=Math.floor(ref.getTime()/86400000);
+    const day=Math.floor(date.getTime()/86400000);
+    const diff=((day-refDay)%3+3)%3;
+    return shifts[(1+diff)%3];
+  }
+  const shift=getShift(now);
 
   const d139=data["139"], d239=data["239"], d339=data["339"];
   const d439=data["439"], d539=data["539"], d2839=data["2839"], d731=data["731"], d839=data["839"];
 
   let body=`<h2>كشف جاهزية الآليات اليومي — مركز كبد للإطفاء 939</h2><div class="sub">CIVIL DEFENSE · KABD FIRE STATION</div>
-<div class="meta"><span>التاريخ: ${dateStr}</span><span>اليوم: ${dayName}</span></div>
+<div class="meta"><span>التاريخ: ${dateStr}</span><span>اليوم: ${dayName}</span><span style="font-weight:800;">القسم: ${shift}</span></div>
 <div class="toolbar"><button class="btn-photo" onclick="document.getElementById('rpt').classList.remove('no-photo');window.print();">طباعة مع الصور</button><button class="btn-nophoto" onclick="document.getElementById('rpt').classList.add('no-photo');window.print();">طباعة بدون صور</button></div><div id="rpt">`;
 
   // 139
@@ -301,6 +311,19 @@ function exportData(){
   const a=document.createElement("a"); a.href=url; a.download="فحص يوم "+fileDate+".html";
   document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
 }
+
+function getShift(date){
+  const shifts=['أ','ب','ج'];
+  const ref=new Date('2026-06-21');
+  const refDay=Math.floor(ref.getTime()/86400000);
+  const day=Math.floor(date.getTime()/86400000);
+  const diff=((day-refDay)%3+3)%3;
+  return shifts[(1+diff)%3];
+}
+(function(){
+  const s=getShift(new Date());
+  document.getElementById("shiftBadge").textContent="القسم: "+s;
+})();
 
 function refreshNow(){
   db.ref("inspections").once("value").then(snap=>{

@@ -96,6 +96,16 @@ main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
 .emp-save-btn{margin-top:8px;width:100%;border:none;border-radius:12px;cursor:pointer;background:var(--water);color:#fff;font-family:inherit;font-weight:700;font-size:17px;padding:16px;transition:transform .08s;}
 .emp-save-btn:active{transform:scale(.98);}
 #empMsg{display:none;border-radius:10px;padding:10px 14px;font-size:13.5px;font-weight:600;margin-top:12px;text-align:center;}
+.emp-list-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-top:16px;overflow:hidden;}
+.emp-list-head{padding:14px 16px;font-weight:700;font-size:15px;border-bottom:1px solid var(--line);background:#FAFAF7;}
+.emp-list-item{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line);}
+.emp-list-item:last-child{border-bottom:none;}
+.emp-list-name{font-weight:700;font-size:15px;}
+.emp-list-meta{font-size:12px;color:var(--muted);font-family:"IBM Plex Mono",monospace;margin-top:2px;}
+.emp-list-actions{display:flex;gap:8px;flex:none;}
+.emp-action-btn{width:38px;height:38px;border:1.5px solid var(--line-strong);background:#F7F7F3;border-radius:10px;font-size:17px;cursor:pointer;display:grid;place-items:center;transition:background .12s;}
+.emp-action-btn.edit:active{background:var(--water-soft);}
+.emp-action-btn.del:active{background:var(--ember-soft);}
 </style>
 </head>
 <body>
@@ -132,10 +142,15 @@ main{max-width:700px;margin:0 auto;padding:16px 14px 0;}
         <div class="role-btns">
           <label class="role-btn"><input type="radio" name="empRole" value="مكافح"> مكافح 🔥</label>
           <label class="role-btn"><input type="radio" name="empRole" value="مشغل الآلية"> مشغل الآلية 🚒</label>
+          <label class="role-btn"><input type="radio" name="empRole" value="ضابط"> ضابط ⭐</label>
         </div>
       </div>
       <div id="empMsg"></div>
-      <button class="emp-save-btn" onclick="saveEmployee()">حفظ الموظف</button>
+      <button class="emp-save-btn" id="empSaveBtn" onclick="saveEmployee()">حفظ الموظف</button>
+    </div>
+    <div class="emp-list-card">
+      <div class="emp-list-head">قائمة الموظفين</div>
+      <div id="empListContainer"><div style="text-align:center;color:var(--muted);padding:20px;font-size:14px;">جاري التحميل…</div></div>
     </div>
   </div>
 </div>
@@ -382,17 +397,72 @@ db.ref("inspections").on("value",snap=>{
 });
 loadData();
 
-function openEmpPage(){
-  document.getElementById("emp-overlay").style.display="block";
-  document.getElementById("empMsg").style.display="none";
-}
-function closeEmpPage(){
-  document.getElementById("emp-overlay").style.display="none";
+let empList={}, editingKey=null;
+
+function resetEmpForm(){
   document.getElementById("empName").value="";
   document.getElementById("empFile").value="";
   document.querySelectorAll('[name="empRole"]').forEach(r=>r.checked=false);
   document.getElementById("empMsg").style.display="none";
+  document.getElementById("empSaveBtn").textContent="حفظ الموظف";
+  editingKey=null;
 }
+
+function openEmpPage(){
+  resetEmpForm();
+  document.getElementById("emp-overlay").style.display="block";
+  loadEmpList();
+}
+
+function closeEmpPage(){
+  document.getElementById("emp-overlay").style.display="none";
+  resetEmpForm();
+}
+
+function loadEmpList(){
+  db.ref("employees").once("value").then(snap=>{
+    empList=snap.val()||{};
+    renderEmpList();
+  });
+}
+
+function renderEmpList(){
+  const container=document.getElementById("empListContainer");
+  const keys=Object.keys(empList);
+  if(!keys.length){
+    container.innerHTML='<div style="text-align:center;color:var(--muted);padding:20px;font-size:14px;">لا يوجد موظفون مضافون بعد</div>';
+    return;
+  }
+  container.innerHTML=keys.map(k=>{
+    const e=empList[k];
+    return `<div class="emp-list-item">
+      <div><div class="emp-list-name">${e.name}</div><div class="emp-list-meta">${k} · ${e.role}</div></div>
+      <div class="emp-list-actions">
+        <button class="emp-action-btn edit" onclick="editEmployee('${k}')" title="تعديل">✏️</button>
+        <button class="emp-action-btn del" onclick="deleteEmployee('${k}')" title="حذف">🗑️</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function editEmployee(key){
+  const emp=empList[key];
+  editingKey=key;
+  document.getElementById("empName").value=emp.name;
+  document.getElementById("empFile").value=key;
+  const r=document.querySelector('[name="empRole"][value="'+emp.role+'"]');
+  if(r)r.checked=true;
+  document.getElementById("empSaveBtn").textContent="تحديث الموظف";
+  document.getElementById("empMsg").style.display="none";
+  document.getElementById("empName").scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+function deleteEmployee(key){
+  const name=(empList[key]||{}).name||key;
+  if(!confirm("هل تريد حذف الموظف: "+name+"؟")) return;
+  db.ref("employees/"+key).remove().then(()=>loadEmpList()).catch(()=>alert("حدث خطأ أثناء الحذف"));
+}
+
 function saveEmployee(){
   const name=document.getElementById("empName").value.trim();
   const rawFile=document.getElementById("empFile").value.trim();
@@ -406,12 +476,14 @@ function saveEmployee(){
   }
   msg.style.cssText="display:block;background:#f0f0f0;color:var(--muted);border:1px solid var(--line);";
   msg.textContent="جاري الحفظ…";
-  db.ref("employees/"+file).set({name,role}).then(()=>{
+  const ops=[];
+  if(editingKey&&editingKey!==file) ops.push(db.ref("employees/"+editingKey).remove());
+  ops.push(db.ref("employees/"+file).set({name,role}));
+  Promise.all(ops).then(()=>{
     msg.style.cssText="display:block;background:var(--green-soft);color:var(--green);border:1px solid #b2d9bf;";
-    msg.textContent="✓ تم حفظ الموظف — "+name+" ("+role+")";
-    document.getElementById("empName").value="";
-    document.getElementById("empFile").value="";
-    document.querySelectorAll('[name="empRole"]').forEach(r=>r.checked=false);
+    msg.textContent="✓ تم الحفظ — "+name+" ("+role+")";
+    resetEmpForm();
+    loadEmpList();
   }).catch(()=>{
     msg.style.cssText="display:block;background:var(--ember-soft);color:#9a2a12;border:1px solid #f0b9a9;";
     msg.textContent="حدث خطأ — تحقق من الاتصال وحاول مجدداً";

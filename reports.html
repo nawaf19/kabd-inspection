@@ -49,6 +49,12 @@ body{background:#f0f0f0;color:#000;font-family:"IBM Plex Sans Arabic",system-ui,
 .no-data-icon{font-size:48px;margin-bottom:12px;}
 .loading{text-align:center;padding:50px;color:#aaa;font-size:15px;}
 
+/* lightbox */
+#lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.92);align-items:center;justify-content:center;}
+#lightbox.open{display:flex;}
+#lightbox img{max-width:94vw;max-height:90vh;border-radius:10px;object-fit:contain;box-shadow:0 8px 40px rgba(0,0,0,.5);}
+#lightbox-close{position:fixed;top:16px;left:16px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:24px;cursor:pointer;display:grid;place-items:center;}
+
 @media print{
   body{background:#fff;}
   .toolbar{display:none!important;}
@@ -67,6 +73,10 @@ body{background:#f0f0f0;color:#000;font-family:"IBM Plex Sans Arabic",system-ui,
   </div>
   <div class="toolbar-actions">
     <span class="count-badge" id="countBadge"></span>
+    <button class="t-btn" onclick="clearAllReports()" style="background:rgba(211,60,28,.35);border-color:rgba(211,60,28,.6);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      مسح الكل
+    </button>
     <button class="t-btn" onclick="location.reload()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
       تحديث
@@ -78,6 +88,11 @@ body{background:#f0f0f0;color:#000;font-family:"IBM Plex Sans Arabic",system-ui,
   </div>
 </div>
 
+<div id="lightbox" onclick="closeLightbox()">
+  <button id="lightbox-close" onclick="closeLightbox()">×</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
 <div class="reports-area" id="reportsArea">
   <div class="loading">جاري تحميل البلاغات…</div>
 </div>
@@ -85,6 +100,26 @@ body{background:#f0f0f0;color:#000;font-family:"IBM Plex Sans Arabic",system-ui,
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script>
+function openLightbox(src){
+  document.getElementById("lightbox-img").src=src;
+  document.getElementById("lightbox").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeLightbox(){
+  document.getElementById("lightbox").classList.remove("open");
+  document.getElementById("lightbox-img").src="";
+  document.body.style.overflow="";
+}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeLightbox();});
+
+function clearAllReports(){
+  if(!confirm("هل تريد مسح جميع البلاغات المحفوظة؟ لا يمكن التراجع عن هذا الإجراء.")) return;
+  db.ref("reports").remove().then(()=>{
+    document.getElementById("countBadge").textContent="";
+    document.getElementById("reportsArea").innerHTML='<div class="no-data"><div class="no-data-icon">🗑️</div>تم مسح جميع البلاغات</div>';
+  }).catch(()=>alert("حدث خطأ أثناء المسح"));
+}
+
 const firebaseConfig={apiKey:"AIzaSyBfi7BxhuMVehfmtvIOLm1MVYeXk_BWVz0",authDomain:"nawwaf-7258c.firebaseapp.com",databaseURL:"https://nawwaf-7258c-default-rtdb.firebaseio.com",projectId:"nawwaf-7258c",storageBucket:"nawwaf-7258c.firebasestorage.app",messagingSenderId:"391747168751",appId:"1:391747168751:web:01777a553f7250d4ce6e1a"};
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database();
@@ -148,7 +183,7 @@ db.ref("reports").once("value").then(snap=>{
         <td>${addr.description||"—"}</td>
       </tr></tbody></table>
       ${vehicles?`<div class="rpt-vehicles"><span>الآليات المستخدمة:</span> ${vehicles}</div>`:""}
-      ${photos.length?`<div class="rpt-photos">${photos.map(p=>`<img src="${p}" onclick="window.open(this.src,'_blank')">`).join("")}</div>`:""}
+      ${photos.length?`<div class="rpt-photos">${photos.map(p=>`<img src="${p}" onclick="openLightbox(this.src)">`).join("")}</div>`:""}
     </div>`;
   });
 

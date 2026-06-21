@@ -143,10 +143,10 @@ function buildReport(fbData){
 
   // === 3. آلية البمب 339 ===
   html+=`<div class="section-title">آلية البمب — 339</div>
-  <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>مستوى الماء</th><th>هوز 1.5</th><th>هوز 2.5</th><th>الفكنوزل</th><th>الموزع</th><th>كاميرة حرارية</th><th>عدد الليتات</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
+  <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>مستوى الماء</th><th>الفوم</th><th>هوز 1.5</th><th>هوز 2.5</th><th>الفكنوزل</th><th>الموزع</th><th>كاميرة حرارية</th><th>عدد الليتات</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
   if(d339){
-    html+=`<tr><td class="val">${d339.operator||"—"}</td><td class="val">${d339.diesel}%</td><td class="val">${d339.water}%</td><td class="val">${d339.hose1}</td><td class="val">${d339.hose2}</td><td class="val">${d339.nozzle}</td><td class="val">${d339.mawza}</td><td class="val">${d339.thermalCam||0}</td><td class="val">${d339.bricks339||0}</td><td class="notes-cell">${d339.notes||"—"}</td><td class="photo-col">${photosCell(d339)}</td></tr>`;
-  } else { html+=`<tr><td colspan="10" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
+    html+=`<tr><td class="val">${d339.operator||"—"}</td><td class="val">${d339.diesel}%</td><td class="val">${d339.water}%</td><td class="val" style="color:#A07800;font-weight:700;">${d339.foam||0}%</td><td class="val">${d339.hose1}</td><td class="val">${d339.hose2}</td><td class="val">${d339.nozzle}</td><td class="val">${d339.mawza}</td><td class="val">${d339.thermalCam||0}</td><td class="val">${d339.bricks339||0}</td><td class="notes-cell">${d339.notes||"—"}</td><td class="photo-col">${photosCell(d339)}</td></tr>`;
+  } else { html+=`<tr><td colspan="11" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
   html+=`</tbody></table>`;
 
   // === 4. تناكر ماء / وانيت الخدمات ===

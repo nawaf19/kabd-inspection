@@ -171,6 +171,17 @@ textarea:focus-visible{outline:2px solid var(--ember);outline-offset:2px;backgro
     <div class="stepper-row"><div class="lbl">عدد الليتات</div><div class="stepper" data-counter="bricks339" data-min="0" data-max="50"><button type="button" data-step="-1">−</button><div class="val mono">0</div><button type="button" data-step="1">+</button></div></div>
   </section>
 
+  <!-- مستوى الفوم (339) -->
+  <section class="card" id="sec-foam" style="display:none;">
+    <div class="field-head"><div class="field-num">7</div><div><div class="field-title">الفوم</div><div class="field-sub">نسبة الفوم في الخزان</div></div></div>
+    <div class="gauge-top">
+      <div class="gauge-read"><span id="foamNum">50</span><span>%</span></div>
+      <div class="gauge-tag" style="background:#FEF9DC;color:#A07800;">FOAM</div>
+    </div>
+    <div class="slider"><input type="range" id="foamSlider" min="0" max="100" value="50" style="--accent:#C4920A;"></div>
+    <div class="ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+  </section>
+
   <!-- عدد الليتات (239) -->
   <section class="card" id="sec-rescue" style="display:none;">
     <div class="field-head"><div class="field-num">3</div><div><div class="field-title">عدد الليتات</div><div class="field-sub">أدخل العدد في كل خانة</div></div></div>
@@ -367,6 +378,9 @@ const hose2Slider=document.getElementById("hose2Slider"), hose2Num=document.getE
 hose1Slider.addEventListener("input",()=>paintSliderN(hose1Slider,hose1Num,0,10));
 hose2Slider.addEventListener("input",()=>paintSliderN(hose2Slider,hose2Num,0,10));
 paintSliderN(hose1Slider,hose1Num,0,10); paintSliderN(hose2Slider,hose2Num,0,10);
+const foamSlider=document.getElementById("foamSlider"), foamNum=document.getElementById("foamNum");
+foamSlider.addEventListener("input",()=>paintSlider(foamSlider,foamNum));
+paintSlider(foamSlider,foamNum);
 
 const machine=document.getElementById("machine");
 machine.addEventListener("change",()=>{
@@ -379,7 +393,7 @@ machine.addEventListener("change",()=>{
 
 function updateVisibleFields(){
   const v=machine.value;
-  const ids=["sec-water","sec-hoses","sec-nozzles","sec-rescue","sec-rescue2","sec-hydraulic","sec-radio","sec-breathing","sec-fillDiesel","sec-pump339","sec-clean"];
+  const ids=["sec-water","sec-hoses","sec-nozzles","sec-rescue","sec-rescue2","sec-hydraulic","sec-radio","sec-breathing","sec-fillDiesel","sec-pump339","sec-foam","sec-clean"];
   ids.forEach(id=>document.getElementById(id).style.display="none");
 
   const ft=document.getElementById("fuel-title"), fs=document.getElementById("fuel-sub"), ftag=document.getElementById("fuel-tag");
@@ -398,6 +412,7 @@ function updateVisibleFields(){
     document.getElementById("sec-hoses").style.display="";
     document.getElementById("sec-nozzles").style.display="";
     document.getElementById("sec-pump339").style.display="";
+    document.getElementById("sec-foam").style.display="";
   } else if(v==="439"||v==="539"){
     ft.textContent="البنزين"; fs.textContent="نسبة البنزين في الخزان"; ftag.textContent="GASOLINE";
     document.getElementById("sec-water").style.display="";
@@ -479,6 +494,7 @@ document.getElementById("send").addEventListener("click",()=>{
     hydFuel: hydFuelSlider.value,
     thermalCam: counters.thermalCam?counters.thermalCam.v:0,
     bricks339: counters.bricks339?counters.bricks339.v:0,
+    foam: foamSlider.value,
     breathFull: breathFullSlider.value,
     breathSpare: breathSpareSlider.value,
     fillDiesel: fillDieselEl.value,

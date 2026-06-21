@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سجل البلاغات — مركز كبد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:#f0f0f0;color:#000;font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;font-size:13px;line-height:1.4;-webkit-font-smoothing:antialiased;}
+
+.toolbar{position:sticky;top:0;z-index:30;background:#16181C;color:#F4F3EE;padding:12px 18px;border-bottom:3px solid #D33C1C;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.toolbar h1{margin:0;font-size:16px;font-weight:700;}
+.toolbar-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.t-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-family:inherit;font-size:13px;font-weight:600;padding:8px 14px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:6px;}
+.t-btn svg{width:16px;height:16px;}
+.back-link{color:#9AA0A8;text-decoration:none;font-size:13px;font-weight:600;}
+.count-badge{font-family:"IBM Plex Mono",monospace;font-size:12px;color:#9AA0A8;}
+
+.reports-area{max-width:1000px;margin:20px auto;padding:0 14px 40px;}
+
+.rpt-page-title{background:#D33C1C;color:#fff;padding:14px 20px;font-size:16px;font-weight:700;text-align:center;border-radius:10px 10px 0 0;margin-bottom:0;}
+.rpt-card{background:#fff;border:2px solid #000;margin-bottom:20px;overflow:hidden;border-radius:0 0 8px 8px;}
+.rpt-card:first-of-type{border-radius:0 0 8px 8px;}
+.rpt-card-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:10px 16px;border-bottom:2px solid #000;background:#f8f8f8;font-weight:700;font-size:12px;}
+.rpt-num{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:700;color:#555;}
+.rpt-type-badge{display:inline-block;padding:4px 12px;border-radius:6px;font-weight:700;font-size:12px;}
+.rpt-type-fire{background:#D33C1C;color:#fff;}
+.rpt-type-rescue{background:#1a56db;color:#fff;}
+.rpt-type-service{background:#057a55;color:#fff;}
+.rpt-type-other{background:#6b7280;color:#fff;}
+.rpt-datetime{font-family:"IBM Plex Mono",monospace;font-size:11px;color:#555;}
+.rpt-caller{font-size:12px;color:#333;}
+
+.rpt-table{width:100%;border-collapse:collapse;}
+.rpt-table th{background:#e8e8e8;font-size:10px;font-weight:700;padding:6px 8px;border:1px solid #000;text-align:center;}
+.rpt-table td{font-size:12px;padding:6px 8px;border:1px solid #000;text-align:center;vertical-align:middle;}
+
+.rpt-vehicles{font-size:12px;font-weight:600;padding:8px 16px;border-top:1.5px solid #ccc;background:#fafafa;color:#333;}
+.rpt-vehicles span{color:#555;font-weight:400;}
+
+.rpt-photos{display:flex;flex-wrap:wrap;gap:8px;padding:10px 16px;border-top:1.5px solid #ccc;}
+.rpt-photos img{max-height:100px;border:1px solid #ccc;border-radius:6px;cursor:pointer;}
+
+.no-data{text-align:center;padding:60px 20px;color:#888;font-size:15px;background:#fff;border:2px solid #ddd;border-radius:10px;}
+.no-data-icon{font-size:48px;margin-bottom:12px;}
+.loading{text-align:center;padding:50px;color:#aaa;font-size:15px;}
+
+@media print{
+  body{background:#fff;}
+  .toolbar{display:none!important;}
+  .reports-area{margin:0;padding:0;max-width:100%;}
+  .rpt-card{break-inside:avoid;}
+  @page{size:A4 portrait;margin:8mm;}
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <div>
+    <a href="dashboard.html" class="back-link">→ العودة للمتابعة</a>
+    <h1>سجل البلاغات — مركز كبد للإطفاء 939</h1>
+  </div>
+  <div class="toolbar-actions">
+    <span class="count-badge" id="countBadge"></span>
+    <button class="t-btn" onclick="window.print()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      طباعة السجل
+    </button>
+  </div>
+</div>
+
+<div class="reports-area" id="reportsArea">
+  <div class="loading">جاري تحميل البلاغات…</div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig={apiKey:"AIzaSyBfi7BxhuMVehfmtvIOLm1MVYeXk_BWVz0",authDomain:"nawwaf-7258c.firebaseapp.com",databaseURL:"https://nawwaf-7258c-default-rtdb.firebaseio.com",projectId:"nawwaf-7258c",storageBucket:"nawwaf-7258c.firebasestorage.app",messagingSenderId:"391747168751",appId:"1:391747168751:web:01777a553f7250d4ce6e1a"};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.database();
+
+const typeMap={
+  "حريق":{label:"🔥 حريق",cls:"rpt-type-fire"},
+  "إنقاذ":{label:"🚑 إنقاذ",cls:"rpt-type-rescue"},
+  "خدمات عامة":{label:"🔧 خدمات عامة",cls:"rpt-type-service"},
+  "أخرى":{label:"📋 أخرى",cls:"rpt-type-other"}
+};
+
+db.ref("reports").once("value").then(snap=>{
+  const container=document.getElementById("reportsArea");
+  const data=snap.val();
+
+  if(!data){
+    container.innerHTML='<div class="no-data"><div class="no-data-icon">📂</div>لا توجد بلاغات مسجلة بعد</div>';
+    return;
+  }
+
+  const entries=Object.entries(data).sort((a,b)=>(b[1].timestamp||0)-(a[1].timestamp||0));
+  document.getElementById("countBadge").textContent=entries.length+" بلاغ";
+
+  let html=`<div class="rpt-page-title">سجل بيانات البلاغات — مركز كبد للإطفاء 939</div>`;
+
+  entries.forEach(([key,r],idx)=>{
+    const ts=r.timestamp?new Date(r.timestamp):null;
+    const dateStr=ts?ts.toLocaleDateString("ar-KW-u-nu-latn",{year:"numeric",month:"2-digit",day:"2-digit"}):"—";
+    const timeVal=ts?ts.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false}):"—";
+    const t=typeMap[r.type]||{label:r.type||"—",cls:"rpt-type-other"};
+    const addr=r.address||{};
+    const vehicles=(r.vehicles||[]).join("  |  ");
+    const photos=r.photos||[];
+
+    html+=`
+    <div class="rpt-card">
+      <div class="rpt-card-header">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="rpt-num">بلاغ #${entries.length-idx}</span>
+          <span class="rpt-type-badge ${t.cls}">${t.label}</span>
+        </div>
+        <span class="rpt-datetime">${dateStr} — ${timeVal}</span>
+        <span class="rpt-caller">رقم المبلغ: <strong>${r.callerNum||"—"}</strong></span>
+      </div>
+      <table class="rpt-table"><thead><tr>
+        <th>المحافظة</th><th>المنطقة</th><th>القطعة</th><th>الشارع</th><th>الجادة</th>
+        <th>المبنى</th><th>الشقة</th><th>المحل</th><th>وصف إضافي</th>
+      </tr></thead><tbody><tr>
+        <td>${addr.governorate||"—"}</td>
+        <td>${addr.area||"—"}</td>
+        <td>${addr.block||"—"}</td>
+        <td>${addr.street||"—"}</td>
+        <td>${addr.avenue||"—"}</td>
+        <td>${addr.building||"—"}</td>
+        <td>${addr.apartment||"—"}</td>
+        <td>${addr.shop||"—"}</td>
+        <td>${addr.description||"—"}</td>
+      </tr></tbody></table>
+      ${vehicles?`<div class="rpt-vehicles"><span>الآليات المستخدمة:</span> ${vehicles}</div>`:""}
+      ${photos.length?`<div class="rpt-photos">${photos.map(p=>`<img src="${p}" onclick="window.open(this.src,'_blank')">`).join("")}</div>`:""}
+    </div>`;
+  });
+
+  container.innerHTML=html;
+}).catch(()=>{
+  document.getElementById("reportsArea").innerHTML='<div class="no-data"><div class="no-data-icon">⚠️</div>حدث خطأ أثناء تحميل البيانات</div>';
+});
+</script>
+</body>
+</html>

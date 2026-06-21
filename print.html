@@ -35,7 +35,6 @@ th{background:#e8e8e8;color:#000;font-weight:700;font-size:10px;letter-spacing:.
 td{background:#fff;}
 .vl{font-weight:700;font-size:12px;background:#f4f4f4;white-space:nowrap;}
 .not-done{color:#000;font-size:11px;}
-.done-status{background:none;color:#000;font-weight:400;}
 .val{font-weight:600;font-size:11px;}
 .notes-cell{text-align:right;font-size:10px;max-width:110px;word-break:break-word;}
 .ok{font-weight:700;}
@@ -57,28 +56,8 @@ td{background:#fff;}
   .report-meta{background:#f8f8f8!important;font-size:9px!important;padding:4px 10px!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   .notes-cell{max-width:60px;font-size:7px;}
   .val{font-size:7.5px;}
-  .no-photo .photo-col{display:none!important;}
-  #reports-area{display:none!important;}
   @page{size:A4 portrait;margin:5mm;}
 }
-
-#reports-area{max-width:1100px;margin:16px auto;padding:0 14px;display:none;}
-.rpt-section-title{background:#D33C1C;color:#fff;padding:12px 20px;font-size:16px;font-weight:700;text-align:center;margin-bottom:0;border-radius:4px 4px 0 0;}
-.rpt-card{background:#fff;border:2px solid #000;margin-bottom:24px;overflow:hidden;}
-.rpt-card-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:8px 16px;border-bottom:2px solid #000;background:#f8f8f8;font-weight:700;font-size:12px;}
-.rpt-type-badge{display:inline-block;padding:3px 10px;border-radius:4px;font-weight:700;font-size:12px;}
-.rpt-type-fire{background:#D33C1C;color:#fff;}
-.rpt-type-rescue{background:#1a56db;color:#fff;}
-.rpt-type-service{background:#057a55;color:#fff;}
-.rpt-type-other{background:#6b7280;color:#fff;}
-.rpt-table{width:100%;border-collapse:collapse;}
-.rpt-table th{background:#e8e8e8;font-size:10px;font-weight:700;padding:5px 8px;border:1px solid #000;text-align:center;}
-.rpt-table td{font-size:11px;padding:5px 8px;border:1px solid #000;text-align:center;vertical-align:middle;}
-.rpt-vehicles{font-size:11px;font-weight:600;padding:7px 16px;border-top:1.5px solid #ccc;background:#fafafa;}
-.rpt-photos{display:flex;flex-wrap:wrap;gap:6px;padding:8px 16px;border-top:1.5px solid #ccc;}
-.rpt-photos img{max-height:90px;border:1px solid #ccc;border-radius:4px;}
-.rpt-no-data{text-align:center;padding:40px;color:#666;font-size:14px;background:#fff;border:2px solid #ddd;border-radius:8px;}
-.rpt-loading{text-align:center;padding:30px;color:#aaa;font-size:14px;}
 </style>
 </head>
 <body>
@@ -97,19 +76,11 @@ td{background:#fff;}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       طباعة بدون صور
     </button>
-    <button class="t-btn" id="rptToggleBtn" onclick="toggleReports()" style="background:rgba(211,60,28,.3);border-color:rgba(211,60,28,.5);">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="11" x2="8" y2="11"/><line x1="12" y1="15" x2="8" y2="15"/></svg>
-      بيانات البلاغ
-    </button>
   </div>
 </div>
 
 <div class="print-area">
   <div class="report" id="report"></div>
-</div>
-
-<div id="reports-area">
-  <div id="rpts-container"></div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -129,12 +100,10 @@ function buildReport(fbData){
 
   function st(v){ return !v?"—":v==="تعمل"||v==="يعمل"?'<span class="ok">'+v+' ✓</span>':'<span class="bad">'+v+' ✗</span>'; }
   function cl(v){ return !v?"—":v==="نظيف"?'<span class="ok">نظيف ✓</span>':'<span class="bad">غير نظيف ✗</span>'; }
-  function inspRow(id,d){ return d?`<td class="done-status">تم ✓</td>`:`<td class="not-done">✗</td>`; }
-  function timeStr(d){ if(!d) return ""; const t=new Date(d.timestamp); return t.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false}); }
   function photosCell(d){ const srcs=d.photosData&&d.photosData.length?d.photosData:[d.photoData].filter(Boolean); return srcs.length?srcs.map(s=>`<img src="${s}" class="photo-cell" style="display:block;margin:2px 0;">`).join(""):"—"; }
   function getShift(date){
     const shifts=['أ','ب','ج'];
-    const ref=new Date('2026-06-21'); // مرجع: 2026-06-21 = قسم ب
+    const ref=new Date('2026-06-21');
     const refDay=Math.floor(ref.getTime()/86400000);
     const day=Math.floor(date.getTime()/86400000);
     const diff=((day-refDay)%3+3)%3;
@@ -142,7 +111,6 @@ function buildReport(fbData){
   }
 
   const shift=getShift(now);
-
   const d139=data["139"], d239=data["239"], d339=data["339"];
   const d439=data["439"], d539=data["539"], d2839=data["2839"], d731=data["731"], d839=data["839"];
 
@@ -153,34 +121,26 @@ function buildReport(fbData){
     </div>
     <div class="report-meta"><span>التاريخ: ${dateStr}</span><span>اليوم: ${dayName}</span><span style="font-size:14px;font-weight:800;letter-spacing:1px;">القسم: ${shift}</span></div>`;
 
-  // === 1. جيب الضابط 139 ===
   html+=`<div class="section-title">جيب الضابط — 139</div>
   <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>أجهزة اللاسلكي</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
-  if(d139){
-    html+=`<tr><td class="val">${d139.operator||"—"}</td><td class="val">${d139.diesel}%</td><td class="val">${d139.radio||0}</td><td class="notes-cell">${d139.notes||"—"}</td><td class="photo-col">${photosCell(d139)}</td></tr>`;
-  } else { html+=`<tr><td colspan="4" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
+  if(d139){ html+=`<tr><td class="val">${d139.operator||"—"}</td><td class="val">${d139.diesel}%</td><td class="val">${d139.radio||0}</td><td class="notes-cell">${d139.notes||"—"}</td><td class="photo-col">${photosCell(d139)}</td></tr>`; }
+  else { html+=`<tr><td colspan="4" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
   html+=`</tbody></table>`;
 
-  // === 2. آلية الإنقاذ 239 ===
   html+=`<div class="section-title">آلية الإنقاذ — 239</div>
   <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>ليتات 1</th><th>ليتات 2</th><th>مولد الكهرباء</th><th>وقود المولد</th><th>الهيدروليك</th><th>وقود الهيدروليك</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
-  if(d239){
-    html+=`<tr><td class="val">${d239.operator||"—"}</td><td class="val">${d239.diesel}%</td><td class="val">${d239.litat1||0}</td><td class="val">${d239.litat2||0}</td><td>${st(d239.generator)}</td><td class="val">${d239.genFuel||0}%</td><td>${st(d239.hydraulic)}</td><td class="val">${d239.hydFuel||0}%</td><td class="notes-cell">${d239.notes||"—"}</td><td class="photo-col">${photosCell(d239)}</td></tr>`;
-  } else { html+=`<tr><td colspan="9" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
+  if(d239){ html+=`<tr><td class="val">${d239.operator||"—"}</td><td class="val">${d239.diesel}%</td><td class="val">${d239.litat1||0}</td><td class="val">${d239.litat2||0}</td><td>${st(d239.generator)}</td><td class="val">${d239.genFuel||0}%</td><td>${st(d239.hydraulic)}</td><td class="val">${d239.hydFuel||0}%</td><td class="notes-cell">${d239.notes||"—"}</td><td class="photo-col">${photosCell(d239)}</td></tr>`; }
+  else { html+=`<tr><td colspan="9" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
   html+=`</tbody></table>`;
 
-  // === 3. آلية البمب 339 ===
   html+=`<div class="section-title">آلية البمب — 339</div>
   <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>مستوى الماء</th><th>الفوم</th><th>هوز 1.5</th><th>هوز 2.5</th><th>الفكنوزل</th><th>الموزع</th><th>كاميرة حرارية</th><th>عدد الليتات</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
-  if(d339){
-    html+=`<tr><td class="val">${d339.operator||"—"}</td><td class="val">${d339.diesel}%</td><td class="val">${d339.water}%</td><td class="val">${d339.foam||0}%</td><td class="val">${d339.hose1}</td><td class="val">${d339.hose2}</td><td class="val">${d339.nozzle}</td><td class="val">${d339.mawza}</td><td class="val">${d339.thermalCam||0}</td><td class="val">${d339.bricks339||0}</td><td class="notes-cell">${d339.notes||"—"}</td><td class="photo-col">${photosCell(d339)}</td></tr>`;
-  } else { html+=`<tr><td colspan="11" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
+  if(d339){ html+=`<tr><td class="val">${d339.operator||"—"}</td><td class="val">${d339.diesel}%</td><td class="val">${d339.water}%</td><td class="val">${d339.foam||0}%</td><td class="val">${d339.hose1}</td><td class="val">${d339.hose2}</td><td class="val">${d339.nozzle}</td><td class="val">${d339.mawza}</td><td class="val">${d339.thermalCam||0}</td><td class="val">${d339.bricks339||0}</td><td class="notes-cell">${d339.notes||"—"}</td><td class="photo-col">${photosCell(d339)}</td></tr>`; }
+  else { html+=`<tr><td colspan="11" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
   html+=`</tbody></table>`;
 
-  // === 4. تناكر ماء / وانيت الخدمات ===
   html+=`<div class="section-title">تناكر ماء / وانيت الخدمات — 439 · 539 · 2839 · 731</div>
   <table><thead><tr><th>الآلية</th><th>النوع</th><th>اسم الفاحص</th><th>مستوى الوقود</th><th>مستوى الماء</th><th>هوز 1.5</th><th>هوز 2.5</th><th>الفكنوزل</th><th>الموزع</th><th>تنظيف</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
-
   [{id:"439",type:"تنكر"},{id:"539",type:"تنكر"},{id:"2839",type:"تريلة"},{id:"731",type:"وانيت"}].forEach(v=>{
     const d=data[v.id];
     if(d){
@@ -192,84 +152,13 @@ function buildReport(fbData){
   });
   html+=`</tbody></table>`;
 
-  // === 5. آلية التنفس 839 ===
   html+=`<div class="section-title">آلية التنفس — 839</div>
   <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>جهاز كامل</th><th>اسطوانة احتياط</th><th>ديزل مكينة تعبئة الاسطوانات</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
-  if(d839){
-    html+=`<tr><td class="val">${d839.operator||"—"}</td><td class="val">${d839.diesel}%</td><td class="val">${d839.breathFull||0}</td><td class="val">${d839.breathSpare||0}</td><td class="val">${d839.fillDiesel||0}%</td><td class="notes-cell">${d839.notes||"—"}</td><td class="photo-col">${photosCell(d839)}</td></tr>`;
-  } else { html+=`<tr><td colspan="6" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
+  if(d839){ html+=`<tr><td class="val">${d839.operator||"—"}</td><td class="val">${d839.diesel}%</td><td class="val">${d839.breathFull||0}</td><td class="val">${d839.breathSpare||0}</td><td class="val">${d839.fillDiesel||0}%</td><td class="notes-cell">${d839.notes||"—"}</td><td class="photo-col">${photosCell(d839)}</td></tr>`; }
+  else { html+=`<tr><td colspan="6" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
   html+=`</tbody></table>`;
 
   document.getElementById("report").innerHTML=html;
-}
-
-let reportsVisible=false,reportsLoaded=false;
-
-function toggleReports(){
-  const area=document.getElementById("reports-area");
-  const btn=document.getElementById("rptToggleBtn");
-  reportsVisible=!reportsVisible;
-  area.style.display=reportsVisible?"block":"none";
-  if(reportsVisible){
-    btn.style.background="rgba(211,60,28,.75)";
-    btn.style.borderColor="rgba(211,60,28,.9)";
-    if(!reportsLoaded){loadReports();reportsLoaded=true;}
-  } else {
-    btn.style.background="rgba(211,60,28,.3)";
-    btn.style.borderColor="rgba(211,60,28,.5)";
-  }
-}
-
-function loadReports(){
-  const container=document.getElementById("rpts-container");
-  container.innerHTML='<p class="rpt-loading">جاري تحميل البيانات...</p>';
-  db.ref("reports").once("value").then(snap=>{
-    const data=snap.val();
-    if(!data){
-      container.innerHTML='<div class="rpt-no-data">لا توجد بيانات بلاغات محفوظة</div>';
-      return;
-    }
-    const entries=Object.entries(data).sort((a,b)=>(b[1].timestamp||0)-(a[1].timestamp||0));
-    const typeMap={
-      "حريق":{label:"حريق 🔥",cls:"rpt-type-fire"},
-      "إنقاذ":{label:"إنقاذ 🚑",cls:"rpt-type-rescue"},
-      "خدمات عامة":{label:"خدمات عامة 🔧",cls:"rpt-type-service"},
-      "أخرى":{label:"أخرى",cls:"rpt-type-other"}
-    };
-    let html=`<div class="rpt-section-title">سجل بيانات البلاغات — مركز كبد للإطفاء 939</div>`;
-    entries.forEach(([key,r],idx)=>{
-      const ts=r.timestamp?new Date(r.timestamp):null;
-      const dateStr=ts?ts.toLocaleDateString("ar-KW-u-nu-latn",{year:"numeric",month:"2-digit",day:"2-digit"}):"—";
-      const timeVal=ts?ts.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false}):"—";
-      const t=typeMap[r.type]||{label:r.type||"—",cls:"rpt-type-other"};
-      const addr=r.address||{};
-      const vehicles=(r.vehicles||[]).join("  |  ");
-      const photos=r.photos||[];
-      html+=`
-      <div class="rpt-card">
-        <div class="rpt-card-header">
-          <span>بلاغ #${entries.length-idx} — <span class="rpt-type-badge ${t.cls}">${t.label}</span></span>
-          <span>${dateStr} — ${timeVal}</span>
-          <span>رقم المبلغ: ${r.callerNum||"—"}</span>
-        </div>
-        <table class="rpt-table"><thead><tr>
-          <th>المحافظة</th><th>المنطقة</th><th>القطعة</th><th>الشارع</th><th>الجادة</th>
-          <th>المبنى</th><th>الشقة</th><th>المحل</th><th>وصف إضافي</th>
-        </tr></thead><tbody><tr>
-          <td>${addr.governorate||"—"}</td><td>${addr.area||"—"}</td>
-          <td>${addr.block||"—"}</td><td>${addr.street||"—"}</td>
-          <td>${addr.avenue||"—"}</td><td>${addr.building||"—"}</td>
-          <td>${addr.apartment||"—"}</td><td>${addr.shop||"—"}</td>
-          <td>${addr.description||"—"}</td>
-        </tr></tbody></table>
-        ${vehicles?`<div class="rpt-vehicles">الآليات المستخدمة: ${vehicles}</div>`:""}
-        ${photos.length?`<div class="rpt-photos">${photos.map(p=>`<img src="${p}">`).join("")}</div>`:""}
-      </div>`;
-    });
-    container.innerHTML=html;
-  }).catch(()=>{
-    container.innerHTML='<div class="rpt-no-data">حدث خطأ أثناء تحميل البيانات</div>';
-  });
 }
 
 function printReport(withPhotos){

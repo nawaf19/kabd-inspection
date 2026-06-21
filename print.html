@@ -105,6 +105,16 @@ function buildReport(fbData){
   function inspRow(id,d){ return d?`<td class="done-status">تم ✓</td>`:`<td class="not-done">✗</td>`; }
   function timeStr(d){ if(!d) return ""; const t=new Date(d.timestamp); return t.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false}); }
   function photosCell(d){ const srcs=d.photosData&&d.photosData.length?d.photosData:[d.photoData].filter(Boolean); return srcs.length?srcs.map(s=>`<img src="${s}" class="photo-cell" style="display:block;margin:2px 0;">`).join(""):"—"; }
+  function getShift(date){
+    const shifts=['أ','ب','ج'];
+    const ref=new Date('2026-06-21'); // مرجع: 2026-06-21 = قسم ب
+    const refDay=Math.floor(ref.getTime()/86400000);
+    const day=Math.floor(date.getTime()/86400000);
+    const diff=((day-refDay)%3+3)%3;
+    return shifts[(1+diff)%3];
+  }
+
+  const shift=getShift(now);
 
   const d139=data["139"], d239=data["239"], d339=data["339"];
   const d439=data["439"], d539=data["539"], d2839=data["2839"], d731=data["731"], d839=data["839"];
@@ -114,7 +124,7 @@ function buildReport(fbData){
       <h2>كشف جاهزية الآليات اليومي — مركز كبد للإطفاء 939</h2>
       <div class="sub">CIVIL DEFENSE · KABD FIRE STATION</div>
     </div>
-    <div class="report-meta"><span>التاريخ: ${dateStr}</span><span>اليوم: ${dayName}</span></div>`;
+    <div class="report-meta"><span>التاريخ: ${dateStr}</span><span>اليوم: ${dayName}</span><span style="font-size:14px;font-weight:800;letter-spacing:1px;">القسم: ${shift}</span></div>`;
 
   // === 1. جيب الضابط 139 ===
   html+=`<div class="section-title">جيب الضابط — 139</div>

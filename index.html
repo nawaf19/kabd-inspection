@@ -205,8 +205,22 @@ textarea:focus-visible{outline:2px solid var(--ember);outline-offset:2px;backgro
   <!-- آلية التنفس 839 -->
   <section class="card" id="sec-breathing" style="display:none;">
     <div class="field-head"><div class="field-num">3</div><div><div class="field-title">معدات التنفس</div><div class="field-sub">أجهزة واسطوانات التنفس</div></div></div>
-    <div class="stepper-row"><div class="lbl">جهاز كامل</div><div class="stepper" data-counter="breathFull" data-min="0" data-max="50"><button type="button" data-step="-1">−</button><div class="val mono">0</div><button type="button" data-step="1">+</button></div></div>
-    <div class="stepper-row"><div class="lbl">اسطوانة احتياط</div><div class="stepper" data-counter="breathSpare" data-min="0" data-max="50"><button type="button" data-step="-1">−</button><div class="val mono">0</div><button type="button" data-step="1">+</button></div></div>
+    <div style="margin-bottom:18px;">
+      <div class="gauge-top">
+        <div style="display:flex;align-items:baseline;gap:8px;"><div class="gauge-read"><span id="breathFullNum">1</span></div><span style="font-size:14px;font-weight:600;color:var(--muted);">جهاز كامل</span></div>
+        <div class="gauge-tag" style="background:var(--green-soft);color:var(--green);">FULL SET</div>
+      </div>
+      <div class="slider"><input type="range" id="breathFullSlider" min="1" max="50" value="1" style="--accent:var(--green);"></div>
+      <div class="ticks"><span>1</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span></div>
+    </div>
+    <div>
+      <div class="gauge-top">
+        <div style="display:flex;align-items:baseline;gap:8px;"><div class="gauge-read"><span id="breathSpareNum">1</span></div><span style="font-size:14px;font-weight:600;color:var(--muted);">اسطوانة احتياط</span></div>
+        <div class="gauge-tag" style="background:var(--water-soft);color:var(--water);">SPARE</div>
+      </div>
+      <div class="slider"><input type="range" id="breathSpareSlider" min="1" max="50" value="1" style="--accent:var(--water);"></div>
+      <div class="ticks"><span>1</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span></div>
+    </div>
   </section>
 
   <!-- ديزل مكينة تعبئة الاسطوانات (839) -->
@@ -310,6 +324,13 @@ function paintSlider(el,num){
   el.style.setProperty("--track",`linear-gradient(to right, ${accent} ${v}%, #EAEAE3 ${v}%)`);
   num.textContent=v;
 }
+function paintSliderN(el,num,min,max){
+  const v=+el.value;
+  const pct=((v-min)/(max-min))*100;
+  const accent=getComputedStyle(el).getPropertyValue("--accent").trim();
+  el.style.setProperty("--track",`linear-gradient(to right, ${accent} ${pct}%, #EAEAE3 ${pct}%)`);
+  num.textContent=v;
+}
 const diesel=document.getElementById("diesel"), dieselNum=document.getElementById("dieselNum");
 const water=document.getElementById("water"), waterNum=document.getElementById("waterNum");
 const fillDieselEl=document.getElementById("fillDiesel"), fillDieselNum=document.getElementById("fillDieselNum");
@@ -322,6 +343,11 @@ genFuelSlider.addEventListener("input",()=>paintSlider(genFuelSlider,genFuelNum)
 hydFuelSlider.addEventListener("input",()=>paintSlider(hydFuelSlider,hydFuelNum));
 paintSlider(diesel,dieselNum); paintSlider(water,waterNum); paintSlider(fillDieselEl,fillDieselNum);
 paintSlider(genFuelSlider,genFuelNum); paintSlider(hydFuelSlider,hydFuelNum);
+const breathFullSlider=document.getElementById("breathFullSlider"), breathFullNum=document.getElementById("breathFullNum");
+const breathSpareSlider=document.getElementById("breathSpareSlider"), breathSpareNum=document.getElementById("breathSpareNum");
+breathFullSlider.addEventListener("input",()=>paintSliderN(breathFullSlider,breathFullNum,1,50));
+breathSpareSlider.addEventListener("input",()=>paintSliderN(breathSpareSlider,breathSpareNum,1,50));
+paintSliderN(breathFullSlider,breathFullNum,1,50); paintSliderN(breathSpareSlider,breathSpareNum,1,50);
 
 const machine=document.getElementById("machine");
 machine.addEventListener("change",()=>{
@@ -417,8 +443,8 @@ document.getElementById("send").addEventListener("click",()=>{
     hydFuel: hydFuelSlider.value,
     thermalCam: counters.thermalCam?counters.thermalCam.v:0,
     bricks339: counters.bricks339?counters.bricks339.v:0,
-    breathFull: counters.breathFull?counters.breathFull.v:0,
-    breathSpare: counters.breathSpare?counters.breathSpare.v:0,
+    breathFull: breathFullSlider.value,
+    breathSpare: breathSpareSlider.value,
     fillDiesel: fillDieselEl.value,
     clean: getRadio("clean"),
     notes: document.getElementById("notes").value.trim(),

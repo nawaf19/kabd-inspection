@@ -548,6 +548,11 @@ document.getElementById("send").addEventListener("click",()=>{
 const EMPLOYEES={
   "23234":{name:"نواف ناصر",role:"مكافح"}
 };
+// Merge with employees stored in Firebase (added via dashboard)
+db.ref("employees").once("value").then(snap=>{
+  const fe=snap.val()||{};
+  Object.assign(EMPLOYEES,fe);
+}).catch(()=>{});
 
 function toWesternDigits(s){
   return s.replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-0x0660));

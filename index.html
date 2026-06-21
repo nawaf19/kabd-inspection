@@ -88,12 +88,39 @@ textarea:focus-visible{outline:2px solid var(--ember);outline-offset:2px;backgro
 .num-input{width:100%;padding:14px;font-size:22px;text-align:center;background:#F7F7F3;border:1.5px solid var(--line-strong);border-radius:12px;color:var(--ink);}
 .num-input:focus-visible{outline:2px solid var(--ember);outline-offset:2px;background:#fff;}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;}}
+/* Login overlay */
+#login-overlay{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+.login-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px 24px;width:100%;max-width:400px;}
+.login-logo{text-align:center;margin-bottom:24px;}
+.login-logo .site-name{font-weight:700;font-size:18px;margin-top:8px;}
+.login-logo .sub{font-size:13px;color:var(--muted);}
+.login-label{font-weight:700;font-size:14px;margin-bottom:8px;display:block;}
+#fileInput{width:100%;padding:16px;font-size:22px;text-align:center;background:#F7F7F3;border:1.5px solid var(--line-strong);border-radius:12px;color:var(--ink);font-family:"IBM Plex Mono",monospace;letter-spacing:4px;direction:ltr;}
+#fileInput:focus-visible{outline:2px solid var(--ember);outline-offset:2px;background:#fff;}
+#loginErr{display:none;background:var(--ember-soft);color:#9a2a12;border:1px solid #f0b9a9;border-radius:10px;padding:10px 14px;font-size:13.5px;font-weight:600;margin-top:12px;text-align:center;}
+#loginBtn{margin-top:16px;width:100%;border:none;border-radius:12px;cursor:pointer;background:var(--ember);color:#fff;font-family:inherit;font-weight:700;font-size:17px;padding:16px;transition:transform .08s,background .12s;}
+#loginBtn:active{transform:scale(.98);}
+#userBadge{display:none;margin-top:6px;background:rgba(255,255,255,.12);border-radius:999px;padding:4px 12px;font-size:12px;font-weight:600;color:#E0E4EA;}
 </style>
 </head>
 <body>
+<div id="login-overlay">
+  <div class="login-card">
+    <div class="login-logo">
+      <div style="font-size:40px;">🔥</div>
+      <div class="site-name">مركز كبد للإطفاء 939</div>
+      <div class="sub">Civil Defense · Kabd Fire Station</div>
+    </div>
+    <label class="login-label" for="fileInput">رقم الملف</label>
+    <input type="text" id="fileInput" inputmode="numeric" placeholder="أدخل رقم ملفك" autocomplete="off">
+    <div id="loginErr">رقم الملف غير صحيح — يرجى المحاولة مجدداً</div>
+    <button id="loginBtn" type="button">دخول →</button>
+  </div>
+</div>
 <header>
   <div class="h-eyebrow">CIVIL DEFENSE · KABD</div>
   <h1>فحص آليات — مركز كبد</h1>
+  <div id="userBadge"></div>
 </header>
 <main>
 
@@ -516,6 +543,45 @@ document.getElementById("send").addEventListener("click",()=>{
 
   done();
 });
+
+/* ─── Login ─── */
+const EMPLOYEES={
+  "23234":{name:"نواف ناصر",role:"مكافح"}
+};
+
+function toWesternDigits(s){
+  return s.replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-0x0660));
+}
+
+function applyLogin(emp){
+  document.getElementById("login-overlay").style.display="none";
+  const op=document.getElementById("operator");
+  for(let i=0;i<op.options.length;i++){
+    if(op.options[i].value===emp.name){op.value=emp.name;op.classList.remove("placeholder");break;}
+  }
+  const badge=document.getElementById("userBadge");
+  badge.textContent=emp.name+" · "+emp.role;
+  badge.style.display="inline-block";
+}
+
+function doLogin(){
+  const raw=document.getElementById("fileInput").value.trim();
+  const num=toWesternDigits(raw);
+  const emp=EMPLOYEES[num];
+  const loginErr=document.getElementById("loginErr");
+  if(!emp){loginErr.style.display="block";return;}
+  loginErr.style.display="none";
+  sessionStorage.setItem("kabd_user",JSON.stringify({fileNum:num,...emp}));
+  applyLogin(emp);
+}
+
+document.getElementById("loginBtn").addEventListener("click",doLogin);
+document.getElementById("fileInput").addEventListener("keydown",e=>{if(e.key==="Enter")doLogin();});
+
+(function(){
+  const stored=sessionStorage.getItem("kabd_user");
+  if(stored){try{applyLogin(JSON.parse(stored));}catch(e){}}
+})();
 
 (function setupPWA(){
   function icon(size){ const c=document.createElement("canvas");c.width=c.height=size;const x=c.getContext("2d");x.fillStyle="#16181C";x.fillRect(0,0,size,size);x.fillStyle="#fff";x.beginPath();const cx=size*0.5,cy=size*0.56,r=size*0.20;x.moveTo(cx,cy-r*1.7);x.bezierCurveTo(cx+r*1.2,cy-r*0.4,cx+r,cy+r,cx,cy+r);x.bezierCurveTo(cx-r,cy+r,cx-r*1.2,cy-r*0.4,cx,cy-r*1.7);x.fill();x.fillStyle="#D33C1C";x.fillRect(0,size*0.86,size,size*0.14);return c.toDataURL("image/png"); }

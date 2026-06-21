@@ -169,6 +169,7 @@ function loadData(firebaseData){
       } else if(v.id==="339"){
         details=`
           <div class="v-bar-item"><div class="v-bar-top"><span class="v-label">💧 الماء</span><span class="v-value">${d.water}%</span></div><div class="v-bar"><div class="v-bar-fill v-bar-water" style="width:${d.water}%"></div></div></div>
+          <div class="v-bar-item"><div class="v-bar-top"><span class="v-label">🟡 الفوم</span><span class="v-value">${d.foam||0}%</span></div><div class="v-bar"><div class="v-bar-fill" style="width:${d.foam||0}%;background:#C4920A;"></div></div></div>
           <div class="v-item"><span class="v-label">هوز 1.5</span><span class="v-value">${d.hose1}</span></div>
           <div class="v-item"><span class="v-label">هوز 2.5</span><span class="v-value">${d.hose2}</span></div>
           <div class="v-item"><span class="v-label">الموزع</span><span class="v-value">${d.mawza}</span></div>
@@ -266,9 +267,9 @@ function exportData(){
 
   // 339
   body+=`<div class="sec">آلية البمب — 339</div>
-  <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>مستوى الماء</th><th>هوز 1.5</th><th>هوز 2.5</th><th>الفكنوزل</th><th>الموزع</th><th>كاميرة حرارية</th><th>عدد الليتات</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
-  if(d339){ body+=`<tr><td>${d339.operator||"—"}</td><td>${d339.diesel}%</td><td>${d339.water}%</td><td>${d339.hose1}</td><td>${d339.hose2}</td><td>${d339.nozzle}</td><td>${d339.mawza}</td><td>${d339.thermalCam||0}</td><td>${d339.bricks339||0}</td><td class="notes">${d339.notes||"—"}</td><td class="photo-col">${pc(d339)}</td></tr>`; }
-  else { body+=`<tr><td colspan="10" class="nd">لم يتم الفحص</td><td class="photo-col nd">—</td></tr>`; }
+  <table><thead><tr><th>اسم الفاحص</th><th>مستوى الوقود</th><th>مستوى الماء</th><th>الفوم</th><th>هوز 1.5</th><th>هوز 2.5</th><th>الفكنوزل</th><th>الموزع</th><th>كاميرة حرارية</th><th>عدد الليتات</th><th>ملاحظات</th><th class="photo-col">صورة</th></tr></thead><tbody>`;
+  if(d339){ body+=`<tr><td>${d339.operator||"—"}</td><td>${d339.diesel}%</td><td>${d339.water}%</td><td style="color:#A07800;font-weight:700;">${d339.foam||0}%</td><td>${d339.hose1}</td><td>${d339.hose2}</td><td>${d339.nozzle}</td><td>${d339.mawza}</td><td>${d339.thermalCam||0}</td><td>${d339.bricks339||0}</td><td class="notes">${d339.notes||"—"}</td><td class="photo-col">${pc(d339)}</td></tr>`; }
+  else { body+=`<tr><td colspan="11" class="nd">لم يتم الفحص</td><td class="photo-col nd">—</td></tr>`; }
   body+=`</tbody></table>`;
 
   // تناكر + وانيت

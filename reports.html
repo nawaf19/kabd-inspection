@@ -67,6 +67,10 @@ body{background:#f0f0f0;color:#000;font-family:"IBM Plex Sans Arabic",system-ui,
   </div>
   <div class="toolbar-actions">
     <span class="count-badge" id="countBadge"></span>
+    <button class="t-btn" onclick="location.reload()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      تحديث
+    </button>
     <button class="t-btn" onclick="window.print()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       طباعة السجل
@@ -96,12 +100,16 @@ db.ref("reports").once("value").then(snap=>{
   const container=document.getElementById("reportsArea");
   const data=snap.val();
 
-  if(!data){
+  if(!data||!Object.keys(data).length){
     container.innerHTML='<div class="no-data"><div class="no-data-icon">📂</div>لا توجد بلاغات مسجلة بعد</div>';
     return;
   }
 
-  const entries=Object.entries(data).sort((a,b)=>(b[1].timestamp||0)-(a[1].timestamp||0));
+  const entries=Object.entries(data).sort((a,b)=>{
+    const ta=a[1].timestamp||"";
+    const tb=b[1].timestamp||"";
+    return tb>ta?1:tb<ta?-1:0;
+  });
   document.getElementById("countBadge").textContent=entries.length+" بلاغ";
 
   let html=`<div class="rpt-page-title">سجل بيانات البلاغات — مركز كبد للإطفاء 939</div>`;
@@ -145,8 +153,8 @@ db.ref("reports").once("value").then(snap=>{
   });
 
   container.innerHTML=html;
-}).catch(()=>{
-  document.getElementById("reportsArea").innerHTML='<div class="no-data"><div class="no-data-icon">⚠️</div>حدث خطأ أثناء تحميل البيانات</div>';
+}).catch(err=>{
+  document.getElementById("reportsArea").innerHTML='<div class="no-data"><div class="no-data-icon">⚠️</div>حدث خطأ أثناء تحميل البيانات<br><small style="color:#aaa;font-size:11px;">'+(err&&err.message?err.message:"تحقق من الاتصال")+'</small><br><button onclick="location.reload()" style="margin-top:12px;padding:10px 20px;background:#D33C1C;color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;">إعادة المحاولة</button></div>';
 });
 </script>
 </body>

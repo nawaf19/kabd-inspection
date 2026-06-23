@@ -577,6 +577,11 @@ function doLogin(){
   if(!emp){loginErr.style.display="block";return;}
   loginErr.style.display="none";
   sessionStorage.setItem("kabd_user",JSON.stringify({fileNum:num,...emp}));
+  if(emp.role==="مكافح"){
+    localStorage.setItem("kabd_current_user",JSON.stringify({name:emp.name,fileNumber:num,role:emp.role}));
+    window.location.href="breathing.html";
+    return;
+  }
   applyLogin(emp);
 }
 

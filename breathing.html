@@ -230,7 +230,8 @@ function attachGaugeEvents(container){
 function onVehicleChange(){
   const v=document.getElementById("vehicle").value;
   document.getElementById("vehicle").classList.remove("placeholder");
-  document.querySelectorAll(".cyl-section").forEach(s=>s.style.display="block");
+  document.getElementById("sec-cylinders").style.display="block";
+  document.getElementById("sec-clock").style.display=(v==="139")?"block":"none";
 
   const area=document.getElementById("cylinderArea");
   area.innerHTML="";
@@ -282,7 +283,7 @@ document.getElementById("send").addEventListener("click",()=>{
   const v=document.getElementById("vehicle").value;
   if(!v){ err.textContent="الرجاء اختيار رقم الآلية"; err.style.display="block"; return; }
   const clock=(document.querySelector('input[name="clock"]:checked')||{}).value||"";
-  if(!clock){ err.textContent="الرجاء تحديد حالة ساعة الفحص"; err.style.display="block"; return; }
+  if(v==="139"&&!clock){ err.textContent="الرجاء تحديد حالة ساعة الفحص"; err.style.display="block"; return; }
   err.style.display="none";
 
   const data={

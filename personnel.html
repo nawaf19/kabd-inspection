@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>إدارة الأشخاص — مركز كبد</title>
+<meta name="theme-color" content="#16181C">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9EAE4;--surface:#FFFFFF;--ink:#16181C;--muted:#6A6F77;
+  --line:#DDDED6;--line-strong:#C9CAC1;
+  --ember:#D33C1C;--ember-soft:#FBE7E0;
+  --water:#137C9E;--water-soft:#E1F0F5;
+  --green:#1B7A3D;--green-soft:#E2F3E8;
+  --header:#16181C;--radius:16px;
+  --shadow:0 1px 2px rgba(22,24,28,.05), 0 8px 24px rgba(22,24,28,.06);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;font-size:16px;line-height:1.5;padding-bottom:40px;-webkit-font-smoothing:antialiased;}
+.mono{font-family:"IBM Plex Mono",monospace;font-feature-settings:"tnum";}
+header{position:sticky;top:0;z-index:30;background:var(--header);color:#F4F3EE;padding:calc(env(safe-area-inset-top) + 16px) 18px 16px;border-bottom:3px solid var(--green);}
+.h-eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:2px;color:#9AA0A8;text-transform:uppercase;display:flex;align-items:center;gap:8px;}
+.h-eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;box-shadow:0 0 0 3px rgba(27,122,61,.25);}
+header h1{margin:6px 0 0;font-size:22px;font-weight:700;letter-spacing:-.2px;}
+.back-link{color:#9AA0A8;text-decoration:none;font-size:13px;font-weight:600;display:inline-block;margin-top:8px;}
+main{max-width:560px;margin:0 auto;padding:16px 14px 0;}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px;}
+.field-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.field-num{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:12px;width:26px;height:26px;flex:none;border-radius:8px;background:var(--ink);color:#fff;display:grid;place-items:center;}
+.field-title{font-weight:700;font-size:16px;}
+.field-sub{font-size:12.5px;color:var(--muted);margin-top:2px;}
+.text-input{width:100%;padding:14px;font-family:"IBM Plex Sans Arabic",sans-serif;font-size:16px;color:var(--ink);background:#F7F7F3;border:1.5px solid var(--line-strong);border-radius:12px;}
+.text-input:focus-visible{outline:2px solid var(--green);outline-offset:2px;background:#fff;}
+.role-btns{display:flex;gap:8px;margin-top:8px;}
+.role-btn{flex:1;padding:14px 8px;border:2px solid var(--line-strong);border-radius:12px;background:#F7F7F3;cursor:pointer;text-align:center;font-weight:700;font-size:14px;transition:all .15s;}
+.role-btn input{display:none;}
+.role-btn.active{border-color:var(--green);background:var(--green-soft);color:var(--green);}
+.add-btn{width:100%;border:none;border-radius:14px;cursor:pointer;background:var(--green);color:#fff;font-family:inherit;font-weight:700;font-size:17px;padding:16px;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 6px 18px rgba(27,122,61,.35);margin-top:14px;}
+.add-btn:active{transform:scale(.98);}
+.person-list{margin-top:14px;}
+.person-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:8px;box-shadow:var(--shadow);}
+.person-info{flex:1;}
+.person-name{font-weight:700;font-size:15px;}
+.person-file{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--muted);}
+.person-role{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;margin-right:10px;}
+.role-fighter{background:var(--ember-soft);color:var(--ember);}
+.role-operator{background:var(--water-soft);color:var(--water);}
+.role-officer{background:var(--green-soft);color:var(--green);}
+.del-btn{width:36px;height:36px;border:none;background:rgba(211,60,28,.1);color:var(--ember);border-radius:10px;font-size:18px;cursor:pointer;display:grid;place-items:center;flex:none;margin-right:8px;}
+.del-btn:active{background:rgba(211,60,28,.2);}
+.err{display:none;background:var(--ember-soft);color:#9a2a12;border:1px solid #f0b9a9;border-radius:10px;padding:10px 14px;font-size:13.5px;font-weight:600;margin-bottom:10px;}
+.empty{text-align:center;padding:30px;color:var(--muted);font-size:15px;font-weight:600;}
+</style>
+</head>
+<body>
+<header>
+  <div class="h-eyebrow">CIVIL DEFENSE · KABD</div>
+  <h1>إدارة الأشخاص</h1>
+  <a href="dashboard.html" class="back-link">← العودة للمتابعة</a>
+</header>
+<main>
+
+  <section class="card">
+    <div class="field-head"><div class="field-num">1</div><div><div class="field-title">إضافة شخص جديد</div><div class="field-sub">أدخل البيانات واختر الدور</div></div></div>
+    <div class="err" id="err"></div>
+    <input type="text" id="personName" class="text-input" placeholder="اسم الشخص" style="margin-bottom:10px;">
+    <input type="text" id="fileNumber" class="text-input mono" placeholder="رقم الملف" inputmode="numeric">
+    <div class="role-btns" id="roleBtns">
+      <div class="role-btn" data-role="مكافح" onclick="selectRole(this)">🔥 مكافح</div>
+      <div class="role-btn" data-role="مشغل" onclick="selectRole(this)">🚒 مشغل آلية</div>
+      <div class="role-btn" data-role="ضابط" onclick="selectRole(this)">⭐ ضابط</div>
+    </div>
+    <button class="add-btn" onclick="addPerson()">+ إضافة شخص</button>
+  </section>
+
+  <section class="card">
+    <div class="field-head"><div class="field-num">2</div><div><div class="field-title">قائمة الأشخاص</div><div class="field-sub">الأشخاص المسجلين في النظام</div></div></div>
+    <div id="personList"></div>
+  </section>
+
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig={apiKey:"AIzaSyBfi7BxhuMVehfmtvIOLm1MVYeXk_BWVz0",authDomain:"nawwaf-7258c.firebaseapp.com",databaseURL:"https://nawwaf-7258c-default-rtdb.firebaseio.com",projectId:"nawwaf-7258c",storageBucket:"nawwaf-7258c.firebasestorage.app",messagingSenderId:"391747168751",appId:"1:391747168751:web:01777a553f7250d4ce6e1a"};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.database();
+const persRef=db.ref("personnel");
+
+let selectedRole="";
+
+function selectRole(el){
+  document.querySelectorAll(".role-btn").forEach(b=>b.classList.remove("active"));
+  el.classList.add("active");
+  selectedRole=el.dataset.role;
+}
+
+function addPerson(){
+  const name=document.getElementById("personName").value.trim();
+  const file=document.getElementById("fileNumber").value.trim();
+  const err=document.getElementById("err");
+
+  if(!name){ err.textContent="الرجاء كتابة اسم الشخص"; err.style.display="block"; return; }
+  if(!file){ err.textContent="الرجاء كتابة رقم الملف"; err.style.display="block"; return; }
+  if(!selectedRole){ err.textContent="الرجاء اختيار الدور"; err.style.display="block"; return; }
+  err.style.display="none";
+
+  persRef.child(file).set({
+    name: name,
+    fileNumber: file,
+    role: selectedRole
+  }).then(()=>{
+    document.getElementById("personName").value="";
+    document.getElementById("fileNumber").value="";
+    document.querySelectorAll(".role-btn").forEach(b=>b.classList.remove("active"));
+    selectedRole="";
+  });
+}
+
+function deletePerson(file){
+  if(confirm("حذف هذا الشخص؟")) persRef.child(file).remove();
+}
+
+function roleClass(r){
+  if(r==="مكافح") return "role-fighter";
+  if(r==="مشغل") return "role-operator";
+  return "role-officer";
+}
+function roleLabel(r){
+  if(r==="مكافح") return "🔥 مكافح";
+  if(r==="مشغل") return "🚒 مشغل آلية";
+  return "⭐ ضابط";
+}
+
+persRef.on("value",snap=>{
+  const data=snap.val()||{};
+  const list=document.getElementById("personList");
+  const keys=Object.keys(data);
+  if(!keys.length){ list.innerHTML='<div class="empty">لا يوجد أشخاص مسجلين</div>'; return; }
+
+  list.innerHTML=keys.map(k=>{
+    const p=data[k];
+    return `<div class="person-item">
+      <div class="person-info"><div class="person-name">${p.name}</div><div class="person-file">ملف: ${p.fileNumber}</div></div>
+      <span class="person-role ${roleClass(p.role)}">${roleLabel(p.role)}</span>
+      <button class="del-btn" onclick="deletePerson('${p.fileNumber}')">×</button>
+    </div>`;
+  }).join("");
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>تسجيل الدخول — مركز كبد</title>
+<meta name="theme-color" content="#16181C">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="مركز كبد">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9EAE4;--surface:#FFFFFF;--ink:#16181C;--muted:#6A6F77;
+  --line:#DDDED6;--line-strong:#C9CAC1;
+  --ember:#D33C1C;--ember-soft:#FBE7E0;
+  --water:#137C9E;--water-soft:#E1F0F5;
+  --green:#1B7A3D;--green-soft:#E2F3E8;
+  --header:#16181C;--radius:16px;
+  --shadow:0 1px 2px rgba(22,24,28,.05), 0 8px 24px rgba(22,24,28,.06);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;height:100%;}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;}
+.mono{font-family:"IBM Plex Mono",monospace;font-feature-settings:"tnum";}
+header{background:var(--header);color:#F4F3EE;padding:calc(env(safe-area-inset-top) + 20px) 18px 20px;border-bottom:3px solid var(--ember);text-align:center;}
+.h-eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:2px;color:#9AA0A8;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:8px;}
+.h-eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ember);display:inline-block;box-shadow:0 0 0 3px rgba(211,60,28,.25);}
+header h1{margin:8px 0 0;font-size:24px;font-weight:700;letter-spacing:-.2px;}
+header p{margin:4px 0 0;font-size:13px;color:#9AA0A8;}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:20px 14px;}
+.login-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px 20px;width:100%;max-width:420px;}
+.login-icon{width:64px;height:64px;margin:0 auto 16px;background:var(--ink);border-radius:16px;display:grid;place-items:center;font-size:30px;}
+.login-title{text-align:center;font-weight:700;font-size:20px;margin-bottom:4px;}
+.login-sub{text-align:center;font-size:13.5px;color:var(--muted);margin-bottom:20px;}
+.file-input{width:100%;padding:18px;font-family:"IBM Plex Mono",monospace;font-size:24px;font-weight:600;text-align:center;color:var(--ink);background:#F7F7F3;border:2px solid var(--line-strong);border-radius:14px;letter-spacing:2px;}
+.file-input:focus-visible{outline:none;border-color:var(--ember);background:#fff;}
+.file-input::placeholder{font-family:"IBM Plex Sans Arabic",sans-serif;font-size:16px;font-weight:500;letter-spacing:0;color:var(--muted);}
+.enter-btn{width:100%;border:none;border-radius:14px;cursor:pointer;background:var(--green);color:#fff;font-family:inherit;font-weight:700;font-size:18px;padding:18px;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 6px 18px rgba(27,122,61,.35);margin-top:14px;transition:transform .08s;}
+.enter-btn:active{transform:scale(.98);}
+.err{display:none;background:var(--ember-soft);color:#9a2a12;border:1px solid #f0b9a9;border-radius:10px;padding:10px 14px;font-size:13.5px;font-weight:600;margin-top:12px;text-align:center;}
+.welcome{display:none;text-align:center;margin-top:16px;padding:14px;border-radius:12px;font-weight:700;font-size:15px;}
+.welcome.fighter{background:var(--ember-soft);color:var(--ember);}
+.welcome.operator{background:var(--water-soft);color:var(--water);}
+.welcome.officer{background:var(--green-soft);color:var(--green);}
+.bottom-links{text-align:center;padding:16px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.bottom-links a{color:var(--water);font-weight:700;font-size:13.5px;text-decoration:none;}
+</style>
+</head>
+<body>
+<header>
+  <div class="h-eyebrow">CIVIL DEFENSE · KABD</div>
+  <h1>مركز كبد للإطفاء 939</h1>
+  <p>نظام فحص الآليات وأجهزة التنفس</p>
+</header>
+
+<main>
+  <div class="login-card">
+    <div class="login-icon">🪪</div>
+    <div class="login-title">تسجيل الدخول</div>
+    <div class="login-sub">أدخل رقم ملفك للدخول إلى صفحة الفحص المناسبة</div>
+    <input type="text" id="fileInput" class="file-input" placeholder="رقم الملف" inputmode="numeric" autocomplete="off">
+    <button class="enter-btn" id="enterBtn">دخول</button>
+    <div class="err" id="err"></div>
+    <div class="welcome" id="welcome"></div>
+  </div>
+</main>
+
+<div class="bottom-links">
+  <a href="personnel.html">⚙️ إدارة الأشخاص</a>
+  <a href="dashboard.html">📊 لوحة المتابعة</a>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig={apiKey:"AIzaSyBfi7BxhuMVehfmtvIOLm1MVYeXk_BWVz0",authDomain:"nawwaf-7258c.firebaseapp.com",databaseURL:"https://nawwaf-7258c-default-rtdb.firebaseio.com",projectId:"nawwaf-7258c",storageBucket:"nawwaf-7258c.firebasestorage.app",messagingSenderId:"391747168751",appId:"1:391747168751:web:01777a553f7250d4ce6e1a"};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.database();
+
+const fileInput=document.getElementById("fileInput");
+const enterBtn=document.getElementById("enterBtn");
+const err=document.getElementById("err");
+const welcome=document.getElementById("welcome");
+
+function doLogin(){
+  const fileNum=fileInput.value.trim();
+  if(!fileNum){ err.textContent="الرجاء إدخال رقم الملف"; err.style.display="block"; welcome.style.display="none"; return; }
+  err.style.display="none";
+  welcome.style.display="none";
+  enterBtn.textContent="جاري البحث...";
+
+  db.ref("personnel/"+fileNum).once("value").then(snap=>{
+    const person=snap.val();
+    if(!person){
+      err.textContent="رقم الملف غير مسجل في النظام";
+      err.style.display="block";
+      enterBtn.textContent="دخول";
+      return;
+    }
+
+    localStorage.setItem("kabd_current_user",JSON.stringify(person));
+
+    if(person.role==="مكافح"){
+      welcome.className="welcome fighter";
+      welcome.innerHTML="مرحباً "+person.name+" 🔥<br>جاري التحويل لصفحة فحص الأسطوانات...";
+      welcome.style.display="block";
+      setTimeout(()=>{ window.location.href="breathing.html"; },1200);
+    } else if(person.role==="مشغل"){
+      welcome.className="welcome operator";
+      welcome.innerHTML="مرحباً "+person.name+" 🚒<br>جاري التحويل لصفحة فحص الآليات...";
+      welcome.style.display="block";
+      setTimeout(()=>{ window.location.href="index.html"; },1200);
+    } else if(person.role==="ضابط"){
+      welcome.className="welcome officer";
+      welcome.innerHTML="مرحباً "+person.name+" ⭐<br>جاري التحويل للوحة المتابعة...";
+      welcome.style.display="block";
+      setTimeout(()=>{ window.location.href="dashboard.html"; },1200);
+    }
+  }).catch(()=>{
+    err.textContent="خطأ في الاتصال — تأكد من الإنترنت";
+    err.style.display="block";
+    enterBtn.textContent="دخول";
+  });
+}
+
+enterBtn.addEventListener("click",doLogin);
+fileInput.addEventListener("keydown",e=>{ if(e.key==="Enter") doLogin(); });
+</script>
+</body>
+</html>

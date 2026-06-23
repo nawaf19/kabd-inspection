@@ -19,13 +19,16 @@ body{background:#f0f0f0;color:#000;font-family:"IBM Plex Sans Arabic",system-ui,
 .t-btn svg{width:16px;height:16px;}
 .back-link{color:#9AA0A8;text-decoration:none;font-size:13px;font-weight:600;}
 .count-badge{font-family:"IBM Plex Mono",monospace;font-size:12px;color:#9AA0A8;}
+#deleteSelBtn{background:rgba(211,60,28,.5);border-color:rgba(211,60,28,.8);display:none;}
 
 .reports-area{max-width:1000px;margin:20px auto;padding:0 14px 40px;}
 
 .rpt-page-title{background:#D33C1C;color:#fff;padding:14px 20px;font-size:16px;font-weight:700;text-align:center;border-radius:10px 10px 0 0;margin-bottom:0;}
-.rpt-card{background:#fff;border:2px solid #000;margin-bottom:20px;overflow:hidden;border-radius:0 0 8px 8px;}
-.rpt-card:first-of-type{border-radius:0 0 8px 8px;}
+
+.rpt-card{background:#fff;border:2px solid #000;margin-bottom:20px;overflow:hidden;border-radius:0 0 8px 8px;transition:border-color .15s;}
+.rpt-card.selected{border-color:#D33C1C;box-shadow:0 0 0 2px rgba(211,60,28,.3);}
 .rpt-card-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:10px 16px;border-bottom:2px solid #000;background:#f8f8f8;font-weight:700;font-size:12px;}
+.rpt-card.selected .rpt-card-header{background:#fff3f1;}
 .rpt-num{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:700;color:#555;}
 .rpt-type-badge{display:inline-block;padding:4px 12px;border-radius:6px;font-weight:700;font-size:12px;}
 .rpt-type-fire{background:#D33C1C;color:#fff;}
@@ -34,6 +37,12 @@ body{background:#f0f0f0;color:#000;font-family:"IBM Plex Sans Arabic",system-ui,
 .rpt-type-other{background:#6b7280;color:#fff;}
 .rpt-datetime{font-family:"IBM Plex Mono",monospace;font-size:11px;color:#555;}
 .rpt-caller{font-size:12px;color:#333;}
+
+.rpt-check{width:18px;height:18px;accent-color:#D33C1C;cursor:pointer;flex-shrink:0;}
+
+.rpt-del-btn{background:none;border:1px solid #ccc;border-radius:6px;padding:4px 8px;cursor:pointer;color:#888;display:flex;align-items:center;gap:4px;font-size:11px;font-family:inherit;font-weight:600;transition:background .15s,color .15s,border-color .15s;}
+.rpt-del-btn:hover{background:#D33C1C;color:#fff;border-color:#D33C1C;}
+.rpt-del-btn svg{width:13px;height:13px;}
 
 .rpt-table{width:100%;border-collapse:collapse;}
 .rpt-table th{background:#e8e8e8;font-size:10px;font-weight:700;padding:6px 8px;border:1px solid #000;text-align:center;}
@@ -49,7 +58,6 @@ body{background:#f0f0f0;color:#000;font-family:"IBM Plex Sans Arabic",system-ui,
 .no-data-icon{font-size:48px;margin-bottom:12px;}
 .loading{text-align:center;padding:50px;color:#aaa;font-size:15px;}
 
-/* lightbox */
 #lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.92);align-items:center;justify-content:center;}
 #lightbox.open{display:flex;}
 #lightbox img{max-width:94vw;max-height:90vh;border-radius:10px;object-fit:contain;box-shadow:0 8px 40px rgba(0,0,0,.5);}
@@ -60,6 +68,7 @@ body{background:#f0f0f0;color:#000;font-family:"IBM Plex Sans Arabic",system-ui,
   .toolbar{display:none!important;}
   .reports-area{margin:0;padding:0;max-width:100%;}
   .rpt-card{break-inside:avoid;}
+  .rpt-check,.rpt-del-btn{display:none!important;}
   @page{size:A4 portrait;margin:8mm;}
 }
 </style>
@@ -73,6 +82,10 @@ body{background:#f0f0f0;color:#000;font-family:"IBM Plex Sans Arabic",system-ui,
   </div>
   <div class="toolbar-actions">
     <span class="count-badge" id="countBadge"></span>
+    <button class="t-btn" id="deleteSelBtn" onclick="deleteSelected()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      حذف المحدد <span id="delSelCount"></span>
+    </button>
     <button class="t-btn" onclick="clearAllReports()" style="background:rgba(211,60,28,.35);border-color:rgba(211,60,28,.6);">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
       مسح الكل
@@ -112,17 +125,74 @@ function closeLightbox(){
 }
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeLightbox();});
 
+const firebaseConfig={apiKey:"AIzaSyBfi7BxhuMVehfmtvIOLm1MVYeXk_BWVz0",authDomain:"nawwaf-7258c.firebaseapp.com",databaseURL:"https://nawwaf-7258c-default-rtdb.firebaseio.com",projectId:"nawwaf-7258c",storageBucket:"nawwaf-7258c.firebasestorage.app",messagingSenderId:"391747168751",appId:"1:391747168751:web:01777a553f7250d4ce6e1a"};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.database();
+
+function updateBadge(){
+  const remaining=document.querySelectorAll(".rpt-card").length;
+  document.getElementById("countBadge").textContent=remaining?remaining+" بلاغ":"";
+}
+
+function updateSelectionUI(){
+  const checked=document.querySelectorAll(".rpt-check:checked");
+  const btn=document.getElementById("deleteSelBtn");
+  if(checked.length>0){
+    btn.style.display="flex";
+    document.getElementById("delSelCount").textContent="("+checked.length+")";
+  } else {
+    btn.style.display="none";
+  }
+}
+
+function toggleCard(key){
+  const card=document.getElementById("card-"+key);
+  const cb=document.getElementById("cb-"+key);
+  if(!card||!cb) return;
+  card.classList.toggle("selected",cb.checked);
+  updateSelectionUI();
+}
+
+function deleteSingle(key){
+  if(!confirm("هل تريد حذف هذا البلاغ؟")) return;
+  db.ref("reports/"+key).remove().then(()=>{
+    const card=document.getElementById("card-"+key);
+    if(card) card.remove();
+    updateBadge();
+    updateSelectionUI();
+    if(!document.querySelector(".rpt-card"))
+      document.getElementById("reportsArea").innerHTML='<div class="no-data"><div class="no-data-icon">📂</div>لا توجد بلاغات مسجلة بعد</div>';
+  }).catch(()=>alert("حدث خطأ أثناء الحذف"));
+}
+
+function deleteSelected(){
+  const checked=document.querySelectorAll(".rpt-check:checked");
+  if(!checked.length) return;
+  if(!confirm("هل تريد حذف "+checked.length+" بلاغ؟ لا يمكن التراجع.")) return;
+  const promises=[];
+  checked.forEach(cb=>{
+    const key=cb.dataset.key;
+    promises.push(db.ref("reports/"+key).remove().then(()=>{
+      const card=document.getElementById("card-"+key);
+      if(card) card.remove();
+    }));
+  });
+  Promise.all(promises).then(()=>{
+    updateBadge();
+    updateSelectionUI();
+    if(!document.querySelector(".rpt-card"))
+      document.getElementById("reportsArea").innerHTML='<div class="no-data"><div class="no-data-icon">📂</div>لا توجد بلاغات مسجلة بعد</div>';
+  }).catch(()=>alert("حدث خطأ أثناء الحذف"));
+}
+
 function clearAllReports(){
   if(!confirm("هل تريد مسح جميع البلاغات المحفوظة؟ لا يمكن التراجع عن هذا الإجراء.")) return;
   db.ref("reports").remove().then(()=>{
     document.getElementById("countBadge").textContent="";
+    document.getElementById("deleteSelBtn").style.display="none";
     document.getElementById("reportsArea").innerHTML='<div class="no-data"><div class="no-data-icon">🗑️</div>تم مسح جميع البلاغات</div>';
   }).catch(()=>alert("حدث خطأ أثناء المسح"));
 }
-
-const firebaseConfig={apiKey:"AIzaSyBfi7BxhuMVehfmtvIOLm1MVYeXk_BWVz0",authDomain:"nawwaf-7258c.firebaseapp.com",databaseURL:"https://nawwaf-7258c-default-rtdb.firebaseio.com",projectId:"nawwaf-7258c",storageBucket:"nawwaf-7258c.firebasestorage.app",messagingSenderId:"391747168751",appId:"1:391747168751:web:01777a553f7250d4ce6e1a"};
-firebase.initializeApp(firebaseConfig);
-const db=firebase.database();
 
 const typeMap={
   "حريق":{label:"🔥 حريق",cls:"rpt-type-fire"},
@@ -147,6 +217,8 @@ db.ref("reports").once("value").then(snap=>{
   });
   document.getElementById("countBadge").textContent=entries.length+" بلاغ";
 
+  const trashIcon=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`;
+
   let html=`<div class="rpt-page-title">سجل بيانات البلاغات — مركز كبد للإطفاء 939</div>`;
 
   entries.forEach(([key,r],idx)=>{
@@ -159,14 +231,18 @@ db.ref("reports").once("value").then(snap=>{
     const photos=r.photos||[];
 
     html+=`
-    <div class="rpt-card">
+    <div class="rpt-card" id="card-${key}">
       <div class="rpt-card-header">
         <div style="display:flex;align-items:center;gap:10px;">
+          <input type="checkbox" class="rpt-check" id="cb-${key}" data-key="${key}" onchange="toggleCard('${key}')">
           <span class="rpt-num">بلاغ #${entries.length-idx}</span>
           <span class="rpt-type-badge ${t.cls}">${t.label}</span>
         </div>
         <span class="rpt-datetime">${dateStr} — ${timeVal}</span>
-        <span class="rpt-caller">رقم المبلغ: <strong>${r.callerNum||"—"}</strong></span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="rpt-caller">رقم المبلغ: <strong>${r.callerNum||"—"}</strong></span>
+          <button class="rpt-del-btn" onclick="deleteSingle('${key}')">${trashIcon} حذف</button>
+        </div>
       </div>
       <table class="rpt-table"><thead><tr>
         <th>المحافظة</th><th>المنطقة</th><th>القطعة</th><th>الشارع</th><th>الجادة</th>

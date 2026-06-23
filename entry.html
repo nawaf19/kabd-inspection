@@ -70,7 +70,7 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:20px 
 </main>
 
 <div class="bottom-links">
-  <a href="personnel.html">⚙️ إدارة الأشخاص</a>
+  <a href="dashboard.html" onclick="localStorage.setItem('openEmpPage','1')">⚙️ الموظفون</a>
   <a href="dashboard.html">📊 لوحة المتابعة</a>
 </div>
 
@@ -93,7 +93,7 @@ function doLogin(){
   welcome.style.display="none";
   enterBtn.textContent="جاري البحث...";
 
-  db.ref("personnel/"+fileNum).once("value").then(snap=>{
+  db.ref("employees/"+fileNum).once("value").then(snap=>{
     const person=snap.val();
     if(!person){
       err.textContent="رقم الملف غير مسجل في النظام";
@@ -102,6 +102,7 @@ function doLogin(){
       return;
     }
 
+    person.fileNumber=fileNum;
     localStorage.setItem("kabd_current_user",JSON.stringify(person));
 
     if(person.role==="مكافح"){
@@ -109,7 +110,7 @@ function doLogin(){
       welcome.innerHTML="مرحباً "+person.name+" 🔥<br>جاري التحويل لصفحة فحص الأسطوانات...";
       welcome.style.display="block";
       setTimeout(()=>{ window.location.href="breathing.html"; },1200);
-    } else if(person.role==="مشغل"){
+    } else if(person.role==="مشغل الآلية"){
       welcome.className="welcome operator";
       welcome.innerHTML="مرحباً "+person.name+" 🚒<br>جاري التحويل لصفحة فحص الآليات...";
       welcome.style.display="block";

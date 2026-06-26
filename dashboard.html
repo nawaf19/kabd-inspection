@@ -181,15 +181,12 @@ main{max-width:680px;margin:0 auto;padding:20px 14px 0;}
 .note-item .note-action-btn.print-btn:active{background:var(--water-soft);}
 .note-item .note-action-btn.del-btn{color:var(--ember);}
 .note-item .note-action-btn.del-btn:active{background:var(--ember-soft);}
-.note-add-form{border-top:1px solid var(--line);padding-top:12px;}
-.note-add-input{width:100%;padding:12px 14px;font-size:14px;background:#F7F7F3;border:1.5px solid var(--line-strong);border-radius:12px;color:var(--ink);font-family:inherit;resize:none;min-height:44px;margin-bottom:8px;}
-.note-add-input:focus-visible{outline:2px solid var(--water);outline-offset:2px;background:#fff;}
-.note-add-bottom{display:flex;gap:8px;align-items:center;}
-.note-photo-label{display:flex;align-items:center;gap:6px;padding:10px 14px;border:1.5px dashed var(--line-strong);border-radius:10px;background:#F7F7F3;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;flex:1;}
-.note-photo-label:active{background:var(--water-soft);}
-.note-photo-count{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--water);font-weight:700;}
-.note-add-btn{background:var(--water);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap;}
-.note-add-btn:active{opacity:.85;}
+
+/* ── Unread flash ── */
+@keyframes noteFlash{0%,100%{background:rgba(211,60,28,.12);border-color:rgba(211,60,28,.4);}50%{background:rgba(211,60,28,.3);border-color:var(--ember);}}
+.h-q-btn.has-unread{animation:noteFlash 1.2s ease-in-out infinite;color:#fff !important;border-color:var(--ember) !important;}
+.notes-v-header.has-unread{animation:noteFlash 1.2s ease-in-out infinite;}
+.unread-dot{width:8px;height:8px;border-radius:50%;background:var(--ember);display:inline-block;margin-right:4px;box-shadow:0 0 0 3px rgba(211,60,28,.25);}
 
 /* ── Report form overlay ── */
 #rpt-overlay{position:fixed;inset:0;z-index:100;background:var(--bg);overflow-y:auto;display:none;padding:calc(env(safe-area-inset-top)+24px) 14px 60px;}
@@ -277,7 +274,7 @@ main{max-width:680px;margin:0 auto;padding:20px 14px 0;}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       تخزين
     </button>
-    <button class="h-q-btn" onclick="openNotesPage()">
+    <button class="h-q-btn" id="notesBtn" onclick="openNotesPage()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
       ملاحظات الآليات
     </button>
@@ -726,6 +723,7 @@ function applyDashLogin(name,role){
   db.ref("inspections").on("value",snap=>{latestData=snap.val()||{};loadData(latestData);});
   loadData();
   loadReportCount();
+  startNotesListener();
 }
 
 function doDashLogin(){
@@ -868,26 +866,29 @@ function saveEmployee(){
 
 /* ─── Vehicle Notes ─── */
 let vehicleNotes={};
-let notePhotosTemp={};
 
 function getDashUserFileNum(){
   try{const u=JSON.parse(sessionStorage.getItem("kabd_dash_user")||"null");return u?u.fileNum:"";}catch(e){return "";}
 }
-function getDashUserName(){
-  try{const u=JSON.parse(sessionStorage.getItem("kabd_dash_user")||"null");return u?u.name:"";}catch(e){return "";}
-}
 
 function openNotesPage(){
   document.getElementById("notes-overlay").style.display="block";
-  notePhotosTemp={};
   loadVehicleNotes();
 }
-function closeNotesPage(){document.getElementById("notes-overlay").style.display="none";notePhotosTemp={};}
+function closeNotesPage(){document.getElementById("notes-overlay").style.display="none";}
 
 function loadVehicleNotes(){
   db.ref("vehicle_notes").once("value").then(snap=>{
     vehicleNotes=snap.val()||{};
     renderNotesPage();
+  });
+}
+
+function startNotesListener(){
+  db.ref("vehicle_notes").on("value",snap=>{
+    vehicleNotes=snap.val()||{};
+    updateUnreadBadge();
+    if(document.getElementById("notes-overlay").style.display==="block") renderNotesPage();
   });
 }
 
@@ -904,8 +905,30 @@ function noteShiftLabel(dateObj){
 
 function canDelete(){return getDashUserFileNum()==="1";}
 
+function getUnreadVehicles(){
+  const unread=[];
+  VEHICLES.forEach(v=>{
+    const notes=vehicleNotes[v.id]||{};
+    const hasUnread=Object.values(notes).some(n=>n.read===false);
+    if(hasUnread) unread.push(v.id);
+  });
+  return unread;
+}
+
+function updateUnreadBadge(){
+  const btn=document.getElementById("notesBtn");
+  if(!btn) return;
+  const unread=getUnreadVehicles();
+  if(unread.length>0){
+    btn.classList.add("has-unread");
+  } else {
+    btn.classList.remove("has-unread");
+  }
+}
+
 function renderNotesPage(){
   const isAdmin=canDelete();
+  const unreadVehicles=getUnreadVehicles();
   const container=document.getElementById("notesContainer");
   container.innerHTML=VEHICLES.map(v=>{
     const notes=vehicleNotes[v.id]||{};
@@ -914,9 +937,10 @@ function renderNotesPage(){
       return tb.localeCompare(ta);
     });
     const count=keys.length;
+    const hasUnread=unreadVehicles.includes(v.id);
     return `<div class="notes-vehicle">
-      <div class="notes-v-header" onclick="toggleVehicleNotes('${v.id}')">
-        <div class="notes-v-id"><div class="notes-v-num">${v.id}</div><div class="notes-v-type">${v.icon} ${v.type}</div></div>
+      <div class="notes-v-header${hasUnread?" has-unread":""}" onclick="toggleVehicleNotes('${v.id}')">
+        <div class="notes-v-id">${hasUnread?'<span class="unread-dot"></span>':""}<div class="notes-v-num">${v.id}</div><div class="notes-v-type">${v.icon} ${v.type}</div></div>
         ${count?`<div class="notes-v-count">${count} ملاحظة</div>`:'<div style="font-size:12px;color:var(--muted);">لا توجد ملاحظات</div>'}
       </div>
       <div class="notes-v-body" id="notes-body-${v.id}">
@@ -926,9 +950,10 @@ function renderNotesPage(){
             const ts=n.timestamp?new Date(n.timestamp):null;
             const dateStr=ts?ts.toLocaleDateString("ar-KW-u-nu-latn",{year:"numeric",month:"2-digit",day:"2-digit"}):"";
             const timeStr=ts?ts.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false}):"";
-            const shift=ts?noteShiftLabel(ts):"";
+            const shift=n.shift||(ts?noteShiftLabel(ts):"");
             const photos=n.photos||[];
-            return `<div class="note-item">
+            const isUnread=n.read===false;
+            return `<div class="note-item" style="${isUnread?"border-right:4px solid var(--ember);":""}">
               ${n.text?`<div class="note-text">${escHTML(n.text)}</div>`:""}
               ${photos.length?`<div class="note-photos">${photos.map(src=>`<img src="${src}" onclick="window.open(this.src,'_blank')">`).join("")}</div>`:""}
               <div class="note-meta">
@@ -942,59 +967,26 @@ function renderNotesPage(){
           }).join("")}
           ${!keys.length?'<div style="text-align:center;color:var(--muted);padding:12px;font-size:13px;">لا توجد ملاحظات لهذه الآلية</div>':""}
         </div>
-        <div class="note-add-form">
-          <textarea class="note-add-input" id="note-input-${v.id}" placeholder="اكتب ملاحظة..." rows="2"></textarea>
-          <div class="note-add-bottom">
-            <label class="note-photo-label" for="note-photo-${v.id}">
-              📷 إرفاق صورة
-              <span class="note-photo-count" id="note-pcount-${v.id}"></span>
-            </label>
-            <input type="file" id="note-photo-${v.id}" accept="image/*" multiple hidden onchange="handleNotePhotos('${v.id}',this)">
-            <button class="note-add-btn" onclick="addNote('${v.id}')">إضافة</button>
-          </div>
-        </div>
       </div>
     </div>`;
   }).join("");
 }
 
 function toggleVehicleNotes(vid){
-  document.getElementById("notes-body-"+vid).classList.toggle("open");
+  const body=document.getElementById("notes-body-"+vid);
+  const wasOpen=body.classList.contains("open");
+  body.classList.toggle("open");
+  if(!wasOpen) markVehicleNotesRead(vid);
 }
 
-function handleNotePhotos(vid,input){
-  const files=Array.from(input.files);
-  if(!files.length) return;
-  if(!notePhotosTemp[vid]) notePhotosTemp[vid]=[];
-  let loaded=0;
-  files.forEach(f=>{
-    const r=new FileReader();
-    r.onload=e=>{
-      notePhotosTemp[vid].push(e.target.result);
-      loaded++;
-      if(loaded===files.length){
-        const el=document.getElementById("note-pcount-"+vid);
-        if(el) el.textContent=notePhotosTemp[vid].length+" صورة";
-      }
-    };
-    r.readAsDataURL(f);
+function markVehicleNotesRead(vid){
+  const notes=vehicleNotes[vid]||{};
+  const updates={};
+  Object.keys(notes).forEach(k=>{
+    if(notes[k].read===false) updates[k+"/read"]=true;
   });
-  input.value="";
-}
-
-function addNote(vid){
-  const input=document.getElementById("note-input-"+vid);
-  const text=input.value.trim();
-  const photos=notePhotosTemp[vid]||[];
-  if(!text&&!photos.length) return;
-  const author=getDashUserName();
-  const shift=noteShiftLabel(new Date());
-  const note={text,author,shift,photos,timestamp:new Date().toISOString()};
-  db.ref("vehicle_notes/"+vid).push(note).then(()=>{
-    input.value="";
-    notePhotosTemp[vid]=[];
-    loadVehicleNotes();
-  });
+  if(!Object.keys(updates).length) return;
+  db.ref("vehicle_notes/"+vid).update(updates);
 }
 
 function deleteNote(vid,noteId){

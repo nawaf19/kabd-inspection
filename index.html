@@ -474,6 +474,15 @@ function getOperatorName(){
 
 function getRadio(name){ return (document.querySelector('input[name="'+name+'"]:checked')||{}).value||""; }
 
+function getCurrentShift(){
+  const shifts=['أ','ب','ج'];
+  const ref=new Date('2026-06-21');
+  const refDay=Math.floor(ref.getTime()/86400000);
+  const day=Math.floor(new Date().getTime()/86400000);
+  const diff=((day-refDay)%3+3)%3;
+  return shifts[(1+diff)%3];
+}
+
 function saveInspection(ins){
   try{ const KEY="kabd_inspections"; let all=JSON.parse(localStorage.getItem(KEY)||"{}"); all[ins.machine]=ins; localStorage.setItem(KEY,JSON.stringify(all)); }catch(e){}
   try{ db.ref("inspections/"+ins.machine).set(ins); }catch(e){}
@@ -517,6 +526,17 @@ document.getElementById("send").addEventListener("click",()=>{
 
   function done(){
     saveInspection(inspection);
+    if(inspection.notes || (inspection.photosData && inspection.photosData.length)){
+      const noteEntry={
+        text: inspection.notes||"",
+        photos: inspection.photosData||[],
+        author: inspection.operator||"",
+        shift: getCurrentShift(),
+        timestamp: inspection.timestamp,
+        read: false
+      };
+      db.ref("vehicle_notes/"+inspection.machine).push(noteEntry).catch(()=>{});
+    }
     const btn=document.getElementById("send");
     btn.textContent="✓ تم حفظ الفحص";
     btn.style.background="#1B7A3D";

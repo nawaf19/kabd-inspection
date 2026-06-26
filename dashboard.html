@@ -188,6 +188,12 @@ main{max-width:680px;margin:0 auto;padding:20px 14px 0;}
 .notes-v-header.has-unread{animation:noteFlash 1.2s ease-in-out infinite;}
 .unread-dot{width:8px;height:8px;border-radius:50%;background:var(--ember);display:inline-block;margin-right:4px;box-shadow:0 0 0 3px rgba(211,60,28,.25);}
 
+/* ── Image lightbox ── */
+#img-lightbox{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:20px;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
+#img-lightbox.open{display:flex;}
+#img-lightbox img{max-width:95%;max-height:90vh;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.5);object-fit:contain;cursor:default;}
+#img-lightbox .lb-close{position:absolute;top:max(env(safe-area-inset-top),16px);right:16px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:24px;cursor:pointer;display:grid;place-items:center;}
+
 /* ── Report form overlay ── */
 #rpt-overlay{position:fixed;inset:0;z-index:100;background:var(--bg);overflow-y:auto;display:none;padding:calc(env(safe-area-inset-top)+24px) 14px 60px;}
 .rpt-page{max-width:560px;margin:0 auto;}
@@ -229,6 +235,12 @@ main{max-width:680px;margin:0 auto;padding:20px 14px 0;}
 </style>
 </head>
 <body>
+
+<!-- Image lightbox -->
+<div id="img-lightbox" onclick="closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <img id="lb-img" src="" onclick="event.stopPropagation()">
+</div>
 
 <!-- Dashboard login overlay -->
 <div id="dash-login">
@@ -955,7 +967,7 @@ function renderNotesPage(){
             const isUnread=n.read===false;
             return `<div class="note-item" style="${isUnread?"border-right:4px solid var(--ember);":""}">
               ${n.text?`<div class="note-text">${escHTML(n.text)}</div>`:""}
-              ${photos.length?`<div class="note-photos">${photos.map(src=>`<img src="${src}" onclick="window.open(this.src,'_blank')">`).join("")}</div>`:""}
+              ${photos.length?`<div class="note-photos">${photos.map(src=>`<img src="${src}" onclick="openLightbox(this.src)">`).join("")}</div>`:""}
               <div class="note-meta">
                 <span>${n.author||"—"}<span class="note-shift">قسم ${shift}</span> · ${dateStr} · ${timeStr}</span>
                 <div class="note-actions">
@@ -993,6 +1005,17 @@ function deleteNote(vid,noteId){
   if(!canDelete()){alert("ليس لديك صلاحية الحذف");return;}
   if(!confirm("حذف هذه الملاحظة؟")) return;
   db.ref("vehicle_notes/"+vid+"/"+noteId).remove().then(()=>loadVehicleNotes());
+}
+
+function openLightbox(src){
+  const lb=document.getElementById("img-lightbox");
+  document.getElementById("lb-img").src=src;
+  lb.classList.add("open");
+}
+function closeLightbox(){
+  const lb=document.getElementById("img-lightbox");
+  lb.classList.remove("open");
+  document.getElementById("lb-img").src="";
 }
 
 function printSingleNote(vid,noteId){

@@ -313,24 +313,6 @@ textarea:focus-visible{outline:2px solid var(--ember);outline-offset:2px;backgro
     <div id="photoGrid" style="margin-top:12px;display:none;grid-template-columns:1fr 1fr;gap:8px;"></div>
   </section>
 
-  <!-- اسم الفاحص -->
-  <section class="card">
-    <div class="field-head"><div class="field-num">👷</div><div><div class="field-title">اسم الفاحص</div><div class="field-sub">اختر اسم الفاحص من القائمة</div></div></div>
-    <div class="select-wrap">
-      <select id="operator" class="placeholder">
-        <option value="" selected disabled>اختر اسم الفاحص</option>
-        <option value="عبد العزيز ابداح">عبد العزيز ابداح</option>
-        <option value="نواف ناصر">نواف ناصر</option>
-        <option value="عيد فلاح">عيد فلاح</option>
-        <option value="العيفان">العيفان</option>
-        <option value="عبدالرحمان طلال">عبدالرحمان طلال</option>
-        <option value="عبد الرحمان باتل">عبد الرحمان باتل</option>
-        <option value="مشعل فهد">مشعل فهد</option>
-        <option value="سالم">سالم</option>
-        <option value="مشاري">مشاري</option>
-      </select>
-    </div>
-  </section>
 
 </main>
 
@@ -484,10 +466,11 @@ photo.addEventListener("change",()=>{
   photo.value="";
 });
 
-const operatorField=document.getElementById("operator");
-const OP_KEY="kabd_operator_name";
-try{ const s=localStorage.getItem(OP_KEY); if(s){ operatorField.value=s; operatorField.classList.remove("placeholder"); } }catch(e){}
-operatorField.addEventListener("change",()=>{ operatorField.classList.remove("placeholder"); try{localStorage.setItem(OP_KEY,operatorField.value);}catch(e){} });
+function getOperatorName(){
+  try{ const u=JSON.parse(sessionStorage.getItem("kabd_user")||"null"); if(u&&u.name) return u.name; }catch(e){}
+  try{ const u=JSON.parse(localStorage.getItem("kabd_current_user")||"null"); if(u&&u.name) return u.name; }catch(e){}
+  return "";
+}
 
 function getRadio(name){ return (document.querySelector('input[name="'+name+'"]:checked')||{}).value||""; }
 
@@ -501,7 +484,6 @@ function showErr(msg,el){ err.textContent=msg;err.style.display="block"; if(el)e
 
 document.getElementById("send").addEventListener("click",()=>{
   if(!machine.value){ showErr("الرجاء اختيار رقم الآلية.",machine); return; }
-  if(!operatorField.value){ showErr("الرجاء اختيار اسم الفاحص.",operatorField); return; }
   err.style.display="none";
 
   const inspection={
@@ -527,7 +509,7 @@ document.getElementById("send").addEventListener("click",()=>{
     fillDiesel: fillDieselEl.value,
     clean: getRadio("clean"),
     notes: document.getElementById("notes").value.trim(),
-    operator: operatorField.value,
+    operator: getOperatorName(),
     timestamp: new Date().toISOString(),
     photosData: photos.slice(),
     photoData: photos.length?photos[0]:null
@@ -560,10 +542,6 @@ function toWesternDigits(s){
 
 function applyLogin(emp){
   document.getElementById("login-overlay").style.display="none";
-  const op=document.getElementById("operator");
-  for(let i=0;i<op.options.length;i++){
-    if(op.options[i].value===emp.name){op.value=emp.name;op.classList.remove("placeholder");break;}
-  }
   const badge=document.getElementById("userBadge");
   badge.textContent=emp.name+" · "+emp.role;
   badge.style.display="inline-block";

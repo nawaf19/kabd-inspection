@@ -101,9 +101,34 @@ textarea:focus-visible{outline:2px solid var(--ember);outline-offset:2px;backgro
 #loginBtn{margin-top:16px;width:100%;border:none;border-radius:12px;cursor:pointer;background:var(--ember);color:#fff;font-family:inherit;font-weight:700;font-size:17px;padding:16px;transition:transform .08s,background .12s;}
 #loginBtn:active{transform:scale(.98);}
 #userBadge{display:none;margin-top:6px;background:rgba(255,255,255,.12);border-radius:999px;padding:4px 12px;font-size:12px;font-weight:600;color:#E0E4EA;}
+/* Operator picker overlay */
+#op-picker{position:fixed;inset:0;z-index:110;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+#op-picker.open{display:flex;}
+.op-picker-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;width:100%;max-width:420px;max-height:80vh;overflow-y:auto;}
+.op-picker-title{text-align:center;font-weight:700;font-size:18px;margin-bottom:6px;}
+.op-picker-sub{text-align:center;font-size:13px;color:var(--muted);margin-bottom:16px;}
+.op-picker-vid{text-align:center;margin-bottom:16px;}
+.op-picker-vid span{font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:20px;background:var(--ink);color:#fff;padding:5px 16px;border-radius:10px;}
+.op-list{display:flex;flex-direction:column;gap:8px;}
+.op-item{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#F7F7F3;border:2px solid var(--line-strong);border-radius:14px;cursor:pointer;font-family:inherit;font-size:16px;font-weight:700;color:var(--ink);text-align:right;transition:border-color .12s,background .12s;}
+.op-item:active{background:var(--water-soft);border-color:var(--water);}
+.op-item .op-icon{width:42px;height:42px;border-radius:12px;background:var(--water-soft);display:grid;place-items:center;font-size:20px;flex:none;}
+.op-item .op-info{flex:1;}
+.op-item .op-name{font-size:16px;font-weight:700;}
+.op-item .op-file{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);margin-top:2px;}
+.op-empty{text-align:center;color:var(--muted);padding:20px;font-size:14px;}
 </style>
 </head>
 <body>
+<div id="op-picker">
+  <div class="op-picker-card">
+    <div style="font-size:36px;text-align:center;margin-bottom:8px;">👷</div>
+    <div class="op-picker-title">اختر اسم المشغل</div>
+    <div class="op-picker-sub">اضغط على اسم المشغل لتسجيل الفحص باسمه</div>
+    <div class="op-picker-vid" id="opPickerVid"></div>
+    <div class="op-list" id="opList"><div class="op-empty">جاري تحميل المشغلين...</div></div>
+  </div>
+</div>
 <div id="login-overlay">
   <div class="login-card">
     <div class="login-logo">
@@ -597,9 +622,31 @@ document.getElementById("loginBtn").addEventListener("click",doLogin);
 document.getElementById("fileInput").addEventListener("keydown",e=>{if(e.key==="Enter")doLogin();});
 
 (function(){
+  const params=new URLSearchParams(window.location.search);
+  if(params.get("from")==="dashboard"){
+    document.getElementById("login-overlay").style.display="none";
+    const vid=params.get("vehicle")||"";
+    const picker=document.getElementById("op-picker");
+    picker.classList.add("open");
+    document.getElementById("opPickerVid").innerHTML=vid?'<span>'+vid+'</span>':"";
+    db.ref("employees").once("value").then(snap=>{
+      const emps=snap.val()||{};
+      const operators=Object.entries(emps).filter(([k,e])=>e.role==="مشغل الآلية");
+      const list=document.getElementById("opList");
+      if(!operators.length){list.innerHTML='<div class="op-empty">لا يوجد مشغلين مسجلين</div>';return;}
+      list.innerHTML=operators.map(([fileNum,emp])=>`<button class="op-item" onclick="pickOperator('${fileNum}','${emp.name}')"><div class="op-icon">🚒</div><div class="op-info"><div class="op-name">${emp.name}</div><div class="op-file">ملف: ${fileNum}</div></div></button>`).join("");
+    });
+    return;
+  }
   const stored=sessionStorage.getItem("kabd_user");
   if(stored){try{applyLogin(JSON.parse(stored));}catch(e){}}
 })();
+
+function pickOperator(fileNum,name){
+  sessionStorage.setItem("kabd_user",JSON.stringify({fileNum,name,role:"مشغل الآلية"}));
+  document.getElementById("op-picker").classList.remove("open");
+  applyLogin({name,role:"مشغل الآلية"});
+}
 
 (function setupPWA(){
   function icon(size){ const c=document.createElement("canvas");c.width=c.height=size;const x=c.getContext("2d");x.fillStyle="#16181C";x.fillRect(0,0,size,size);x.fillStyle="#fff";x.beginPath();const cx=size*0.5,cy=size*0.56,r=size*0.20;x.moveTo(cx,cy-r*1.7);x.bezierCurveTo(cx+r*1.2,cy-r*0.4,cx+r,cy+r,cx,cy+r);x.bezierCurveTo(cx-r,cy+r,cx-r*1.2,cy-r*0.4,cx,cy-r*1.7);x.fill();x.fillStyle="#D33C1C";x.fillRect(0,size*0.86,size,size*0.14);return c.toDataURL("image/png"); }

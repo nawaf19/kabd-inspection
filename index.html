@@ -400,6 +400,16 @@ machine.addEventListener("change",()=>{
   updateVisibleFields();
 });
 
+(function(){
+  const p=new URLSearchParams(window.location.search);
+  const vid=p.get("vehicle");
+  if(vid){
+    for(let i=0;i<machine.options.length;i++){
+      if(machine.options[i].value===vid){machine.value=vid;machine.classList.remove("placeholder");machine.dispatchEvent(new Event("change"));break;}
+    }
+  }
+})();
+
 function updateVisibleFields(){
   const v=machine.value;
   const ids=["sec-water","sec-hoses","sec-nozzles","sec-rescue","sec-rescue2","sec-hydraulic","sec-radio","sec-breathing","sec-fillDiesel","sec-pump339","sec-foam","sec-clean"];

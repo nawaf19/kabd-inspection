@@ -603,7 +603,7 @@ function loadData(firebaseData){
     } else {
       card.innerHTML=`
         <div class="v-header"><div class="v-id"><div class="v-num mono">${v.id}</div><div class="v-type">${v.icon} ${v.type}</div></div><div class="v-status pending">لم يتم الفحص</div></div>
-        <div class="pending-body"><div style="font-size:32px;margin-bottom:6px;">⏳</div><div class="pending-text">لم يتم الفحص بعد</div></div>`;
+        <div class="pending-body"><div style="font-size:32px;margin-bottom:6px;">⏳</div><div class="pending-text">لم يتم الفحص بعد</div><a href="index.html?vehicle=${v.id}" style="display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:12px 24px;background:var(--water);color:#fff;border-radius:12px;font-family:inherit;font-weight:700;font-size:15px;text-decoration:none;box-shadow:0 4px 14px rgba(19,124,158,.3);">📋 فحص الآلية</a></div>`;
     }
     container.appendChild(card);
   });

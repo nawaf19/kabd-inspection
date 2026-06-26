@@ -139,6 +139,7 @@ const vehicleCylinders={
 };
 
 const gaugeValues={};
+let myAssignment="";
 
 function describeArc(cx,cy,r,startAngle,endAngle){
   const s=polarToCartesian(cx,cy,r,startAngle);
@@ -216,6 +217,38 @@ function onVehicleChange(){
   document.getElementById("sec-cylinders").style.display="block";
   document.getElementById("sec-clock").style.display=(v==="139")?"block":"none";
 
+  const fileNum=currentUser?currentUser.fileNumber:"unknown";
+  const userName=currentUser?currentUser.name:"";
+
+  db.ref("breathing_sessions/"+v).once("value").then(snap=>{
+    const sessions=snap.val()||{};
+    let role="";
+
+    if(sessions.basic&&sessions.basic.fileNum===fileNum){
+      role="basic";
+    } else if(sessions.reserve&&sessions.reserve.fileNum===fileNum){
+      role="reserve";
+    } else if(!sessions.basic){
+      role="basic";
+    } else if(!sessions.reserve){
+      role="reserve";
+    } else {
+      role="both";
+    }
+
+    if(role==="basic"||role==="reserve"){
+      db.ref("breathing_sessions/"+v+"/"+role).set({fileNum,name:userName,timestamp:new Date().toISOString()});
+    }
+
+    myAssignment=role;
+    buildCylinders(v,role);
+  }).catch(()=>{
+    myAssignment="both";
+    buildCylinders(v,"both");
+  });
+}
+
+function buildCylinders(v,role){
   const area=document.getElementById("cylinderArea");
   area.innerHTML="";
   const cfg=vehicleCylinders[v];
@@ -223,29 +256,46 @@ function onVehicleChange(){
 
   Object.keys(gaugeValues).forEach(k=>delete gaugeValues[k]);
 
-  const basicTitle=document.createElement("div");
-  basicTitle.className="cyl-group-title cyl-group-basic";
-  basicTitle.textContent="أسطوانات أساسية ("+cfg.basic+")";
-  area.appendChild(basicTitle);
-
-  const basicGrid=document.createElement("div");
-  basicGrid.className="cyl-grid";
-  for(let i=1;i<=cfg.basic;i++){
-    basicGrid.appendChild(createGauge("basic_"+i,"أسطوانة "+i));
+  if(role!=="both"){
+    const badge=document.createElement("div");
+    badge.style.cssText="text-align:center;padding:10px 14px;border-radius:12px;font-weight:700;font-size:14px;margin-bottom:14px;";
+    if(role==="basic"){
+      badge.style.background="var(--water-soft)";badge.style.color="var(--water)";
+      badge.textContent="📋 مهمتك: الأسطوانات الأساسية";
+    } else {
+      badge.style.background="var(--orange-soft)";badge.style.color="var(--orange)";
+      badge.textContent="📋 مهمتك: أسطوانات الاحتياط";
+    }
+    area.appendChild(badge);
   }
-  area.appendChild(basicGrid);
 
-  const resTitle=document.createElement("div");
-  resTitle.className="cyl-group-title cyl-group-reserve";
-  resTitle.textContent="أسطوانات احتياط ("+cfg.reserve+")";
-  area.appendChild(resTitle);
+  if(role==="basic"||role==="both"){
+    const basicTitle=document.createElement("div");
+    basicTitle.className="cyl-group-title cyl-group-basic";
+    basicTitle.textContent="أسطوانات أساسية ("+cfg.basic+")";
+    area.appendChild(basicTitle);
 
-  const resGrid=document.createElement("div");
-  resGrid.className="cyl-grid";
-  for(let i=1;i<=cfg.reserve;i++){
-    resGrid.appendChild(createGauge("reserve_"+i,"احتياط "+i));
+    const basicGrid=document.createElement("div");
+    basicGrid.className="cyl-grid";
+    for(let i=1;i<=cfg.basic;i++){
+      basicGrid.appendChild(createGauge("basic_"+i,"أسطوانة "+i));
+    }
+    area.appendChild(basicGrid);
   }
-  area.appendChild(resGrid);
+
+  if(role==="reserve"||role==="both"){
+    const resTitle=document.createElement("div");
+    resTitle.className="cyl-group-title cyl-group-reserve";
+    resTitle.textContent="أسطوانات احتياط ("+cfg.reserve+")";
+    area.appendChild(resTitle);
+
+    const resGrid=document.createElement("div");
+    resGrid.className="cyl-grid";
+    for(let i=1;i<=cfg.reserve;i++){
+      resGrid.appendChild(createGauge("reserve_"+i,"احتياط "+i));
+    }
+    area.appendChild(resGrid);
+  }
 
   area.querySelectorAll('input[type=range]').forEach(slider=>{
     slider.addEventListener("input",()=>paintGaugeSlider(slider));
@@ -264,21 +314,39 @@ document.getElementById("send").addEventListener("click",()=>{
   const data={
     vehicle:v,
     clock:clock,
-    cylinders:gaugeValues,
     operator:currentUser?currentUser.name:"",
     fileNumber:currentUser?currentUser.fileNumber:"",
     timestamp:new Date().toISOString()
   };
 
-  db.ref("breathing/"+v).set(data).then(()=>{
+  if(myAssignment==="both"){
+    data.cylinders=gaugeValues;
+    db.ref("breathing/"+v).set(data).then(onSaveSuccess).catch(onSaveError);
+  } else {
+    db.ref("breathing/"+v).once("value").then(snap=>{
+      const existing=snap.val()||{};
+      const merged=Object.assign({},existing.cylinders||{},gaugeValues);
+      data.cylinders=merged;
+      if(existing.operator&&existing.operator!==data.operator){
+        data.operator=existing.operator+" / "+data.operator;
+      }
+      db.ref("breathing/"+v).set(data).then(()=>{
+        db.ref("breathing_sessions/"+v+"/"+myAssignment).remove();
+        onSaveSuccess();
+      }).catch(onSaveError);
+    }).catch(onSaveError);
+  }
+
+  function onSaveSuccess(){
     const btn=document.getElementById("send");
     btn.textContent="✓ تم حفظ الفحص";
     btn.style.background="#1B7A3D";
     setTimeout(()=>{ btn.textContent="✓ حفظ فحص الأسطوانات"; },2000);
-  }).catch(()=>{
+  }
+  function onSaveError(){
     err.textContent="خطأ في الحفظ — تأكد من الإنترنت";
     err.style.display="block";
-  });
+  }
 });
 </script>
 </body>

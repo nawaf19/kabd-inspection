@@ -90,9 +90,10 @@ const firebaseConfig={apiKey:"AIzaSyBfi7BxhuMVehfmtvIOLm1MVYeXk_BWVz0",authDomai
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database();
 
-function buildReport(fbData){
+function buildReport(fbData,breathData){
   let data=fbData||{};
   if(!fbData){ try{data=JSON.parse(localStorage.getItem("kabd_inspections")||"{}");}catch(e){} }
+  const br=breathData||{};
   const now=new Date();
   const dateStr=now.toLocaleDateString("ar-KW-u-nu-latn",{year:"numeric",month:"2-digit",day:"2-digit"});
   const days=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
@@ -158,6 +159,56 @@ function buildReport(fbData){
   else { html+=`<tr><td colspan="6" class="not-done">لم يتم الفحص</td><td class="photo-col not-done">—</td></tr>`; }
   html+=`</tbody></table>`;
 
+  // قسم أجهزة التنفس
+  html+=`<div class="section-title">أجهزة التنفس</div>`;
+  const brVehicles=[
+    {id:"139",name:"جيب 139",basic:2,reserve:2},
+    {id:"239",name:"انقاذ 239",basic:3,reserve:3},
+    {id:"339",name:"بمب 339",basic:6,reserve:6}
+  ];
+  const maxBasic=6, maxReserve=6;
+  let brHead=`<table><thead><tr><th rowspan="2" style="width:60px;"></th>`;
+  brVehicles.forEach(v=>{ brHead+=`<th colspan="${v.basic}">${v.name}</th>`; });
+  brHead+=`</tr><tr>`;
+  brVehicles.forEach(v=>{ for(let i=1;i<=v.basic;i++) brHead+=`<th>${i}</th>`; });
+  brHead+=`</tr></thead><tbody>`;
+
+  // صف أساسي
+  brHead+=`<tr><td class="vl">أساسي</td>`;
+  brVehicles.forEach(v=>{
+    const d=br[v.id];
+    for(let i=1;i<=v.basic;i++){
+      const val=d&&d.cylinders&&d.cylinders["basic_"+i];
+      brHead+=`<td class="val">${val!=null?val:"—"}</td>`;
+    }
+  });
+  brHead+=`</tr>`;
+
+  // صف احتياط
+  brHead+=`<tr><td class="vl">احتياط</td>`;
+  brVehicles.forEach(v=>{
+    const d=br[v.id];
+    for(let i=1;i<=v.reserve;i++){
+      const val=d&&d.cylinders&&d.cylinders["reserve_"+i];
+      brHead+=`<td class="val">${val!=null?val:"—"}</td>`;
+    }
+  });
+  brHead+=`</tr>`;
+
+  // ساعة فحص الأسطوانات
+  const clockVal=br["139"]&&br["139"].clock?br["139"].clock:"";
+  const clockDisplay=!clockVal?"—":clockVal==="تعمل"?'<span class="ok">صالحة ✓</span>':'<span class="bad">عاطلة ✗</span>';
+  brHead+=`<tr><td colspan="${2+3+6+1}" style="text-align:right;font-weight:700;font-size:11px;padding:6px 10px;">ساعة فحص الأسطوانات: ${clockDisplay}</td></tr>`;
+
+  // اسم الفاحص
+  const brOperators=brVehicles.map(v=>br[v.id]?br[v.id].operator:"").filter(Boolean);
+  if(brOperators.length){
+    brHead+=`<tr><td colspan="${2+3+6+1}" style="text-align:right;font-size:10px;padding:4px 10px;">الفاحص: ${[...new Set(brOperators)].join(" · ")}</td></tr>`;
+  }
+
+  brHead+=`</tbody></table>`;
+  html+=brHead;
+
   document.getElementById("report").innerHTML=html;
 }
 
@@ -167,8 +218,11 @@ function printReport(withPhotos){
   setTimeout(()=>window.print(),100);
 }
 
-db.ref("inspections").once("value").then(snap=>{
-  buildReport(snap.val()||{});
+Promise.all([
+  db.ref("inspections").once("value"),
+  db.ref("breathing").once("value")
+]).then(([inspSnap,brSnap])=>{
+  buildReport(inspSnap.val()||{}, brSnap.val()||{});
 }).catch(()=>buildReport());
 </script>
 </body>

@@ -153,8 +153,16 @@ function toggleCard(key){
   updateSelectionUI();
 }
 
+function checkDeletePassword(){
+  const pwd=prompt("أدخل الرقم السري للحذف:");
+  if(pwd===null) return false;
+  if(pwd==="232344") return true;
+  alert("الرقم السري غير صحيح");
+  return false;
+}
+
 function deleteSingle(key){
-  if(!confirm("هل تريد حذف هذا البلاغ؟")) return;
+  if(!checkDeletePassword()) return;
   db.ref("reports/"+key).remove().then(()=>{
     const card=document.getElementById("card-"+key);
     if(card) card.remove();
@@ -168,6 +176,7 @@ function deleteSingle(key){
 function deleteSelected(){
   const checked=document.querySelectorAll(".rpt-check:checked");
   if(!checked.length) return;
+  if(!checkDeletePassword()) return;
   if(!confirm("هل تريد حذف "+checked.length+" بلاغ؟ لا يمكن التراجع.")) return;
   const promises=[];
   checked.forEach(cb=>{

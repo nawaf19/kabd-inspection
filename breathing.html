@@ -108,7 +108,7 @@ select.placeholder{color:var(--muted);font-weight:500;}
   </section>
 
   <section class="card cyl-section" id="sec-cylinders">
-    <div class="field-head"><div class="field-num">3</div><div><div class="field-title">ضغط الأسطوانات</div><div class="field-sub">اسحب السلايدر لتحديد ضغط كل أسطوانة (0–300 بار)</div></div></div>
+    <div class="field-head"><div class="field-num">3</div><div><div class="field-title">ضغط الأسطوانات</div><div class="field-sub">اسحب السلايدر لتحديد ضغط كل أسطوانة (0–350 بار)</div></div></div>
     <div id="cylinderArea"></div>
   </section>
 
@@ -131,6 +131,7 @@ const currentUser=JSON.parse(localStorage.getItem("kabd_current_user")||"null");
 if(currentUser){
   document.getElementById("userBadge").textContent="🪪 "+currentUser.name+" — ملف: "+currentUser.fileNumber;
 }
+
 
 const vehicleCylinders={
   "139":{basic:2,reserve:2},
@@ -172,19 +173,19 @@ function createGauge(id,label){
       <div class="gauge-value"><span class="gauge-num">0</span> <span>bar</span></div>
     </div>
     <div class="gauge-slider">
-      <input type="range" min="0" max="300" value="0" data-id="${id}" style="--accent:#D33C1C;">
+      <input type="range" min="0" max="350" value="0" data-id="${id}" style="--accent:#D33C1C;">
     </div>
-    <div class="gauge-ticks"><span>0</span><span>100</span><span>200</span><span>300</span></div>`;
+    <div class="gauge-ticks"><span>0</span><span>70</span><span>140</span><span>210</span><span>280</span><span>350</span></div>`;
   gaugeValues[id]=0;
   return wrap;
 }
 
 function updateGaugeDisplay(container,val){
-  val=Math.max(0,Math.min(300,Math.round(val)));
+  val=Math.max(0,Math.min(350,Math.round(val)));
   const id=container.dataset.id;
   gaugeValues[id]=val;
   const cx=70,cy=72,r=58;
-  const angle=180-(val/300)*180;
+  const angle=180-(val/350)*180;
   const fill=container.querySelector(".gauge-fill");
   const numEl=container.querySelector(".gauge-num");
   const color=getColor(val);
@@ -201,7 +202,7 @@ function updateGaugeDisplay(container,val){
 
 function paintGaugeSlider(slider){
   const val=+slider.value;
-  const pct=(val/300)*100;
+  const pct=(val/350)*100;
   const color=getColor(val);
   slider.style.setProperty("--track",`linear-gradient(to right, ${color} ${pct}%, #EAEAE3 ${pct}%)`);
   slider.style.setProperty("--accent",color);
@@ -214,6 +215,7 @@ function paintGaugeSlider(slider){
 function onVehicleChange(){
   const v=document.getElementById("vehicle").value;
   document.getElementById("vehicle").classList.remove("placeholder");
+  err.style.display="none";
   document.getElementById("sec-cylinders").style.display="block";
   document.getElementById("sec-clock").style.display=(v==="139")?"block":"none";
 

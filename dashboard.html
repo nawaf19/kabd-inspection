@@ -442,18 +442,55 @@ main{max-width:680px;margin:0 auto;padding:20px 14px 0;}
   <!-- ── قسم 3: أجهزة الميدان ── -->
   <div class="section-label">أجهزة الميدان</div>
   <div style="background:var(--surface);border:1.5px solid rgba(19,124,158,.25);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:10px;">
-    <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
-      <div style="width:58px;height:58px;border-radius:16px;background:var(--water-soft);display:grid;place-items:center;font-size:28px;flex:none;">📻</div>
-      <div>
-        <div style="font-size:18px;font-weight:700;">أجهزة اللاسلكي</div>
-        <div style="font-size:13px;color:var(--muted);margin-top:3px;">عدد الأجهزة المتوفرة في الوردية الحالية</div>
-      </div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:14px;">
+        <thead>
+          <tr style="background:var(--water-soft);">
+            <th style="text-align:right;padding:10px 12px;font-weight:700;border-bottom:1.5px solid rgba(19,124,158,.3);">النوع</th>
+            <th style="text-align:center;padding:10px 12px;font-weight:700;border-bottom:1.5px solid rgba(19,124,158,.3);white-space:nowrap;">عدد أجهزة اللاسلكي</th>
+            <th style="text-align:right;padding:10px 12px;font-weight:700;border-bottom:1.5px solid rgba(19,124,158,.3);">ملاحظات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--line);">
+            <td style="padding:10px 12px;font-weight:700;white-space:nowrap;">أجهزة اللاسلكي</td>
+            <td style="padding:6px 12px;text-align:center;">
+              <input type="number" id="radioCount" min="0" max="99" placeholder="0"
+                     style="width:72px;padding:8px;font-size:18px;font-weight:700;text-align:center;border:1.5px solid var(--line-strong);border-radius:8px;font-family:'IBM Plex Mono',monospace;background:#F7F7F3;color:var(--ink);">
+            </td>
+            <td style="padding:6px 12px;">
+              <input type="text" id="radioNotes" placeholder="ملاحظات..."
+                     style="width:100%;padding:8px 10px;font-size:14px;border:1.5px solid var(--line-strong);border-radius:8px;background:#F7F7F3;color:var(--ink);font-family:inherit;">
+            </td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--line);">
+            <td style="padding:10px 12px;font-weight:700;white-space:nowrap;">أجهزة ميدان المركز</td>
+            <td style="padding:6px 12px;text-align:center;">
+              <input type="number" id="centerCount" min="0" max="99" placeholder="0"
+                     style="width:72px;padding:8px;font-size:18px;font-weight:700;text-align:center;border:1.5px solid var(--line-strong);border-radius:8px;font-family:'IBM Plex Mono',monospace;background:#F7F7F3;color:var(--ink);">
+            </td>
+            <td style="padding:6px 12px;">
+              <input type="text" id="centerNotes" placeholder="ملاحظات..."
+                     style="width:100%;padding:8px 10px;font-size:14px;border:1.5px solid var(--line-strong);border-radius:8px;background:#F7F7F3;color:var(--ink);font-family:inherit;">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:10px 12px;font-weight:700;white-space:nowrap;">أجهزة ميدان البمب</td>
+            <td style="padding:6px 12px;text-align:center;">
+              <input type="number" id="pumpCount" min="0" max="99" placeholder="0"
+                     style="width:72px;padding:8px;font-size:18px;font-weight:700;text-align:center;border:1.5px solid var(--line-strong);border-radius:8px;font-family:'IBM Plex Mono',monospace;background:#F7F7F3;color:var(--ink);">
+            </td>
+            <td style="padding:6px 12px;">
+              <input type="text" id="pumpNotes" placeholder="ملاحظات..."
+                     style="width:100%;padding:8px 10px;font-size:14px;border:1.5px solid var(--line-strong);border-radius:8px;background:#F7F7F3;color:var(--ink);font-family:inherit;">
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-      <input type="number" id="radioCountInput" min="0" max="99" placeholder="0"
-             style="width:90px;padding:10px;font-size:22px;font-weight:700;text-align:center;border:1.5px solid var(--line-strong);border-radius:10px;font-family:'IBM Plex Mono',monospace;background:#F7F7F3;color:var(--ink);">
+    <div style="margin-top:14px;display:flex;align-items:center;gap:10px;">
       <button onclick="saveFieldDevices()"
-              style="background:var(--water);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;">حفظ</button>
+              style="background:var(--water);color:#fff;border:none;border-radius:10px;padding:10px 24px;font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;">حفظ</button>
       <span id="fdStatus" style="font-size:13px;color:var(--muted);"></span>
     </div>
   </div>
@@ -651,11 +688,19 @@ let latestData={};
 let latestFieldDevices={};
 
 function saveFieldDevices(){
-  const val=parseInt(document.getElementById("radioCountInput").value)||0;
   const status=document.getElementById("fdStatus");
   status.textContent="جاري الحفظ…";
-  db.ref("fieldDevices").set({radio:val,timestamp:new Date().toISOString()}).then(()=>{
-    latestFieldDevices={radio:val};
+  const fd={
+    radio: parseInt(document.getElementById("radioCount").value)||0,
+    radioNotes: document.getElementById("radioNotes").value.trim(),
+    center: parseInt(document.getElementById("centerCount").value)||0,
+    centerNotes: document.getElementById("centerNotes").value.trim(),
+    pump: parseInt(document.getElementById("pumpCount").value)||0,
+    pumpNotes: document.getElementById("pumpNotes").value.trim(),
+    timestamp: new Date().toISOString()
+  };
+  db.ref("fieldDevices").set(fd).then(()=>{
+    latestFieldDevices=fd;
     status.textContent="✓ تم الحفظ";
     setTimeout(()=>{status.textContent="";},2000);
   }).catch(()=>{status.textContent="خطأ في الحفظ";});
@@ -768,7 +813,13 @@ function applyDashLogin(name,role){
   db.ref("inspections").on("value",snap=>{latestData=snap.val()||{};loadData(latestData);});
   db.ref("fieldDevices").once("value").then(snap=>{
     latestFieldDevices=snap.val()||{};
-    if(latestFieldDevices.radio!==undefined) document.getElementById("radioCountInput").value=latestFieldDevices.radio;
+    const fd=latestFieldDevices;
+    if(fd.radio!==undefined) document.getElementById("radioCount").value=fd.radio;
+    if(fd.radioNotes) document.getElementById("radioNotes").value=fd.radioNotes;
+    if(fd.center!==undefined) document.getElementById("centerCount").value=fd.center;
+    if(fd.centerNotes) document.getElementById("centerNotes").value=fd.centerNotes;
+    if(fd.pump!==undefined) document.getElementById("pumpCount").value=fd.pump;
+    if(fd.pumpNotes) document.getElementById("pumpNotes").value=fd.pumpNotes;
   });
   loadData();
   loadReportCount();

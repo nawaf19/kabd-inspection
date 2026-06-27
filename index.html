@@ -420,8 +420,7 @@ const machine=document.getElementById("machine");
 machine.addEventListener("change",()=>{
   machine.classList.remove("placeholder");
   if(inspectedVehicles[machine.value]){
-    const prevOp=inspectedVehicles[machine.value].operator||"مجهول";
-    showErr("⛔ تم فحص هذه الآلية بالفعل بواسطة "+prevOp+" — لا يمكن إعادة الفحص. تواصل مع الضابط لمسح البيانات.",machine);
+    showErr("⚠️ تم فحص هذه الآلية من قبل — "+inspectedVehicles[machine.value].operator,machine);
   } else { err.style.display="none"; }
   updateVisibleFields();
 });

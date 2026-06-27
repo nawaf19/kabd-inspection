@@ -132,8 +132,6 @@ if(currentUser){
   document.getElementById("userBadge").textContent="🪪 "+currentUser.name+" — ملف: "+currentUser.fileNumber;
 }
 
-let existingBreathing={};
-db.ref("breathing").once("value").then(snap=>{existingBreathing=snap.val()||{};});
 
 const vehicleCylinders={
   "139":{basic:2,reserve:2},
@@ -217,13 +215,7 @@ function paintGaugeSlider(slider){
 function onVehicleChange(){
   const v=document.getElementById("vehicle").value;
   document.getElementById("vehicle").classList.remove("placeholder");
-  if(existingBreathing[v]){
-    const prevOp=existingBreathing[v].operator||"مجهول";
-    err.textContent="⛔ تم فحص أسطوانات هذه الآلية بالفعل بواسطة "+prevOp+" — لا يمكن إعادة الفحص. تواصل مع الضابط لمسح البيانات.";
-    err.style.display="block";
-  } else {
-    err.style.display="none";
-  }
+  err.style.display="none";
   document.getElementById("sec-cylinders").style.display="block";
   document.getElementById("sec-clock").style.display=(v==="139")?"block":"none";
 
@@ -317,12 +309,6 @@ const err=document.getElementById("err");
 document.getElementById("send").addEventListener("click",()=>{
   const v=document.getElementById("vehicle").value;
   if(!v){ err.textContent="الرجاء اختيار رقم الآلية"; err.style.display="block"; return; }
-  if(existingBreathing[v]){
-    const prevOp=existingBreathing[v].operator||"مجهول";
-    err.textContent="⛔ تم فحص أسطوانات هذه الآلية بالفعل بواسطة "+prevOp+" — لا يمكن إعادة الفحص. تواصل مع الضابط لمسح البيانات.";
-    err.style.display="block";
-    return;
-  }
   const clock=(document.querySelector('input[name="clock"]:checked')||{}).value||"";
   if(v==="139"&&!clock){ err.textContent="الرجاء تحديد حالة ساعة الفحص"; err.style.display="block"; return; }
   err.style.display="none";

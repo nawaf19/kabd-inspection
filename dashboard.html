@@ -624,6 +624,7 @@ function clearAll(){
   if(!confirm("هل تريد مسح جميع بيانات الفحص؟")) return;
   try{localStorage.removeItem("kabd_inspections");}catch(e){}
   try{db.ref("inspections").remove();}catch(e){}
+  try{db.ref("breathing").remove();}catch(e){}
   loadData({});
 }
 

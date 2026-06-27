@@ -84,10 +84,11 @@ const firebaseConfig={apiKey:"AIzaSyBfi7BxhuMVehfmtvIOLm1MVYeXk_BWVz0",authDomai
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database();
 
-function buildReport(fbData,breathData){
+function buildReport(fbData, breathData, fieldDevices){
   let data=fbData||{};
   if(!fbData){ try{data=JSON.parse(localStorage.getItem("kabd_inspections")||"{}");}catch(e){} }
   const br=breathData||{};
+  const fd=fieldDevices||{};
   const now=new Date();
   const dateStr=now.toLocaleDateString("ar-KW-u-nu-latn",{year:"numeric",month:"2-digit",day:"2-digit"});
   const days=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
@@ -202,15 +203,38 @@ function buildReport(fbData,breathData){
   brHead+=`</tbody></table>`;
   html+=brHead;
 
+  html+=`<div class="section-title">أجهزة الميدان</div>
+  <table><thead><tr><th>النوع</th><th>العدد</th></tr></thead><tbody>
+  <tr><td style="font-weight:700;text-align:right;padding-right:14px;">أجهزة اللاسلكي</td><td class="val" style="font-size:14px;">${fd.radio!==undefined?fd.radio:"—"}</td></tr>
+  </tbody></table>`;
+
+  html+=`<div style="border-top:2px solid #000;padding:10px 16px 16px;">
+    <div style="font-weight:700;font-size:12px;margin-bottom:6px;">ملاحظات:</div>
+    <div style="border-bottom:1px dashed #888;height:22px;margin-bottom:5px;"></div>
+    <div style="border-bottom:1px dashed #888;height:22px;margin-bottom:5px;"></div>
+    <div style="border-bottom:1px dashed #888;height:22px;margin-bottom:18px;"></div>
+    <div style="display:flex;justify-content:space-around;margin-top:4px;">
+      <div style="text-align:center;min-width:220px;">
+        <div style="font-weight:700;font-size:12px;margin-bottom:32px;">اعتماد رئيس القسم</div>
+        <div style="border-bottom:1.5px solid #000;width:200px;margin:0 auto;"></div>
+      </div>
+      <div style="text-align:center;min-width:220px;">
+        <div style="font-weight:700;font-size:12px;margin-bottom:32px;">اعتماد رئيس المركز</div>
+        <div style="border-bottom:1.5px solid #000;width:200px;margin:0 auto;"></div>
+      </div>
+    </div>
+  </div>`;
+
   document.getElementById("report").innerHTML=html;
 }
 
 
 Promise.all([
   db.ref("inspections").once("value"),
-  db.ref("breathing").once("value")
-]).then(([inspSnap,brSnap])=>{
-  buildReport(inspSnap.val()||{}, brSnap.val()||{});
+  db.ref("breathing").once("value"),
+  db.ref("fieldDevices").once("value")
+]).then(([inspSnap,brSnap,fdSnap])=>{
+  buildReport(inspSnap.val()||{}, brSnap.val()||{}, fdSnap.val()||{});
 }).catch(()=>buildReport());
 </script>
 </body>

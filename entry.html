@@ -160,6 +160,7 @@ function doLogin(){
 
 enterBtn.addEventListener("click",doLogin);
 fileInput.addEventListener("keydown",e=>{ if(e.key==="Enter") doLogin(); });
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/kabd-inspection/sw.js').catch(()=>{});
 </script>
 </body>
 </html>

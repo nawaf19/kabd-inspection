@@ -1296,6 +1296,7 @@ function exportAllNotes(){
   const a=document.createElement("a");a.href=url;a.download="ملاحظات الآليات "+fileDate+".html";
   document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
 }
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/kabd-inspection/sw.js').catch(()=>{});
 </script>
 </body>
 </html>

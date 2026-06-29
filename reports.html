@@ -276,6 +276,7 @@ db.ref("reports").once("value").then(snap=>{
 }).catch(err=>{
   document.getElementById("reportsArea").innerHTML='<div class="no-data"><div class="no-data-icon">⚠️</div>حدث خطأ أثناء تحميل البيانات<br><small style="color:#aaa;font-size:11px;">'+(err&&err.message?err.message:"تحقق من الاتصال")+'</small><br><button onclick="location.reload()" style="margin-top:12px;padding:10px 20px;background:#D33C1C;color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;">إعادة المحاولة</button></div>';
 });
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/kabd-inspection/sw.js').catch(()=>{});
 </script>
 </body>
 </html>

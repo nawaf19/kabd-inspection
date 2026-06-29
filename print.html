@@ -236,6 +236,7 @@ Promise.all([
 ]).then(([inspSnap,brSnap,fdSnap])=>{
   buildReport(inspSnap.val()||{}, brSnap.val()||{}, fdSnap.val()||{});
 }).catch(()=>buildReport());
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/kabd-inspection/sw.js').catch(()=>{});
 </script>
 </body>
 </html>

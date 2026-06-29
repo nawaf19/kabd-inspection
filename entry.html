@@ -48,6 +48,17 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:20px 
 .welcome.officer{background:var(--green-soft);color:var(--green);}
 .bottom-links{text-align:center;padding:16px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
 .bottom-links a{color:var(--water);font-weight:700;font-size:13.5px;text-decoration:none;}
+.choice-screen{display:none;margin-top:16px;}
+.choice-greeting{text-align:center;padding:14px;border-radius:12px;font-weight:700;font-size:15px;background:var(--water-soft);color:var(--water);margin-bottom:16px;}
+.choice-btns{display:flex;flex-direction:column;gap:12px;}
+.choice-btn{width:100%;border:none;border-radius:14px;cursor:pointer;font-family:inherit;font-weight:700;font-size:17px;padding:18px 16px;display:flex;align-items:center;gap:14px;transition:transform .08s;}
+.choice-btn:active{transform:scale(.98);}
+.choice-btn.primary{background:var(--green);color:#fff;box-shadow:0 6px 18px rgba(27,122,61,.35);}
+.choice-btn.secondary{background:var(--water);color:#fff;box-shadow:0 6px 18px rgba(19,124,158,.3);}
+.choice-btn-icon{font-size:26px;line-height:1;}
+.choice-btn-text{text-align:right;}
+.choice-btn-label{font-size:17px;font-weight:700;}
+.choice-btn-sub{font-size:12px;font-weight:500;opacity:.85;margin-top:2px;}
 </style>
 </head>
 <body>
@@ -66,6 +77,25 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:20px 
     <button class="enter-btn" id="enterBtn">دخول</button>
     <div class="err" id="err"></div>
     <div class="welcome" id="welcome"></div>
+    <div class="choice-screen" id="choiceScreen">
+      <div class="choice-greeting" id="choiceGreeting"></div>
+      <div class="choice-btns">
+        <button class="choice-btn primary" onclick="window.location.href='index.html'">
+          <div class="choice-btn-icon">🚒</div>
+          <div class="choice-btn-text">
+            <div class="choice-btn-label">فحص الآليات</div>
+            <div class="choice-btn-sub">تعبئة كشف الفحص اليومي</div>
+          </div>
+        </button>
+        <button class="choice-btn secondary" onclick="window.location.href='tasks.html'">
+          <div class="choice-btn-icon">📋</div>
+          <div class="choice-btn-text">
+            <div class="choice-btn-label">إنجاز مهام يومية</div>
+            <div class="choice-btn-sub">تسجيل المهام والأعمال المنجزة</div>
+          </div>
+        </button>
+      </div>
+    </div>
   </div>
 </main>
 
@@ -111,10 +141,10 @@ function doLogin(){
       welcome.style.display="block";
       setTimeout(()=>{ window.location.href="breathing.html"; },1200);
     } else if(person.role==="مشغل الآلية"){
-      welcome.className="welcome operator";
-      welcome.innerHTML="مرحباً "+person.name+" 🚒<br>جاري التحويل لصفحة فحص الآليات...";
-      welcome.style.display="block";
-      setTimeout(()=>{ window.location.href="index.html"; },1200);
+      document.getElementById("fileInput").style.display="none";
+      enterBtn.style.display="none";
+      document.getElementById("choiceGreeting").textContent="مرحباً "+person.name+" 🚒 — اختر ما تريد القيام به";
+      document.getElementById("choiceScreen").style.display="block";
     } else if(person.role==="ضابط"){
       welcome.className="welcome officer";
       welcome.innerHTML="مرحباً "+person.name+" ⭐<br>جاري التحويل للوحة المتابعة...";

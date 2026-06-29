@@ -288,6 +288,7 @@ document.getElementById("send").addEventListener("click",()=>{
     err.style.display="block";
   }
 });
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/kabd-inspection/sw.js').catch(()=>{});
 </script>
 </body>
 </html>

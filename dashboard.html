@@ -1085,6 +1085,9 @@ function markVehicleNotesRead(vid){
 
 function deleteNote(vid,noteId){
   if(!canDelete()){alert("ليس لديك صلاحية الحذف");return;}
+  const pwd=prompt("أدخل الرقم السري للحذف:");
+  if(pwd===null) return;
+  if(pwd!=="232344"){alert("الرقم السري غير صحيح");return;}
   if(!confirm("حذف هذه الملاحظة؟")) return;
   db.ref("vehicle_notes/"+vid+"/"+noteId).remove().then(()=>loadVehicleNotes());
 }

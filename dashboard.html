@@ -453,17 +453,6 @@ main{max-width:680px;margin:0 auto;padding:20px 14px 0;}
         </thead>
         <tbody>
           <tr style="border-bottom:1px solid var(--line);">
-            <td style="padding:10px 12px;font-weight:700;white-space:nowrap;">أجهزة اللاسلكي</td>
-            <td style="padding:6px 12px;text-align:center;">
-              <input type="number" id="radioCount" min="0" max="99" placeholder="0"
-                     style="width:72px;padding:8px;font-size:18px;font-weight:700;text-align:center;border:1.5px solid var(--line-strong);border-radius:8px;font-family:'IBM Plex Mono',monospace;background:#F7F7F3;color:var(--ink);">
-            </td>
-            <td style="padding:6px 12px;">
-              <input type="text" id="radioNotes" placeholder="ملاحظات..."
-                     style="width:100%;padding:8px 10px;font-size:14px;border:1.5px solid var(--line-strong);border-radius:8px;background:#F7F7F3;color:var(--ink);font-family:inherit;">
-            </td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--line);">
             <td style="padding:10px 12px;font-weight:700;white-space:nowrap;">أجهزة ميدان المركز</td>
             <td style="padding:6px 12px;text-align:center;">
               <input type="number" id="centerCount" min="0" max="99" placeholder="0"
@@ -691,8 +680,6 @@ function saveFieldDevices(){
   const status=document.getElementById("fdStatus");
   status.textContent="جاري الحفظ…";
   const fd={
-    radio: parseInt(document.getElementById("radioCount").value)||0,
-    radioNotes: document.getElementById("radioNotes").value.trim(),
     center: parseInt(document.getElementById("centerCount").value)||0,
     centerNotes: document.getElementById("centerNotes").value.trim(),
     pump: parseInt(document.getElementById("pumpCount").value)||0,
@@ -814,8 +801,6 @@ function applyDashLogin(name,role){
   db.ref("fieldDevices").once("value").then(snap=>{
     latestFieldDevices=snap.val()||{};
     const fd=latestFieldDevices;
-    if(fd.radio!==undefined) document.getElementById("radioCount").value=fd.radio;
-    if(fd.radioNotes) document.getElementById("radioNotes").value=fd.radioNotes;
     if(fd.center!==undefined) document.getElementById("centerCount").value=fd.center;
     if(fd.centerNotes) document.getElementById("centerNotes").value=fd.centerNotes;
     if(fd.pump!==undefined) document.getElementById("pumpCount").value=fd.pump;

@@ -97,12 +97,7 @@ textarea:focus-visible{outline:2px solid var(--green);outline-offset:2px;backgro
   </section>
 
   <section class="card">
-    <div class="field-head"><div class="field-num">3</div><div><div class="field-title">المهمة المنجزة</div><div class="field-sub">اكتب ما قمت به</div></div></div>
-    <textarea id="taskDesc" placeholder="مثال: تم تنظيف الآلية وفحص الإطارات وتعبئة الوقود..."></textarea>
-  </section>
-
-  <section class="card">
-    <div class="field-head"><div class="field-num">4</div><div><div class="field-title">صورة</div><div class="field-sub">صوّر الآلية أو المهمة (اختياري)</div></div></div>
+    <div class="field-head"><div class="field-num">3</div><div><div class="field-title">صورة</div><div class="field-sub">صوّر الآلية أو المهمة (اختياري)</div></div></div>
     <label class="photo-btn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
       التقاط صورة
@@ -159,10 +154,8 @@ const err=document.getElementById("err");
 document.getElementById("send").addEventListener("click",()=>{
   const vehicle=document.getElementById("vehicle").value;
   const taskType=document.getElementById("taskType").value;
-  const taskDesc=document.getElementById("taskDesc").value.trim();
   if(!vehicle){ err.textContent="الرجاء اختيار رقم الآلية"; err.style.display="block"; return; }
   if(!taskType){ err.textContent="الرجاء اختيار نوع المهمة"; err.style.display="block"; return; }
-  if(!taskDesc){ err.textContent="الرجاء كتابة المهمة المنجزة"; err.style.display="block"; return; }
   err.style.display="none";
 
   const btn=document.getElementById("send");
@@ -172,7 +165,6 @@ document.getElementById("send").addEventListener("click",()=>{
   const record={
     vehicle,
     taskType,
-    task: taskDesc,
     operator: currentUser?currentUser.name:"",
     fileNumber: currentUser?currentUser.fileNumber:"",
     timestamp: new Date().toISOString()

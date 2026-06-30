@@ -615,6 +615,10 @@ function doLogin(){
     window.location.href="breathing.html";
     return;
   }
+  if(emp.role==="مشغل الآلية"&&!sessionStorage.getItem("task_chosen")){
+    window.location.replace("entry.html?v=1");
+    return;
+  }
   applyLogin(emp);
 }
 
@@ -639,11 +643,21 @@ document.getElementById("fileInput").addEventListener("keydown",e=>{if(e.key==="
     return;
   }
   const stored=sessionStorage.getItem("kabd_user");
-  if(stored){try{applyLogin(JSON.parse(stored));}catch(e){}}
+  if(stored){
+    try{
+      const u=JSON.parse(stored);
+      if(u.role==="مشغل الآلية"&&!sessionStorage.getItem("task_chosen")){
+        window.location.replace("entry.html?v=1");
+        return;
+      }
+      applyLogin(u);
+    }catch(e){}
+  }
 })();
 
 function pickOperator(fileNum,name){
   sessionStorage.setItem("kabd_user",JSON.stringify({fileNum,name,role:"مشغل الآلية"}));
+  sessionStorage.setItem("task_chosen","1");
   document.getElementById("op-picker").classList.remove("open");
   applyLogin({name,role:"مشغل الآلية"});
 }

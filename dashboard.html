@@ -1234,6 +1234,7 @@ function renderTasksList(){
         <button class="task-del-btn" onclick="deleteTask('${k}')" title="حذف">🗑️</button>
       </div>
       <div class="task-body">
+        ${t.taskType?`<div style="display:inline-block;margin-bottom:10px;font-size:12px;font-weight:700;background:var(--water-soft);color:var(--water);padding:4px 10px;border-radius:8px;">📌 ${escHTML(t.taskType)}</div>`:""}
         <div class="task-text">${escHTML(t.task||"")}</div>
         ${t.photo?`<img src="${t.photo}" class="task-photo" onclick="openLightbox(this.src)">`:""}
         <div class="task-meta">

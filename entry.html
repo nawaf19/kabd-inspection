@@ -80,7 +80,7 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:20px 
     <div class="choice-screen" id="choiceScreen">
       <div class="choice-greeting" id="choiceGreeting"></div>
       <div class="choice-btns">
-        <button class="choice-btn primary" onclick="window.location.href='index.html'">
+        <button class="choice-btn primary" onclick="sessionStorage.setItem('task_chosen','1');window.location.href='index.html'">
           <div class="choice-btn-icon">🚒</div>
           <div class="choice-btn-text">
             <div class="choice-btn-label">فحص الآليات</div>

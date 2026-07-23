@@ -76,9 +76,12 @@ input.rpt-check{accent-color:var(--ember);width:18px;height:18px;cursor:pointer;
 .rpt-photos img{max-height:110px;border:1.5px solid var(--line-strong);border-radius:8px;cursor:pointer;object-fit:cover;}
 
 .rpt-footer{display:flex;align-items:center;padding:10px 16px;border-top:1px solid var(--line);background:#FAFAF7;}
-.rpt-del-btn{background:none;border:1px solid var(--line-strong);border-radius:8px;padding:6px 14px;cursor:pointer;color:var(--muted);font-family:inherit;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px;transition:background .12s,color .12s,border-color .12s;}
+.rpt-del-btn,.rpt-save-img-btn{background:none;border:1px solid var(--line-strong);border-radius:8px;padding:6px 14px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px;transition:background .12s,color .12s,border-color .12s;}
+.rpt-del-btn{color:var(--muted);}
 .rpt-del-btn:active{background:var(--ember-soft);color:var(--ember);border-color:var(--ember);}
-.rpt-del-btn svg{width:14px;height:14px;}
+.rpt-save-img-btn{color:var(--water);}
+.rpt-save-img-btn:active{background:var(--water-soft);border-color:var(--water);}
+.rpt-del-btn svg,.rpt-save-img-btn svg{width:14px;height:14px;}
 
 .no-data{text-align:center;padding:60px 20px;color:var(--muted);font-size:15px;background:var(--surface);border:1.5px solid var(--line);border-radius:var(--radius);}
 .no-data-icon{font-size:48px;margin-bottom:12px;}
@@ -143,6 +146,7 @@ input.rpt-check{accent-color:var(--ember);width:18px;height:18px;cursor:pointer;
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 function openLightbox(src){
   document.getElementById("lightbox-img").src=src;
@@ -176,6 +180,28 @@ function toggleCard(key){
   if(!card||!cb) return;
   card.classList.toggle("selected",cb.checked);
   updateSelectionUI();
+}
+function saveAsImage(key){
+  const card=document.getElementById("card-"+key);
+  const footer=card.querySelector(".rpt-footer");
+  const btn=document.getElementById("save-btn-"+key);
+  const origText=btn.innerHTML;
+  btn.textContent="جاري الحفظ…";
+  footer.style.visibility="hidden";
+  html2canvas(card,{scale:2,useCORS:true,backgroundColor:"#FFFFFF",logging:false}).then(canvas=>{
+    footer.style.visibility="";
+    btn.innerHTML=origText;
+    const r=card.querySelector(".rpt-seq");
+    const label=r?r.textContent.trim():"بلاغ";
+    const link=document.createElement("a");
+    link.download=label+".png";
+    link.href=canvas.toDataURL("image/png");
+    link.click();
+  }).catch(()=>{
+    footer.style.visibility="";
+    btn.innerHTML=origText;
+    alert("حدث خطأ أثناء حفظ الصورة");
+  });
 }
 function checkPwd(){
   const p=prompt("أدخل الرقم السري للحذف:");
@@ -312,8 +338,9 @@ db.ref("reports").once("value").then(snap=>{
       <div class="rpt-body">
         ${callerSec}${addrSec}${vehicleSec}${techSec}${causeSec}${photoSec}
       </div>
-      <div class="rpt-footer">
+      <div class="rpt-footer" style="gap:8px;">
         <button class="rpt-del-btn" onclick="deleteSingle('${key}')">${trashSVG} حذف البلاغ</button>
+        <button class="rpt-save-img-btn" id="save-btn-${key}" onclick="saveAsImage('${key}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> حفظ كصورة</button>
       </div>
     </div>`;
   });

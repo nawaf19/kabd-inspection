@@ -592,7 +592,11 @@ document.getElementById("send").addEventListener("click",()=>{
     const btn=document.getElementById("send");
     btn.textContent="✓ تم حفظ الفحص";
     btn.style.background="#1B7A3D";
-    setTimeout(()=>{ btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> حفظ الفحص'; },2000);
+    if(!isOfficerFlow){
+      setSendLocked(true);
+    } else {
+      setTimeout(()=>{ btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> حفظ الفحص'; },2000);
+    }
   }
 
   done();

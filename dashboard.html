@@ -346,6 +346,14 @@ main{max-width:680px;margin:0 auto;padding:20px 14px 0;}
       <input type="file" id="rptPhoto" accept="image/*" multiple hidden>
       <div id="rptPhotoGrid"></div>
     </div>
+    <div class="rpt-section">
+      <div class="rpt-section-title"><span>6</span> المعاينة الفنية</div>
+      <textarea id="rptTechInspection" class="rpt-input" rows="4" placeholder="وصف المعاينة الفنية للحادث..." style="resize:vertical;line-height:1.6;"></textarea>
+    </div>
+    <div class="rpt-section">
+      <div class="rpt-section-title"><span>7</span> السبب المعتقد</div>
+      <textarea id="rptCause" class="rpt-input" rows="3" placeholder="السبب المعتقد للحادث..." style="resize:vertical;line-height:1.6;"></textarea>
+    </div>
     <div id="rptMsg"></div>
     <button class="rpt-save-btn" id="rptSaveBtn" onclick="saveReport()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
@@ -438,7 +446,7 @@ main{max-width:680px;margin:0 auto;padding:20px 14px 0;}
           </tr>
         </thead>
         <tbody>
-          <tr style="border-bottom:1px solid var(--line);">
+          <tr>
             <td style="padding:10px 12px;font-weight:700;white-space:nowrap;">أجهزة ميدان المركز</td>
             <td style="padding:6px 12px;text-align:center;">
               <input type="number" id="centerCount" min="0" max="99" placeholder="0"
@@ -446,17 +454,6 @@ main{max-width:680px;margin:0 auto;padding:20px 14px 0;}
             </td>
             <td style="padding:6px 12px;">
               <input type="text" id="centerNotes" placeholder="ملاحظات..."
-                     style="width:100%;padding:8px 10px;font-size:14px;border:1.5px solid var(--line-strong);border-radius:8px;background:#F7F7F3;color:var(--ink);font-family:inherit;">
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:10px 12px;font-weight:700;white-space:nowrap;">أجهزة ميدان البمب</td>
-            <td style="padding:6px 12px;text-align:center;">
-              <input type="number" id="pumpCount" min="0" max="99" placeholder="0"
-                     style="width:72px;padding:8px;font-size:18px;font-weight:700;text-align:center;border:1.5px solid var(--line-strong);border-radius:8px;font-family:'IBM Plex Mono',monospace;background:#F7F7F3;color:var(--ink);">
-            </td>
-            <td style="padding:6px 12px;">
-              <input type="text" id="pumpNotes" placeholder="ملاحظات..."
                      style="width:100%;padding:8px 10px;font-size:14px;border:1.5px solid var(--line-strong);border-radius:8px;background:#F7F7F3;color:var(--ink);font-family:inherit;">
             </td>
           </tr>
@@ -690,8 +687,6 @@ function saveFieldDevices(){
   const fd={
     center: parseInt(document.getElementById("centerCount").value)||0,
     centerNotes: document.getElementById("centerNotes").value.trim(),
-    pump: parseInt(document.getElementById("pumpCount").value)||0,
-    pumpNotes: document.getElementById("pumpNotes").value.trim(),
     timestamp: new Date().toISOString()
   };
   db.ref("fieldDevices").set(fd).then(()=>{
@@ -811,8 +806,6 @@ function applyDashLogin(name,role){
     const fd=latestFieldDevices;
     if(fd.center!==undefined) document.getElementById("centerCount").value=fd.center;
     if(fd.centerNotes) document.getElementById("centerNotes").value=fd.centerNotes;
-    if(fd.pump!==undefined) document.getElementById("pumpCount").value=fd.pump;
-    if(fd.pumpNotes) document.getElementById("pumpNotes").value=fd.pumpNotes;
   });
   loadData();
   loadReportCount();
@@ -866,6 +859,8 @@ function closeRptPage(){
   ["addrGov","addrArea","addrBlock","addrStreet","addrAvenue","addrBuilding","addrApt","addrShop","addrDesc"].forEach(id=>document.getElementById(id).value="");
   document.querySelectorAll('[name="rptVehicle"]').forEach(c=>c.checked=false);
   rptPhotos=[];renderRptPhotos();
+  document.getElementById("rptTechInspection").value="";
+  document.getElementById("rptCause").value="";
   document.getElementById("rptMsg").style.display="none";
   document.getElementById("rptSaveBtn").innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> حفظ بيانات البلاغ';
 }
@@ -889,7 +884,10 @@ function saveReport(){
   const report={
     type,callerNum:document.getElementById("rptCaller").value.trim(),
     address:{governorate:document.getElementById("addrGov").value.trim(),area:document.getElementById("addrArea").value.trim(),block:document.getElementById("addrBlock").value.trim(),street:document.getElementById("addrStreet").value.trim(),avenue:document.getElementById("addrAvenue").value.trim(),building:document.getElementById("addrBuilding").value.trim(),apartment:document.getElementById("addrApt").value.trim(),shop:document.getElementById("addrShop").value.trim(),description:document.getElementById("addrDesc").value.trim()},
-    vehicles,photos:rptPhotos.slice(),timestamp:new Date().toISOString()
+    vehicles,photos:rptPhotos.slice(),
+    techInspection:document.getElementById("rptTechInspection").value.trim(),
+    cause:document.getElementById("rptCause").value.trim(),
+    timestamp:new Date().toISOString()
   };
   msg.style.cssText="display:block;background:#f0f0f0;color:var(--muted);border:1px solid var(--line);";msg.textContent="جاري الحفظ…";
   db.ref("reports").push(report).then(()=>{

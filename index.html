@@ -353,6 +353,7 @@ textarea:focus-visible{outline:2px solid var(--ember);outline-offset:2px;backgro
 const firebaseConfig={apiKey:"AIzaSyBfi7BxhuMVehfmtvIOLm1MVYeXk_BWVz0",authDomain:"nawwaf-7258c.firebaseapp.com",databaseURL:"https://nawwaf-7258c-default-rtdb.firebaseio.com",projectId:"nawwaf-7258c",storageBucket:"nawwaf-7258c.firebasestorage.app",messagingSenderId:"391747168751",appId:"1:391747168751:web:01777a553f7250d4ce6e1a"};
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database();
+const isOfficerFlow=(new URLSearchParams(window.location.search)).get("from")==="dashboard";
 const inspRef=db.ref("inspections");
 let inspectedVehicles={};
 inspRef.on("value",snap=>{inspectedVehicles=snap.val()||{};});
@@ -417,11 +418,27 @@ foamSlider.addEventListener("input",()=>paintSlider(foamSlider,foamNum));
 paintSlider(foamSlider,foamNum);
 
 const machine=document.getElementById("machine");
+function setSendLocked(locked){
+  const btn=document.getElementById("send");
+  btn.disabled=locked;
+  btn.style.opacity=locked?"0.45":"";
+  btn.style.cursor=locked?"not-allowed":"";
+}
+
 machine.addEventListener("change",()=>{
   machine.classList.remove("placeholder");
   if(inspectedVehicles[machine.value]){
-    showErr("⚠️ تم فحص هذه الآلية من قبل — "+inspectedVehicles[machine.value].operator,machine);
-  } else { err.style.display="none"; }
+    if(isOfficerFlow){
+      showErr("⚠️ تم فحص هذه الآلية من قبل — "+inspectedVehicles[machine.value].operator+" — ستتم الكتابة فوق الفحص السابق",machine);
+      setSendLocked(false);
+    } else {
+      showErr("🔒 تم فحص هذه الآلية من قبل — "+inspectedVehicles[machine.value].operator+" — لا يمكنك التعديل",machine);
+      setSendLocked(true);
+    }
+  } else {
+    err.style.display="none";
+    setSendLocked(false);
+  }
   updateVisibleFields();
 });
 

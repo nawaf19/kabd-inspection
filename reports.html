@@ -2,108 +2,139 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>سجل البلاغات — مركز كبد</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;}
+:root{
+  --bg:#E9EAE4;--surface:#FFFFFF;--ink:#16181C;--muted:#6A6F77;
+  --line:#DDDED6;--line-strong:#C9CAC1;
+  --ember:#D33C1C;--ember-soft:#FBE7E0;
+  --water:#137C9E;--water-soft:#E1F0F5;
+  --green:#1B7A3D;--green-soft:#E2F3E8;
+  --header:#16181C;--radius:14px;
+  --shadow:0 1px 2px rgba(22,24,28,.05),0 6px 20px rgba(22,24,28,.07);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{margin:0;padding:0;}
-body{background:#f0f0f0;color:#000;font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;font-size:13px;line-height:1.4;-webkit-font-smoothing:antialiased;}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;font-size:15px;line-height:1.5;padding-bottom:40px;-webkit-font-smoothing:antialiased;}
+.mono{font-family:"IBM Plex Mono",monospace;font-feature-settings:"tnum";}
 
-.toolbar{position:sticky;top:0;z-index:30;background:#16181C;color:#F4F3EE;padding:12px 18px;border-bottom:3px solid #D33C1C;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
-.toolbar h1{margin:0;font-size:16px;font-weight:700;}
+.toolbar{position:sticky;top:0;z-index:30;background:var(--header);color:#F4F3EE;padding:14px 18px;border-bottom:3px solid var(--ember);}
+.toolbar-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.toolbar-left{flex:1;min-width:0;}
+.back-link{color:#9AA0A8;text-decoration:none;font-size:12px;font-weight:600;display:flex;align-items:center;gap:4px;margin-bottom:3px;}
+.back-link svg{width:13px;height:13px;}
+.toolbar h1{margin:0;font-size:17px;font-weight:700;}
 .toolbar-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
-.t-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-family:inherit;font-size:13px;font-weight:600;padding:8px 14px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:6px;}
-.t-btn svg{width:16px;height:16px;}
-.back-link{color:#9AA0A8;text-decoration:none;font-size:13px;font-weight:600;}
-.count-badge{font-family:"IBM Plex Mono",monospace;font-size:12px;color:#9AA0A8;}
-#deleteSelBtn{background:rgba(211,60,28,.5);border-color:rgba(211,60,28,.8);display:none;}
+.t-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;font-family:inherit;font-size:12px;font-weight:700;padding:8px 14px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .12s;}
+.t-btn svg{width:15px;height:15px;flex:none;}
+.t-btn:active{background:rgba(255,255,255,.2);}
+.t-btn.danger{background:rgba(211,60,28,.35);border-color:rgba(211,60,28,.6);}
+.count-chip{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:700;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15);color:#E0E4EA;padding:4px 12px;border-radius:999px;white-space:nowrap;}
+#deleteSelBtn{display:none;}
 
-.reports-area{max-width:1000px;margin:20px auto;padding:0 14px 40px;}
+.reports-area{max-width:720px;margin:24px auto 0;padding:0 14px;}
 
-.rpt-page-title{background:#D33C1C;color:#fff;padding:14px 20px;font-size:16px;font-weight:700;text-align:center;border-radius:10px 10px 0 0;margin-bottom:0;}
+/* ── Card ── */
+.rpt-card{background:var(--surface);border:1.5px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:20px;overflow:hidden;transition:border-color .15s,box-shadow .15s;}
+.rpt-card.selected{border-color:var(--ember);box-shadow:0 0 0 3px rgba(211,60,28,.15);}
 
-.rpt-card{background:#fff;border:2px solid #000;margin-bottom:20px;overflow:hidden;border-radius:0 0 8px 8px;transition:border-color .15s;}
-.rpt-card.selected{border-color:#D33C1C;box-shadow:0 0 0 2px rgba(211,60,28,.3);}
-.rpt-card-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:10px 16px;border-bottom:2px solid #000;background:#f8f8f8;font-weight:700;font-size:12px;}
-.rpt-card.selected .rpt-card-header{background:#fff3f1;}
-.rpt-num{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:700;color:#555;}
-.rpt-type-badge{display:inline-block;padding:4px 12px;border-radius:6px;font-weight:700;font-size:12px;}
-.rpt-type-fire{background:#D33C1C;color:#fff;}
-.rpt-type-rescue{background:#1a56db;color:#fff;}
-.rpt-type-service{background:#057a55;color:#fff;}
-.rpt-type-other{background:#6b7280;color:#fff;}
-.rpt-datetime{font-family:"IBM Plex Mono",monospace;font-size:11px;color:#555;}
-.rpt-caller{font-size:12px;color:#333;}
+.rpt-banner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:14px 16px;background:var(--ink);color:#F4F3EE;}
+.rpt-banner-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.rpt-seq{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:700;color:#9AA0A8;letter-spacing:.5px;}
+.rpt-type-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 13px;border-radius:6px;font-weight:700;font-size:13px;}
+.type-fire{background:var(--ember);color:#fff;}
+.type-rescue{background:#1a56db;color:#fff;}
+.type-service{background:var(--green);color:#fff;}
+.type-other{background:var(--muted);color:#fff;}
+.rpt-datetime{font-family:"IBM Plex Mono",monospace;font-size:11px;color:#9AA0A8;}
+input.rpt-check{accent-color:var(--ember);width:18px;height:18px;cursor:pointer;flex-shrink:0;}
 
-.rpt-check{width:18px;height:18px;accent-color:#D33C1C;cursor:pointer;flex-shrink:0;}
+.rpt-body{padding:16px;}
+.rpt-section{margin-bottom:14px;}
+.rpt-section:last-child{margin-bottom:0;}
+.rpt-section-label{font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);font-family:"IBM Plex Mono",monospace;margin-bottom:8px;}
 
-.rpt-del-btn{background:none;border:1px solid #ccc;border-radius:6px;padding:4px 8px;cursor:pointer;color:#888;display:flex;align-items:center;gap:4px;font-size:11px;font-family:inherit;font-weight:600;transition:background .15s,color .15s,border-color .15s;}
-.rpt-del-btn:hover{background:#D33C1C;color:#fff;border-color:#D33C1C;}
-.rpt-del-btn svg{width:13px;height:13px;}
+.rpt-caller-val{font-family:"IBM Plex Mono",monospace;font-size:22px;font-weight:700;direction:ltr;display:inline-block;}
 
-.rpt-table{width:100%;border-collapse:collapse;}
-.rpt-table th{background:#e8e8e8;font-size:10px;font-weight:700;padding:6px 8px;border:1px solid #000;text-align:center;}
-.rpt-table td{font-size:12px;padding:6px 8px;border:1px solid #000;text-align:center;vertical-align:middle;}
+.addr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+@media(max-width:480px){.addr-grid{grid-template-columns:repeat(2,1fr);}}
+.addr-item{background:#F7F7F3;border:1px solid var(--line);border-radius:8px;padding:8px 10px;}
+.addr-item .addr-lbl{font-size:10.5px;font-weight:700;color:var(--muted);margin-bottom:2px;}
+.addr-item .addr-val{font-size:14px;font-weight:600;}
+.addr-item.full{grid-column:1/-1;}
 
-.rpt-vehicles{font-size:12px;font-weight:600;padding:8px 16px;border-top:1.5px solid #ccc;background:#fafafa;color:#333;}
-.rpt-vehicles span{color:#555;font-weight:400;}
+.vehicle-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.vehicle-chip{display:inline-flex;align-items:center;gap:5px;font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:700;padding:5px 12px;background:var(--water-soft);color:var(--water);border:1px solid rgba(19,124,158,.25);border-radius:8px;}
 
-.rpt-photos{display:flex;flex-wrap:wrap;gap:8px;padding:10px 16px;border-top:1.5px solid #ccc;}
-.rpt-photos img{max-height:100px;border:1px solid #ccc;border-radius:6px;cursor:pointer;}
+.rpt-text-block{background:#F7F7F3;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.7;white-space:pre-wrap;}
 
-.no-data{text-align:center;padding:60px 20px;color:#888;font-size:15px;background:#fff;border:2px solid #ddd;border-radius:10px;}
+.rpt-photos{display:flex;flex-wrap:wrap;gap:8px;}
+.rpt-photos img{max-height:110px;border:1.5px solid var(--line-strong);border-radius:8px;cursor:pointer;object-fit:cover;}
+
+.rpt-footer{display:flex;align-items:center;padding:10px 16px;border-top:1px solid var(--line);background:#FAFAF7;}
+.rpt-del-btn{background:none;border:1px solid var(--line-strong);border-radius:8px;padding:6px 14px;cursor:pointer;color:var(--muted);font-family:inherit;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px;transition:background .12s,color .12s,border-color .12s;}
+.rpt-del-btn:active{background:var(--ember-soft);color:var(--ember);border-color:var(--ember);}
+.rpt-del-btn svg{width:14px;height:14px;}
+
+.no-data{text-align:center;padding:60px 20px;color:var(--muted);font-size:15px;background:var(--surface);border:1.5px solid var(--line);border-radius:var(--radius);}
 .no-data-icon{font-size:48px;margin-bottom:12px;}
-.loading{text-align:center;padding:50px;color:#aaa;font-size:15px;}
+.loading{text-align:center;padding:50px;color:var(--muted);font-size:15px;}
 
-#lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.92);align-items:center;justify-content:center;}
+#lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.9);align-items:center;justify-content:center;padding:20px;cursor:pointer;}
 #lightbox.open{display:flex;}
-#lightbox img{max-width:94vw;max-height:90vh;border-radius:10px;object-fit:contain;box-shadow:0 8px 40px rgba(0,0,0,.5);}
+#lightbox img{max-width:94vw;max-height:90vh;border-radius:10px;object-fit:contain;cursor:default;}
 #lightbox-close{position:fixed;top:16px;left:16px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:24px;cursor:pointer;display:grid;place-items:center;}
 
 @media print{
   body{background:#fff;}
   .toolbar{display:none!important;}
   .reports-area{margin:0;padding:0;max-width:100%;}
-  .rpt-card{break-inside:avoid;}
-  .rpt-check,.rpt-del-btn{display:none!important;}
-  @page{size:A4 portrait;margin:8mm;}
+  .rpt-card{break-inside:avoid;box-shadow:none!important;border:1.5px solid #ccc!important;}
+  .rpt-check,.rpt-del-btn,.rpt-footer{display:none!important;}
+  @page{size:A4 portrait;margin:10mm;}
 }
 </style>
 </head>
 <body>
 
 <div class="toolbar">
-  <div>
-    <a href="dashboard.html" class="back-link">→ العودة للمتابعة</a>
-    <h1>سجل البلاغات — مركز كبد للإطفاء 939</h1>
-  </div>
-  <div class="toolbar-actions">
-    <span class="count-badge" id="countBadge"></span>
-    <button class="t-btn" id="deleteSelBtn" onclick="deleteSelected()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-      حذف المحدد <span id="delSelCount"></span>
-    </button>
-    <button class="t-btn" onclick="clearAllReports()" style="background:rgba(211,60,28,.35);border-color:rgba(211,60,28,.6);">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-      مسح الكل
-    </button>
-    <button class="t-btn" onclick="location.reload()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-      تحديث
-    </button>
-    <button class="t-btn" onclick="window.print()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-      طباعة السجل
-    </button>
+  <div class="toolbar-inner">
+    <div class="toolbar-left">
+      <a href="dashboard.html" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        العودة للمتابعة
+      </a>
+      <h1>سجل البلاغات — مركز كبد للإطفاء 939</h1>
+    </div>
+    <div class="toolbar-actions">
+      <span class="count-chip" id="countBadge"></span>
+      <button class="t-btn" id="deleteSelBtn" onclick="deleteSelected()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        حذف المحدد <span id="delSelCount"></span>
+      </button>
+      <button class="t-btn danger" onclick="clearAllReports()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        مسح الكل
+      </button>
+      <button class="t-btn" onclick="location.reload()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        تحديث
+      </button>
+      <button class="t-btn" onclick="window.print()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        طباعة
+      </button>
+    </div>
   </div>
 </div>
 
 <div id="lightbox" onclick="closeLightbox()">
   <button id="lightbox-close" onclick="closeLightbox()">×</button>
-  <img id="lightbox-img" src="" alt="">
+  <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()">
 </div>
 
 <div class="reports-area" id="reportsArea">
@@ -130,21 +161,15 @@ firebase.initializeApp(firebaseConfig);
 const db=firebase.database();
 
 function updateBadge(){
-  const remaining=document.querySelectorAll(".rpt-card").length;
-  document.getElementById("countBadge").textContent=remaining?remaining+" بلاغ":"";
+  const n=document.querySelectorAll(".rpt-card").length;
+  document.getElementById("countBadge").textContent=n?n+" بلاغ":"";
 }
-
 function updateSelectionUI(){
   const checked=document.querySelectorAll(".rpt-check:checked");
   const btn=document.getElementById("deleteSelBtn");
-  if(checked.length>0){
-    btn.style.display="flex";
-    document.getElementById("delSelCount").textContent="("+checked.length+")";
-  } else {
-    btn.style.display="none";
-  }
+  btn.style.display=checked.length?"flex":"none";
+  if(checked.length) document.getElementById("delSelCount").textContent="("+checked.length+")";
 }
-
 function toggleCard(key){
   const card=document.getElementById("card-"+key);
   const cb=document.getElementById("cb-"+key);
@@ -152,48 +177,35 @@ function toggleCard(key){
   card.classList.toggle("selected",cb.checked);
   updateSelectionUI();
 }
-
-function checkDeletePassword(){
-  const pwd=prompt("أدخل الرقم السري للحذف:");
-  if(pwd===null) return false;
-  if(pwd==="232344") return true;
-  alert("الرقم السري غير صحيح");
-  return false;
+function checkPwd(){
+  const p=prompt("أدخل الرقم السري للحذف:");
+  if(p===null) return false;
+  if(p==="232344") return true;
+  alert("الرقم السري غير صحيح"); return false;
 }
-
 function deleteSingle(key){
-  if(!checkDeletePassword()) return;
+  if(!checkPwd()) return;
   db.ref("reports/"+key).remove().then(()=>{
-    const card=document.getElementById("card-"+key);
-    if(card) card.remove();
-    updateBadge();
-    updateSelectionUI();
+    const c=document.getElementById("card-"+key); if(c) c.remove();
+    updateBadge(); updateSelectionUI();
     if(!document.querySelector(".rpt-card"))
       document.getElementById("reportsArea").innerHTML='<div class="no-data"><div class="no-data-icon">📂</div>لا توجد بلاغات مسجلة بعد</div>';
   }).catch(()=>alert("حدث خطأ أثناء الحذف"));
 }
-
 function deleteSelected(){
   const checked=document.querySelectorAll(".rpt-check:checked");
   if(!checked.length) return;
-  if(!checkDeletePassword()) return;
+  if(!checkPwd()) return;
   if(!confirm("هل تريد حذف "+checked.length+" بلاغ؟ لا يمكن التراجع.")) return;
-  const promises=[];
-  checked.forEach(cb=>{
-    const key=cb.dataset.key;
-    promises.push(db.ref("reports/"+key).remove().then(()=>{
-      const card=document.getElementById("card-"+key);
-      if(card) card.remove();
-    }));
-  });
-  Promise.all(promises).then(()=>{
-    updateBadge();
-    updateSelectionUI();
+  Promise.all(Array.from(checked).map(cb=>{
+    const k=cb.dataset.key;
+    return db.ref("reports/"+k).remove().then(()=>{const c=document.getElementById("card-"+k);if(c) c.remove();});
+  })).then(()=>{
+    updateBadge(); updateSelectionUI();
     if(!document.querySelector(".rpt-card"))
       document.getElementById("reportsArea").innerHTML='<div class="no-data"><div class="no-data-icon">📂</div>لا توجد بلاغات مسجلة بعد</div>';
   }).catch(()=>alert("حدث خطأ أثناء الحذف"));
 }
-
 function clearAllReports(){
   if(!confirm("هل تريد مسح جميع البلاغات المحفوظة؟ لا يمكن التراجع عن هذا الإجراء.")) return;
   db.ref("reports").remove().then(()=>{
@@ -204,77 +216,111 @@ function clearAllReports(){
 }
 
 const typeMap={
-  "حريق":{label:"🔥 حريق",cls:"rpt-type-fire"},
-  "إنقاذ":{label:"🚑 إنقاذ",cls:"rpt-type-rescue"},
-  "خدمات عامة":{label:"🔧 خدمات عامة",cls:"rpt-type-service"},
-  "أخرى":{label:"📋 أخرى",cls:"rpt-type-other"}
+  "حريق":{label:"🔥 حريق",cls:"type-fire"},
+  "إنقاذ":{label:"🚑 إنقاذ",cls:"type-rescue"},
+  "خدمات عامة":{label:"🔧 خدمات عامة",cls:"type-service"},
+  "أخرى":{label:"📋 أخرى",cls:"type-other"}
 };
+
+const vehicleNames={
+  "139":"🚙 139 جيب","239":"🚑 239 إنقاذ","339":"🚒 339 بمب",
+  "439":"🚛 439 تنكر","539":"🚛 539 تنكر","839":"🫁 839 تنفس",
+  "2839":"🚚 2839 تريلة","731":"🚐 731 وانيت"
+};
+
+function escH(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML;}
+
+function addrItem(label,val,full){
+  if(!val) return "";
+  return `<div class="addr-item${full?" full":""}"><div class="addr-lbl">${label}</div><div class="addr-val">${escH(val)}</div></div>`;
+}
 
 db.ref("reports").once("value").then(snap=>{
   const container=document.getElementById("reportsArea");
   const data=snap.val();
-
   if(!data||!Object.keys(data).length){
     container.innerHTML='<div class="no-data"><div class="no-data-icon">📂</div>لا توجد بلاغات مسجلة بعد</div>';
     return;
   }
 
-  const entries=Object.entries(data).sort((a,b)=>{
-    const ta=a[1].timestamp||"";
-    const tb=b[1].timestamp||"";
-    return tb>ta?1:tb<ta?-1:0;
-  });
+  const entries=Object.entries(data).sort((a,b)=>(b[1].timestamp||"")>(a[1].timestamp||"")?1:-1);
   document.getElementById("countBadge").textContent=entries.length+" بلاغ";
 
-  const trashIcon=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`;
+  const trashSVG=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`;
 
-  let html=`<div class="rpt-page-title">سجل بيانات البلاغات — مركز كبد للإطفاء 939</div>`;
-
+  let html="";
   entries.forEach(([key,r],idx)=>{
     const ts=r.timestamp?new Date(r.timestamp):null;
     const dateStr=ts?ts.toLocaleDateString("ar-KW-u-nu-latn",{year:"numeric",month:"2-digit",day:"2-digit"}):"—";
     const timeVal=ts?ts.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false}):"—";
-    const t=typeMap[r.type]||{label:r.type||"—",cls:"rpt-type-other"};
+    const t=typeMap[r.type]||{label:r.type||"—",cls:"type-other"};
     const addr=r.address||{};
-    const vehicles=(r.vehicles||[]).join("  |  ");
+    const vehicles=r.vehicles||[];
     const photos=r.photos||[];
 
-    html+=`
-    <div class="rpt-card" id="card-${key}">
-      <div class="rpt-card-header">
-        <div style="display:flex;align-items:center;gap:10px;">
+    const addrFields=[
+      addrItem("المحافظة",addr.governorate),
+      addrItem("المنطقة",addr.area),
+      addrItem("القطعة",addr.block),
+      addrItem("الشارع",addr.street),
+      addrItem("الجادة",addr.avenue),
+      addrItem("المبنى",addr.building),
+      addrItem("الشقة",addr.apartment),
+      addrItem("المحل",addr.shop),
+      addrItem("وصف إضافي",addr.description,true)
+    ].join("");
+
+    const callerSec=r.callerNum?`<div class="rpt-section">
+      <div class="rpt-section-label">رقم المبلغ</div>
+      <div class="rpt-caller-val mono">${escH(r.callerNum)}</div>
+    </div>`:"";
+
+    const addrSec=addrFields?`<div class="rpt-section">
+      <div class="rpt-section-label">العنوان</div>
+      <div class="addr-grid">${addrFields}</div>
+    </div>`:"";
+
+    const vehicleSec=vehicles.length?`<div class="rpt-section">
+      <div class="rpt-section-label">الآليات المستخدمة</div>
+      <div class="vehicle-chips">${vehicles.map(v=>`<span class="vehicle-chip">${vehicleNames[v]||v}</span>`).join("")}</div>
+    </div>`:"";
+
+    const techSec=r.techInspection?`<div class="rpt-section">
+      <div class="rpt-section-label">المعاينة الفنية</div>
+      <div class="rpt-text-block">${escH(r.techInspection)}</div>
+    </div>`:"";
+
+    const causeSec=r.cause?`<div class="rpt-section">
+      <div class="rpt-section-label">السبب المعتقد</div>
+      <div class="rpt-text-block">${escH(r.cause)}</div>
+    </div>`:"";
+
+    const photoSec=photos.length?`<div class="rpt-section">
+      <div class="rpt-section-label">صور البلاغ</div>
+      <div class="rpt-photos">${photos.map(p=>`<img src="${p}" onclick="openLightbox('${p}')">`).join("")}</div>
+    </div>`:"";
+
+    html+=`<div class="rpt-card" id="card-${key}">
+      <div class="rpt-banner">
+        <div class="rpt-banner-left">
           <input type="checkbox" class="rpt-check" id="cb-${key}" data-key="${key}" onchange="toggleCard('${key}')">
-          <span class="rpt-num">بلاغ #${entries.length-idx}</span>
+          <span class="rpt-seq">بلاغ #${entries.length-idx}</span>
           <span class="rpt-type-badge ${t.cls}">${t.label}</span>
         </div>
         <span class="rpt-datetime">${dateStr} — ${timeVal}</span>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <span class="rpt-caller">رقم المبلغ: <strong>${r.callerNum||"—"}</strong></span>
-          <button class="rpt-del-btn" onclick="deleteSingle('${key}')">${trashIcon} حذف</button>
-        </div>
       </div>
-      <table class="rpt-table"><thead><tr>
-        <th>المحافظة</th><th>المنطقة</th><th>القطعة</th><th>الشارع</th><th>الجادة</th>
-        <th>المبنى</th><th>الشقة</th><th>المحل</th><th>وصف إضافي</th>
-      </tr></thead><tbody><tr>
-        <td>${addr.governorate||"—"}</td>
-        <td>${addr.area||"—"}</td>
-        <td>${addr.block||"—"}</td>
-        <td>${addr.street||"—"}</td>
-        <td>${addr.avenue||"—"}</td>
-        <td>${addr.building||"—"}</td>
-        <td>${addr.apartment||"—"}</td>
-        <td>${addr.shop||"—"}</td>
-        <td>${addr.description||"—"}</td>
-      </tr></tbody></table>
-      ${vehicles?`<div class="rpt-vehicles"><span>الآليات المستخدمة:</span> ${vehicles}</div>`:""}
-      ${photos.length?`<div class="rpt-photos">${photos.map(p=>`<img src="${p}" onclick="openLightbox(this.src)">`).join("")}</div>`:""}
+      <div class="rpt-body">
+        ${callerSec}${addrSec}${vehicleSec}${techSec}${causeSec}${photoSec}
+      </div>
+      <div class="rpt-footer">
+        <button class="rpt-del-btn" onclick="deleteSingle('${key}')">${trashSVG} حذف البلاغ</button>
+      </div>
     </div>`;
   });
 
   container.innerHTML=html;
 }).catch(err=>{
-  document.getElementById("reportsArea").innerHTML='<div class="no-data"><div class="no-data-icon">⚠️</div>حدث خطأ أثناء تحميل البيانات<br><small style="color:#aaa;font-size:11px;">'+(err&&err.message?err.message:"تحقق من الاتصال")+'</small><br><button onclick="location.reload()" style="margin-top:12px;padding:10px 20px;background:#D33C1C;color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;">إعادة المحاولة</button></div>';
+  document.getElementById("reportsArea").innerHTML='<div class="no-data"><div class="no-data-icon">⚠️</div>حدث خطأ أثناء تحميل البيانات<br><small style="color:var(--muted);font-size:12px;">'+(err&&err.message?err.message:"تحقق من الاتصال")+'</small><br><button onclick="location.reload()" style="margin-top:16px;padding:10px 20px;background:var(--ember);color:#fff;border:none;border-radius:10px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;">إعادة المحاولة</button></div>';
 });
 if('serviceWorker' in navigator) navigator.serviceWorker.register('/kabd-inspection/sw.js').catch(()=>{});
 </script>

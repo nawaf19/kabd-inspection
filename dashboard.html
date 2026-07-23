@@ -640,7 +640,13 @@ function loadData(firebaseData){
       }
 
       card.innerHTML=`
-        <div class="v-header"><div class="v-id"><div class="v-num mono">${v.id}</div><div class="v-type">${v.icon} ${v.type}</div></div><div class="v-status done">تم الفحص</div></div>
+        <div class="v-header">
+          <div class="v-id"><div class="v-num mono">${v.id}</div><div class="v-type">${v.icon} ${v.type}</div></div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="v-status done">تم الفحص</div>
+            <a href="index.html?vehicle=${v.id}&from=dashboard" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:var(--water);color:#fff;border-radius:8px;font-family:inherit;font-weight:700;font-size:12px;text-decoration:none;white-space:nowrap;">✏️ تعديل</a>
+          </div>
+        </div>
         <div class="v-body">
           <div class="v-grid">
             <div class="v-bar-item"><div class="v-bar-top"><span class="v-label">⛽ ${fuelLabel}</span><span class="v-value">${d.diesel}%</span></div><div class="v-bar"><div class="v-bar-fill v-bar-fuel" style="width:${d.diesel}%"></div></div></div>
@@ -649,13 +655,7 @@ function loadData(firebaseData){
           ${d.notes?`<div class="v-notes"><div class="v-notes-label">📝 ملاحظات</div>${d.notes}</div>`:""}
           ${(d.photosData&&d.photosData.length?d.photosData:[d.photoData].filter(Boolean)).map(src=>`<a href="${src}" target="_blank" class="v-photo-wrap"><img src="${src}" class="v-photo-big"></a>`).join("")}
         </div>
-        <div class="v-meta">
-          <span>👷 ${d.operator||"—"}</span>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <span class="mono">${date} — ${time}</span>
-            <a href="index.html?vehicle=${v.id}&from=dashboard" style="display:inline-flex;align-items:center;gap:5px;padding:6px 14px;background:var(--water);color:#fff;border-radius:8px;font-family:inherit;font-weight:700;font-size:12px;text-decoration:none;flex:none;">✏️ تعديل الفحص</a>
-          </div>
-        </div>`;
+        <div class="v-meta"><span>👷 ${d.operator||"—"}</span><span class="mono">${date} — ${time}</span></div>`;
     } else {
       card.innerHTML=`
         <div class="v-header"><div class="v-id"><div class="v-num mono">${v.id}</div><div class="v-type">${v.icon} ${v.type}</div></div><div class="v-status pending">لم يتم الفحص</div></div>

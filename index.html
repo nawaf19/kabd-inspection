@@ -647,31 +647,90 @@ document.getElementById("fileInput").addEventListener("keydown",e=>{if(e.key==="
   if(params.get("from")==="dashboard"){
     document.getElementById("login-overlay").style.display="none";
     const vid=params.get("vehicle")||"";
-    const picker=document.getElementById("op-picker");
-    picker.classList.add("open");
-    document.getElementById("opPickerVid").innerHTML=vid?'<span>'+vid+'</span>':"";
-    db.ref("employees").once("value").then(snap=>{
-      const emps=snap.val()||{};
-      const operators=Object.entries(emps).filter(([k,e])=>e.role==="مشغل الآلية");
-      const list=document.getElementById("opList");
-      if(!operators.length){list.innerHTML='<div class="op-empty">لا يوجد مشغلين مسجلين</div>';return;}
-      list.innerHTML=operators.map(([fileNum,emp])=>`<button class="op-item" onclick="pickOperator('${fileNum}','${emp.name}')"><div class="op-icon">🚒</div><div class="op-info"><div class="op-name">${emp.name}</div><div class="op-file">ملف: ${fileNum}</div></div></button>`).join("");
-    });
+    if(vid){
+      db.ref("inspections/"+vid).once("value").then(snap=>{
+        const data=snap.val();
+        if(data){
+          sessionStorage.setItem("kabd_user",JSON.stringify({name:data.operator||"",role:"مشغل الآلية"}));
+          applyLogin({name:data.operator||"—",role:"مشغل الآلية"});
+          for(let i=0;i<machine.options.length;i++){
+            if(machine.options[i].value===vid){machine.value=vid;machine.classList.remove("placeholder");break;}
+          }
+          updateVisibleFields();
+          setTimeout(()=>populateInspectionData(data),0);
+        } else {
+          showOperatorPicker(vid);
+        }
+      }).catch(()=>showOperatorPicker(vid));
+      return;
+    }
+    showOperatorPicker(vid);
     return;
   }
   const stored=sessionStorage.getItem("kabd_user");
   if(stored){
-    try{
-      const u=JSON.parse(stored);
-      applyLogin(u);
-    }catch(e){}
+    try{const u=JSON.parse(stored);applyLogin(u);}catch(e){}
   }
 })();
+
+function showOperatorPicker(vid){
+  const picker=document.getElementById("op-picker");
+  picker.classList.add("open");
+  document.getElementById("opPickerVid").innerHTML=vid?'<span>'+vid+'</span>':"";
+  db.ref("employees").once("value").then(snap=>{
+    const emps=snap.val()||{};
+    const operators=Object.entries(emps).filter(([k,e])=>e.role==="مشغل الآلية");
+    const list=document.getElementById("opList");
+    if(!operators.length){list.innerHTML='<div class="op-empty">لا يوجد مشغلين مسجلين</div>';return;}
+    list.innerHTML=operators.map(([fileNum,emp])=>`<button class="op-item" onclick="pickOperator('${fileNum}','${emp.name}')"><div class="op-icon">🚒</div><div class="op-info"><div class="op-name">${emp.name}</div><div class="op-file">ملف: ${fileNum}</div></div></button>`).join("");
+  });
+}
 
 function pickOperator(fileNum,name){
   sessionStorage.setItem("kabd_user",JSON.stringify({fileNum,name,role:"مشغل الآلية"}));
   document.getElementById("op-picker").classList.remove("open");
   applyLogin({name,role:"مشغل الآلية"});
+}
+
+function populateInspectionData(data){
+  if(!data) return;
+  function setSlider(el,numEl,val,min,max){
+    if(el==null||val==null) return;
+    el.value=val;
+    if(min!=null) paintSliderN(el,numEl,+min,+max);
+    else paintSlider(el,numEl);
+  }
+  setSlider(diesel,dieselNum,data.diesel);
+  setSlider(water,waterNum,data.water);
+  setSlider(foamSlider,foamNum,data.foam);
+  setSlider(hose1Slider,hose1Num,data.hose1,0,10);
+  setSlider(hose2Slider,hose2Num,data.hose2,0,10);
+  setSlider(fillDieselEl,fillDieselNum,data.fillDiesel);
+  setSlider(genFuelSlider,genFuelNum,data.genFuel);
+  setSlider(hydFuelSlider,hydFuelNum,data.hydFuel);
+  setSlider(breathFullSlider,breathFullNum,data.breathFull,1,50);
+  setSlider(breathSpareSlider,breathSpareNum,data.breathSpare,1,50);
+  function setStepper(key,val){
+    if(!counters[key]||val==null) return;
+    const v=Math.max(counters[key].min,Math.min(counters[key].max,+val));
+    counters[key].el.textContent=v;
+    const st=counters[key].el.closest('.stepper');
+    if(st){st.querySelector('[data-step="-1"]').disabled=v<=counters[key].min;st.querySelector('[data-step="1"]').disabled=v>=counters[key].max;}
+  }
+  setStepper("mawza",data.mawza);
+  setStepper("nozzle",data.nozzle);
+  setStepper("radio",data.radio);
+  setStepper("thermalCam",data.thermalCam);
+  setStepper("bricks339",data.bricks339);
+  function setRadio(name,val){if(val){const el=document.querySelector('input[name="'+name+'"][value="'+val+'"]');if(el)el.checked=true;}}
+  setRadio("generator",data.generator);
+  setRadio("hydraulic",data.hydraulic);
+  setRadio("clean",data.clean);
+  const l1=document.getElementById("litat1"),l2=document.getElementById("litat2");
+  if(l1&&data.litat1!=null) l1.value=data.litat1;
+  if(l2&&data.litat2!=null) l2.value=data.litat2;
+  const ntxt=document.getElementById("notes");
+  if(ntxt&&data.notes) ntxt.value=data.notes;
 }
 
 (function setupPWA(){

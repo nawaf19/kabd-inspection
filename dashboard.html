@@ -976,16 +976,30 @@ function openNotesPage(){
 }
 function closeNotesPage(){document.getElementById("notes-overlay").style.display="none";}
 
+function mergeLocalNotes(fb){
+  try{
+    const local=JSON.parse(localStorage.getItem("kabd_vehicle_notes")||"{}");
+    Object.keys(local).forEach(vid=>{
+      if(!fb[vid]) fb[vid]={};
+      Object.keys(local[vid]).forEach(k=>{if(!fb[vid][k]) fb[vid][k]=local[vid][k];});
+    });
+  }catch(e){}
+  return fb;
+}
+
 function loadVehicleNotes(){
   db.ref("vehicle_notes").once("value").then(snap=>{
-    vehicleNotes=snap.val()||{};
+    vehicleNotes=mergeLocalNotes(snap.val()||{});
+    renderNotesPage();
+  }).catch(()=>{
+    try{vehicleNotes=JSON.parse(localStorage.getItem("kabd_vehicle_notes")||"{}");}catch(e){vehicleNotes={};}
     renderNotesPage();
   });
 }
 
 function startNotesListener(){
   db.ref("vehicle_notes").on("value",snap=>{
-    vehicleNotes=snap.val()||{};
+    vehicleNotes=mergeLocalNotes(snap.val()||{});
     updateUnreadBadge();
     if(document.getElementById("notes-overlay").style.display==="block") renderNotesPage();
   });

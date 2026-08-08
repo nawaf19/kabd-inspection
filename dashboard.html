@@ -554,7 +554,9 @@ function toggleInspection(){
 
 function loadData(firebaseData){
   let data=firebaseData||{};
-  if(!firebaseData){ try{data=JSON.parse(localStorage.getItem("kabd_inspections")||"{}");}catch(e){} }
+  if(!firebaseData||Object.keys(data).length===0){
+    try{const local=JSON.parse(localStorage.getItem("kabd_inspections")||"{}");if(Object.keys(local).length>0)data=local;}catch(e){}
+  }
   latestData=data;
   const total=VEHICLES.length, done=VEHICLES.filter(v=>data[v.id]).length, pending=total-done;
 

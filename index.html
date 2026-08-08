@@ -537,7 +537,9 @@ function getCurrentShift(){
 
 function saveInspection(ins){
   try{ const KEY="kabd_inspections"; let all=JSON.parse(localStorage.getItem(KEY)||"{}"); all[ins.machine]=ins; localStorage.setItem(KEY,JSON.stringify(all)); }catch(e){}
-  try{ db.ref("inspections/"+ins.machine).set(ins); }catch(e){}
+  db.ref("inspections/"+ins.machine).set(ins).catch(()=>{
+    showErr("⚠️ تحذير: تم الحفظ محلياً فقط — تحقق من الاتصال بالإنترنت",null);
+  });
 }
 
 const err=document.getElementById("err");

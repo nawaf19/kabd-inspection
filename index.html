@@ -589,6 +589,13 @@ document.getElementById("send").addEventListener("click",()=>{
         timestamp: inspection.timestamp,
         read: false
       };
+      try{
+        const VNK="kabd_vehicle_notes";
+        let vn=JSON.parse(localStorage.getItem(VNK)||"{}");
+        if(!vn[inspection.machine]) vn[inspection.machine]={};
+        vn[inspection.machine]["local_"+Date.now()]={text:noteEntry.text,author:noteEntry.author,shift:noteEntry.shift,timestamp:noteEntry.timestamp,read:false};
+        localStorage.setItem(VNK,JSON.stringify(vn));
+      }catch(e){}
       db.ref("vehicle_notes/"+inspection.machine).push(noteEntry).catch(()=>{});
     }
     const btn=document.getElementById("send");

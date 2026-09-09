@@ -46,24 +46,53 @@ body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",sy
 .lock-btn{width:100%;padding:13px;border:none;border-radius:10px;background:var(--ink);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
 .lock-btn:active{background:#000;}
 
-/* ── Upload buttons ── */
-.upload-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px;}
-.upload-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:18px 8px;border:1.5px dashed var(--line-strong);border-radius:12px;background:var(--surface);color:var(--ink);font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;text-align:center;}
+/* ── New event form ── */
+.log-card{background:var(--surface);border:1.5px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 16px;margin-bottom:24px;}
+.log-card-title{font-size:15px;font-weight:700;margin-bottom:14px;}
+.field{margin-bottom:14px;}
+.field:last-of-type{margin-bottom:0;}
+.field-label{font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:6px;display:block;}
+.field-select,.field-textarea{width:100%;border:1.5px solid var(--line-strong);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:14px;color:var(--ink);background:var(--surface);}
+.field-textarea{resize:vertical;min-height:70px;line-height:1.6;}
+
+.upload-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0;}
+.upload-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px 8px;border:1.5px dashed var(--line-strong);border-radius:12px;background:var(--surface);color:var(--ink);font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;text-align:center;}
 .upload-btn:active{background:var(--orange-soft);border-color:var(--orange);}
-.upload-btn svg{width:22px;height:22px;color:var(--orange);}
-.upload-progress{text-align:center;font-size:12.5px;color:var(--muted);margin:-10px 0 16px;display:none;}
+.upload-btn svg{width:20px;height:20px;color:var(--orange);}
+
+.attach-preview{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.attach-chip{position:relative;display:flex;align-items:center;gap:6px;background:#F7F7F3;border:1px solid var(--line);border-radius:8px;padding:6px 10px 6px 26px;font-size:12px;font-weight:600;max-width:220px;}
+.attach-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.attach-chip button{position:absolute;left:4px;top:50%;transform:translateY(-50%);background:rgba(22,24,28,.8);color:#fff;border:none;width:18px;height:18px;border-radius:50%;font-size:12px;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0;}
+
+.submit-btn{width:100%;padding:13px;border:none;border-radius:10px;background:var(--orange);color:#fff;font-family:inherit;font-size:14.5px;font-weight:700;cursor:pointer;}
+.submit-btn:active{background:#C96A08;}
+.upload-progress{text-align:center;font-size:12.5px;color:var(--muted);margin-top:10px;display:none;}
+
+/* ── Day groups ── */
+.day-group{margin-bottom:26px;}
+.day-header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;padding:0 2px;}
+.day-date{font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.5px;}
+.share-btn{background:var(--green);border-color:var(--green);}
+.share-btn:active{background:#155f30;}
 
 /* ── Event card ── */
-.evt-card{background:var(--surface);border:1.5px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden;}
+.evt-card{background:var(--surface);border:1.5px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;}
 .evt-banner{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px;background:var(--ink);color:#F4F3EE;}
 .evt-type-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:6px;font-weight:700;font-size:12.5px;}
-.type-photo{background:var(--water);color:#fff;}
-.type-video{background:var(--ember);color:#fff;}
-.type-audio{background:var(--green);color:#fff;}
+.type-insp{background:var(--water);color:#fff;}
+.type-fire{background:var(--ember);color:#fff;}
+.type-rescue{background:#1a56db;color:#fff;}
+.type-service{background:var(--green);color:#fff;}
+.type-other{background:var(--muted);color:#fff;}
 .evt-datetime{font-family:"IBM Plex Mono",monospace;font-size:11px;color:#9AA0A8;}
 .evt-body{padding:14px 16px;}
+.evt-media-item{margin-bottom:10px;}
+.evt-media-item:last-child{margin-bottom:0;}
 .evt-body img,.evt-body video{width:100%;max-height:340px;object-fit:contain;border-radius:10px;background:#000;display:block;cursor:pointer;}
+.evt-body video{cursor:default;}
 .evt-body audio{width:100%;}
+.evt-comment{background:#F7F7F3;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13.5px;line-height:1.7;white-space:pre-wrap;margin-top:10px;}
 .evt-meta{font-size:12px;color:var(--muted);margin-top:8px;}
 .evt-footer{display:flex;align-items:center;justify-content:flex-end;padding:8px 16px;border-top:1px solid var(--line);background:#FAFAF7;}
 .evt-del-btn{background:none;border:1px solid var(--line-strong);border-radius:8px;padding:6px 14px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:6px;}
@@ -76,7 +105,7 @@ body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",sy
 
 #lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.92);align-items:center;justify-content:center;padding:20px;cursor:pointer;}
 #lightbox.open{display:flex;}
-#lightbox img,#lightbox video{max-width:94vw;max-height:90vh;border-radius:10px;object-fit:contain;cursor:default;}
+#lightbox img{max-width:94vw;max-height:90vh;border-radius:10px;object-fit:contain;cursor:default;}
 #lightbox-close{position:fixed;top:16px;left:16px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:24px;cursor:pointer;display:grid;place-items:center;}
 </style>
 </head>
@@ -86,7 +115,7 @@ body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",sy
   <div class="lock-box">
     <div class="lock-icon">🔒</div>
     <h2>قسم الأحداث محمي</h2>
-    <p>أدخل الرقم السري للدخول إلى الصور ومقاطع الفيديو والصوت المحفوظة</p>
+    <p>أدخل الرقم السري للدخول إلى سجل أحداث الدوام</p>
     <button class="lock-btn" onclick="attemptUnlock()">إدخال الرقم السري</button>
   </div>
 </div>
@@ -112,30 +141,55 @@ body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",sy
 
 <div id="lightbox" onclick="closeLightbox()">
   <button id="lightbox-close" onclick="closeLightbox()">×</button>
-  <div id="lightbox-content"></div>
+  <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()">
 </div>
 
 <div class="evt-area" id="mainContent" style="display:none;">
-  <div class="upload-row">
-    <label class="upload-btn" for="evtPhoto">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-      صورة
-    </label>
-    <input type="file" id="evtPhoto" accept="image/*" capture="environment" hidden>
 
-    <label class="upload-btn" for="evtVideo">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-      فيديو
-    </label>
-    <input type="file" id="evtVideo" accept="video/*" capture="environment" hidden>
+  <div class="log-card">
+    <div class="log-card-title">تسجيل حدث جديد</div>
 
-    <label class="upload-btn" for="evtAudio">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
-      مقطع صوتي
-    </label>
-    <input type="file" id="evtAudio" accept="audio/*" capture hidden>
+    <div class="field">
+      <label class="field-label">نوع الحدث</label>
+      <select id="evtType" class="field-select">
+        <option value="insp">🧰 فحص</option>
+        <option value="fire">🔥 حريق</option>
+        <option value="rescue">🚑 إنقاذ</option>
+        <option value="service">🔧 خدمة عامة</option>
+        <option value="other">📝 أخرى</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field-label">تعليق</label>
+      <textarea id="evtComment" class="field-textarea" placeholder="اكتب تفاصيل الحدث…"></textarea>
+    </div>
+
+    <div class="upload-row">
+      <label class="upload-btn" for="evtPhoto">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        صورة
+      </label>
+      <input type="file" id="evtPhoto" accept="image/*" capture="environment" multiple hidden>
+
+      <label class="upload-btn" for="evtVideo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        فيديو
+      </label>
+      <input type="file" id="evtVideo" accept="video/*" capture="environment" multiple hidden>
+
+      <label class="upload-btn" for="evtAudio">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+        صوت
+      </label>
+      <input type="file" id="evtAudio" accept="audio/*" capture multiple hidden>
+    </div>
+
+    <div class="attach-preview" id="attachPreview"></div>
+
+    <button class="submit-btn" onclick="submitEvent()">إرسال الحدث</button>
+    <div class="upload-progress" id="uploadProgress">جاري الحفظ…</div>
   </div>
-  <div class="upload-progress" id="uploadProgress">جاري الرفع…</div>
 
   <div id="eventsArea"><div class="loading">جاري تحميل الأحداث…</div></div>
 </div>
@@ -157,14 +211,14 @@ function attemptUnlock(){
 }
 attemptUnlock();
 
-function openLightbox(html){
-  document.getElementById("lightbox-content").innerHTML=html;
+function openLightbox(src){
+  document.getElementById("lightbox-img").src=src;
   document.getElementById("lightbox").classList.add("open");
   document.body.style.overflow="hidden";
 }
 function closeLightbox(){
   document.getElementById("lightbox").classList.remove("open");
-  document.getElementById("lightbox-content").innerHTML="";
+  document.getElementById("lightbox-img").src="";
   document.body.style.overflow="";
 }
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeLightbox();});
@@ -177,41 +231,59 @@ function currentUserName(){
   try{ const u=JSON.parse(localStorage.getItem("kabd_current_user")||"null"); if(u&&u.name) return u.name; }catch(e){}
   return "غير معروف";
 }
-
 function escH(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML;}
 
 const typeMap={
-  photo:{label:"📷 صورة",cls:"type-photo"},
-  video:{label:"🎥 فيديو",cls:"type-video"},
-  audio:{label:"🎙️ مقطع صوتي",cls:"type-audio"}
+  insp:{label:"🧰 فحص",cls:"type-insp"},
+  fire:{label:"🔥 حريق",cls:"type-fire"},
+  rescue:{label:"🚑 إنقاذ",cls:"type-rescue"},
+  service:{label:"🔧 خدمة عامة",cls:"type-service"},
+  other:{label:"📝 أخرى",cls:"type-other"}
 };
 
-function handleUpload(type,input){
+/* ── Attach files to the pending event before it's sent ── */
+let pendingMedia=[];
+function renderAttachPreview(){
+  const wrap=document.getElementById("attachPreview");
+  wrap.innerHTML=pendingMedia.map((m,i)=>{
+    const icon=m.kind==="photo"?"📷":m.kind==="video"?"🎥":"🎙️";
+    return `<div class="attach-chip"><span>${icon} ${escH(m.name)}</span><button type="button" onclick="removeAttach(${i})">×</button></div>`;
+  }).join("");
+}
+function removeAttach(i){ pendingMedia.splice(i,1); renderAttachPreview(); }
+
+function handleAttach(kind,input){
   input.addEventListener("change",()=>{
-    const file=input.files[0];
+    const files=Array.from(input.files);
     input.value="";
-    if(!file) return;
-    if(file.size>MAX_SIZE){ alert("حجم الملف كبير جدًا، الحد الأقصى 8 ميجابايت"); return; }
-    const progress=document.getElementById("uploadProgress");
-    progress.style.display="block";
-    const r=new FileReader();
-    r.onload=e=>{
-      db.ref("events").push({
-        type,
-        data:e.target.result,
-        name:file.name,
-        uploader:currentUserName(),
-        timestamp:Date.now()
-      }).then(()=>{ progress.style.display="none"; loadEvents(); })
-        .catch(()=>{ progress.style.display="none"; alert("حدث خطأ أثناء الرفع"); });
-    };
-    r.onerror=()=>{ progress.style.display="none"; alert("تعذّرت قراءة الملف"); };
-    r.readAsDataURL(file);
+    files.forEach(file=>{
+      if(file.size>MAX_SIZE){ alert("الملف "+file.name+" كبير جدًا، الحد الأقصى 8 ميجابايت"); return; }
+      const r=new FileReader();
+      r.onload=e=>{ pendingMedia.push({kind,data:e.target.result,name:file.name}); renderAttachPreview(); };
+      r.readAsDataURL(file);
+    });
   });
 }
-handleUpload("photo",document.getElementById("evtPhoto"));
-handleUpload("video",document.getElementById("evtVideo"));
-handleUpload("audio",document.getElementById("evtAudio"));
+handleAttach("photo",document.getElementById("evtPhoto"));
+handleAttach("video",document.getElementById("evtVideo"));
+handleAttach("audio",document.getElementById("evtAudio"));
+
+function submitEvent(){
+  const type=document.getElementById("evtType").value;
+  const comment=document.getElementById("evtComment").value.trim();
+  if(!comment && !pendingMedia.length){ alert("أضف تعليقًا أو مرفقًا واحدًا على الأقل"); return; }
+  const progress=document.getElementById("uploadProgress");
+  progress.style.display="block";
+  db.ref("events").push({
+    type, comment, media:pendingMedia,
+    uploader:currentUserName(), timestamp:Date.now()
+  }).then(()=>{
+    pendingMedia=[]; renderAttachPreview();
+    document.getElementById("evtComment").value="";
+    progress.style.display="none";
+    loadEvents();
+  }).catch(()=>{ progress.style.display="none"; alert("حدث خطأ أثناء الحفظ"); });
+}
 
 function checkPwd(){
   const p=prompt("أدخل الرقم السري للحذف:");
@@ -221,55 +293,122 @@ function checkPwd(){
 }
 function deleteEvent(key){
   if(!checkPwd()) return;
-  if(!confirm("حذف هذا العنصر؟ لا يمكن التراجع.")) return;
+  if(!confirm("حذف هذا الحدث؟ لا يمكن التراجع.")) return;
   db.ref("events/"+key).remove().then(loadEvents).catch(()=>alert("حدث خطأ أثناء الحذف"));
 }
 
-function renderMedia(type,data){
-  if(type==="photo") return `<img src="${data}" onclick="openLightbox('<img src=&quot;${data}&quot;>')">`;
-  if(type==="video") return `<video src="${data}" controls onclick="event.stopPropagation()"></video>`;
-  return `<audio src="${data}" controls></audio>`;
+function renderMediaItem(m){
+  if(m.kind==="photo") return `<div class="evt-media-item"><img src="${m.data}" onclick="openLightbox('${m.data}')"></div>`;
+  if(m.kind==="video") return `<div class="evt-media-item"><video src="${m.data}" controls></video></div>`;
+  return `<div class="evt-media-item"><audio src="${m.data}" controls></audio></div>`;
 }
+
+function eventCardHTML(ev,trashSVG){
+  const t=typeMap[ev.type]||typeMap.other;
+  const mediaHtml=(ev.media||[]).map(renderMediaItem).join("");
+  const commentHtml=ev.comment?`<div class="evt-comment">${escH(ev.comment)}</div>`:"";
+  return `<div class="evt-card">
+    <div class="evt-banner">
+      <span class="evt-type-badge ${t.cls}">${t.label}</span>
+      <span class="evt-datetime">${ev.timeVal}</span>
+    </div>
+    <div class="evt-body">
+      ${mediaHtml}${commentHtml}
+      <div class="evt-meta">بواسطة ${escH(ev.uploader||"غير معروف")}</div>
+    </div>
+    <div class="evt-footer">
+      <button class="evt-del-btn" onclick="deleteEvent('${ev.key}')">${trashSVG} حذف</button>
+    </div>
+  </div>`;
+}
+
+function dayKeyOf(ts){
+  const d=new Date(ts||0);
+  return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+}
+
+let eventsByDay={};
 
 function loadEvents(){
   const container=document.getElementById("eventsArea");
   container.innerHTML='<div class="loading">جاري تحميل الأحداث…</div>';
   db.ref("events").once("value").then(snap=>{
     const data=snap.val();
+    eventsByDay={};
     if(!data||!Object.keys(data).length){
       container.innerHTML='<div class="no-data"><div class="no-data-icon">🗂️</div>لا توجد أحداث مسجلة بعد</div>';
       document.getElementById("countBadge").textContent="";
       return;
     }
-    const entries=Object.entries(data).sort((a,b)=>(b[1].timestamp||0)-(a[1].timestamp||0));
-    document.getElementById("countBadge").textContent=entries.length+" عنصر";
+    const entries=Object.entries(data).map(([key,ev])=>{
+      const ts=ev.timestamp||0;
+      const d=new Date(ts);
+      return Object.assign({key},ev,{
+        dateStr:d.toLocaleDateString("ar-KW-u-nu-latn",{year:"numeric",month:"2-digit",day:"2-digit"}),
+        timeVal:d.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false})
+      });
+    });
+    document.getElementById("countBadge").textContent=entries.length+" حدث";
 
+    entries.forEach(ev=>{
+      const dk=dayKeyOf(ev.timestamp);
+      (eventsByDay[dk]=eventsByDay[dk]||[]).push(ev);
+    });
+
+    const dayKeys=Object.keys(eventsByDay).sort((a,b)=>(eventsByDay[b][0].timestamp||0)-(eventsByDay[a][0].timestamp||0));
     const trashSVG=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`;
+    const shareSVG=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>`;
 
     let html="";
-    entries.forEach(([key,ev])=>{
-      const t=typeMap[ev.type]||typeMap.photo;
-      const ts=ev.timestamp?new Date(ev.timestamp):null;
-      const dateStr=ts?ts.toLocaleDateString("ar-KW-u-nu-latn",{year:"numeric",month:"2-digit",day:"2-digit"}):"—";
-      const timeVal=ts?ts.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false}):"—";
-      html+=`<div class="evt-card">
-        <div class="evt-banner">
-          <span class="evt-type-badge ${t.cls}">${t.label}</span>
-          <span class="evt-datetime">${dateStr} — ${timeVal}</span>
+    dayKeys.forEach(dk=>{
+      const dayEntries=eventsByDay[dk].slice().sort((a,b)=>(a.timestamp||0)-(b.timestamp||0));
+      eventsByDay[dk]=dayEntries;
+      html+=`<div class="day-group">
+        <div class="day-header">
+          <span class="day-date">${dayEntries[0].dateStr}</span>
+          <button class="t-btn share-btn" onclick="shareDay('${dk}')">${shareSVG} مشاركة اليوم</button>
         </div>
-        <div class="evt-body">
-          ${renderMedia(ev.type,ev.data)}
-          <div class="evt-meta">بواسطة ${escH(ev.uploader||"غير معروف")}</div>
-        </div>
-        <div class="evt-footer">
-          <button class="evt-del-btn" onclick="deleteEvent('${key}')">${trashSVG} حذف</button>
-        </div>
+        ${dayEntries.map(ev=>eventCardHTML(ev,trashSVG)).join("")}
       </div>`;
     });
     container.innerHTML=html;
   }).catch(err=>{
     container.innerHTML='<div class="no-data"><div class="no-data-icon">⚠️</div>حدث خطأ أثناء تحميل البيانات<br><small style="color:var(--muted);font-size:12px;">'+(err&&err.message?err.message:"تحقق من الاتصال")+'</small></div>';
   });
+}
+
+/* ── Share a whole day's events (text + media) via the device's native share sheet ── */
+async function shareDay(dayKey){
+  const dayEntries=eventsByDay[dayKey];
+  if(!dayEntries||!dayEntries.length) return;
+
+  let text="📋 أحداث يوم "+dayEntries[0].dateStr+" — مركز كبد\n\n";
+  dayEntries.forEach(ev=>{
+    const t=typeMap[ev.type]||typeMap.other;
+    text+="⏰ "+ev.timeVal+" — "+t.label+"\n";
+    if(ev.comment) text+=ev.comment+"\n";
+    text+="\n";
+  });
+
+  const files=[];
+  for(const ev of dayEntries){
+    for(const m of (ev.media||[])){
+      try{
+        const blob=await (await fetch(m.data)).blob();
+        files.push(new File([blob], m.name||("مرفق."+(m.kind==="photo"?"jpg":m.kind==="video"?"mp4":"m4a")), {type:blob.type}));
+      }catch(e){}
+    }
+  }
+
+  const shareData={title:"أحداث اليوم — مركز كبد", text};
+  if(files.length && navigator.canShare && navigator.canShare({files})) shareData.files=files;
+
+  if(navigator.share){
+    try{ await navigator.share(shareData); }
+    catch(e){ if(e.name!=="AbortError") window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank"); }
+  } else {
+    window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank");
+  }
 }
 if('serviceWorker' in navigator) navigator.serviceWorker.register('/kabd-inspection/sw.js').catch(()=>{});
 </script>

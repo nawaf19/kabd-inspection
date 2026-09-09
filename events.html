@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>الأحداث — مركز كبد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9EAE4;--surface:#FFFFFF;--ink:#16181C;--muted:#6A6F77;
+  --line:#DDDED6;--line-strong:#C9CAC1;
+  --ember:#D33C1C;--ember-soft:#FBE7E0;
+  --water:#137C9E;--water-soft:#E1F0F5;
+  --green:#1B7A3D;--green-soft:#E2F3E8;
+  --orange:#E6790B;--orange-soft:#FFF3E0;
+  --header:#16181C;--radius:14px;
+  --shadow:0 1px 2px rgba(22,24,28,.05),0 6px 20px rgba(22,24,28,.07);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;font-size:15px;line-height:1.5;padding-bottom:40px;-webkit-font-smoothing:antialiased;}
+.mono{font-family:"IBM Plex Mono",monospace;font-feature-settings:"tnum";}
+
+.toolbar{position:sticky;top:0;z-index:30;background:var(--header);color:#F4F3EE;padding:14px 18px;border-bottom:3px solid var(--orange);}
+.toolbar-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.toolbar-left{flex:1;min-width:0;}
+.back-link{color:#9AA0A8;text-decoration:none;font-size:12px;font-weight:600;display:flex;align-items:center;gap:4px;margin-bottom:3px;}
+.back-link svg{width:13px;height:13px;}
+.toolbar h1{margin:0;font-size:17px;font-weight:700;}
+.toolbar-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.t-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;font-family:inherit;font-size:12px;font-weight:700;padding:8px 14px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .12s;}
+.t-btn svg{width:15px;height:15px;flex:none;}
+.t-btn:active{background:rgba(255,255,255,.2);}
+.count-chip{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:700;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15);color:#E0E4EA;padding:4px 12px;border-radius:999px;white-space:nowrap;}
+
+.evt-area{max-width:720px;margin:24px auto 0;padding:0 14px;}
+
+/* ── Lock screen ── */
+#lockScreen{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px;}
+.lock-box{background:var(--surface);border:1.5px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:32px 26px;text-align:center;max-width:340px;width:100%;}
+.lock-icon{width:56px;height:56px;border-radius:16px;background:var(--orange-soft);color:var(--orange);display:grid;place-items:center;margin:0 auto 16px;font-size:26px;}
+.lock-box h2{margin:0 0 6px;font-size:17px;font-weight:700;}
+.lock-box p{margin:0 0 20px;font-size:13px;color:var(--muted);}
+.lock-btn{width:100%;padding:13px;border:none;border-radius:10px;background:var(--ink);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
+.lock-btn:active{background:#000;}
+
+/* ── Upload buttons ── */
+.upload-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px;}
+.upload-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:18px 8px;border:1.5px dashed var(--line-strong);border-radius:12px;background:var(--surface);color:var(--ink);font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;text-align:center;}
+.upload-btn:active{background:var(--orange-soft);border-color:var(--orange);}
+.upload-btn svg{width:22px;height:22px;color:var(--orange);}
+.upload-progress{text-align:center;font-size:12.5px;color:var(--muted);margin:-10px 0 16px;display:none;}
+
+/* ── Event card ── */
+.evt-card{background:var(--surface);border:1.5px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden;}
+.evt-banner{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px;background:var(--ink);color:#F4F3EE;}
+.evt-type-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:6px;font-weight:700;font-size:12.5px;}
+.type-photo{background:var(--water);color:#fff;}
+.type-video{background:var(--ember);color:#fff;}
+.type-audio{background:var(--green);color:#fff;}
+.evt-datetime{font-family:"IBM Plex Mono",monospace;font-size:11px;color:#9AA0A8;}
+.evt-body{padding:14px 16px;}
+.evt-body img,.evt-body video{width:100%;max-height:340px;object-fit:contain;border-radius:10px;background:#000;display:block;cursor:pointer;}
+.evt-body audio{width:100%;}
+.evt-meta{font-size:12px;color:var(--muted);margin-top:8px;}
+.evt-footer{display:flex;align-items:center;justify-content:flex-end;padding:8px 16px;border-top:1px solid var(--line);background:#FAFAF7;}
+.evt-del-btn{background:none;border:1px solid var(--line-strong);border-radius:8px;padding:6px 14px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:6px;}
+.evt-del-btn:active{background:var(--ember-soft);color:var(--ember);border-color:var(--ember);}
+.evt-del-btn svg{width:14px;height:14px;}
+
+.no-data{text-align:center;padding:60px 20px;color:var(--muted);font-size:15px;background:var(--surface);border:1.5px solid var(--line);border-radius:var(--radius);}
+.no-data-icon{font-size:48px;margin-bottom:12px;}
+.loading{text-align:center;padding:50px;color:var(--muted);font-size:15px;}
+
+#lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.92);align-items:center;justify-content:center;padding:20px;cursor:pointer;}
+#lightbox.open{display:flex;}
+#lightbox img,#lightbox video{max-width:94vw;max-height:90vh;border-radius:10px;object-fit:contain;cursor:default;}
+#lightbox-close{position:fixed;top:16px;left:16px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:24px;cursor:pointer;display:grid;place-items:center;}
+</style>
+</head>
+<body>
+
+<div id="lockScreen">
+  <div class="lock-box">
+    <div class="lock-icon">🔒</div>
+    <h2>قسم الأحداث محمي</h2>
+    <p>أدخل الرقم السري للدخول إلى الصور ومقاطع الفيديو والصوت المحفوظة</p>
+    <button class="lock-btn" onclick="attemptUnlock()">إدخال الرقم السري</button>
+  </div>
+</div>
+
+<div class="toolbar" style="display:none;" id="mainToolbar">
+  <div class="toolbar-inner">
+    <div class="toolbar-left">
+      <a href="dashboard.html" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        العودة للمتابعة
+      </a>
+      <h1>الأحداث — مركز كبد</h1>
+    </div>
+    <div class="toolbar-actions">
+      <span class="count-chip" id="countBadge"></span>
+      <button class="t-btn" onclick="location.reload()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        تحديث
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="lightbox" onclick="closeLightbox()">
+  <button id="lightbox-close" onclick="closeLightbox()">×</button>
+  <div id="lightbox-content"></div>
+</div>
+
+<div class="evt-area" id="mainContent" style="display:none;">
+  <div class="upload-row">
+    <label class="upload-btn" for="evtPhoto">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      صورة
+    </label>
+    <input type="file" id="evtPhoto" accept="image/*" capture="environment" hidden>
+
+    <label class="upload-btn" for="evtVideo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      فيديو
+    </label>
+    <input type="file" id="evtVideo" accept="video/*" capture="environment" hidden>
+
+    <label class="upload-btn" for="evtAudio">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+      مقطع صوتي
+    </label>
+    <input type="file" id="evtAudio" accept="audio/*" capture hidden>
+  </div>
+  <div class="upload-progress" id="uploadProgress">جاري الرفع…</div>
+
+  <div id="eventsArea"><div class="loading">جاري تحميل الأحداث…</div></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+const PIN="232344";
+const MAX_SIZE=8*1024*1024; // 8MB per file
+
+function attemptUnlock(){
+  const p=prompt("أدخل الرقم السري:");
+  if(p===null) return;
+  if(p!==PIN){ alert("الرقم السري غير صحيح"); return; }
+  document.getElementById("lockScreen").style.display="none";
+  document.getElementById("mainToolbar").style.display="";
+  document.getElementById("mainContent").style.display="";
+  loadEvents();
+}
+attemptUnlock();
+
+function openLightbox(html){
+  document.getElementById("lightbox-content").innerHTML=html;
+  document.getElementById("lightbox").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeLightbox(){
+  document.getElementById("lightbox").classList.remove("open");
+  document.getElementById("lightbox-content").innerHTML="";
+  document.body.style.overflow="";
+}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeLightbox();});
+
+const firebaseConfig={apiKey:"AIzaSyBfi7BxhuMVehfmtvIOLm1MVYeXk_BWVz0",authDomain:"nawwaf-7258c.firebaseapp.com",databaseURL:"https://nawwaf-7258c-default-rtdb.firebaseio.com",projectId:"nawwaf-7258c",storageBucket:"nawwaf-7258c.firebasestorage.app",messagingSenderId:"391747168751",appId:"1:391747168751:web:01777a553f7250d4ce6e1a"};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.database();
+
+function currentUserName(){
+  try{ const u=JSON.parse(localStorage.getItem("kabd_current_user")||"null"); if(u&&u.name) return u.name; }catch(e){}
+  return "غير معروف";
+}
+
+function escH(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML;}
+
+const typeMap={
+  photo:{label:"📷 صورة",cls:"type-photo"},
+  video:{label:"🎥 فيديو",cls:"type-video"},
+  audio:{label:"🎙️ مقطع صوتي",cls:"type-audio"}
+};
+
+function handleUpload(type,input){
+  input.addEventListener("change",()=>{
+    const file=input.files[0];
+    input.value="";
+    if(!file) return;
+    if(file.size>MAX_SIZE){ alert("حجم الملف كبير جدًا، الحد الأقصى 8 ميجابايت"); return; }
+    const progress=document.getElementById("uploadProgress");
+    progress.style.display="block";
+    const r=new FileReader();
+    r.onload=e=>{
+      db.ref("events").push({
+        type,
+        data:e.target.result,
+        name:file.name,
+        uploader:currentUserName(),
+        timestamp:Date.now()
+      }).then(()=>{ progress.style.display="none"; loadEvents(); })
+        .catch(()=>{ progress.style.display="none"; alert("حدث خطأ أثناء الرفع"); });
+    };
+    r.onerror=()=>{ progress.style.display="none"; alert("تعذّرت قراءة الملف"); };
+    r.readAsDataURL(file);
+  });
+}
+handleUpload("photo",document.getElementById("evtPhoto"));
+handleUpload("video",document.getElementById("evtVideo"));
+handleUpload("audio",document.getElementById("evtAudio"));
+
+function checkPwd(){
+  const p=prompt("أدخل الرقم السري للحذف:");
+  if(p===null) return false;
+  if(p===PIN) return true;
+  alert("الرقم السري غير صحيح"); return false;
+}
+function deleteEvent(key){
+  if(!checkPwd()) return;
+  if(!confirm("حذف هذا العنصر؟ لا يمكن التراجع.")) return;
+  db.ref("events/"+key).remove().then(loadEvents).catch(()=>alert("حدث خطأ أثناء الحذف"));
+}
+
+function renderMedia(type,data){
+  if(type==="photo") return `<img src="${data}" onclick="openLightbox('<img src=&quot;${data}&quot;>')">`;
+  if(type==="video") return `<video src="${data}" controls onclick="event.stopPropagation()"></video>`;
+  return `<audio src="${data}" controls></audio>`;
+}
+
+function loadEvents(){
+  const container=document.getElementById("eventsArea");
+  container.innerHTML='<div class="loading">جاري تحميل الأحداث…</div>';
+  db.ref("events").once("value").then(snap=>{
+    const data=snap.val();
+    if(!data||!Object.keys(data).length){
+      container.innerHTML='<div class="no-data"><div class="no-data-icon">🗂️</div>لا توجد أحداث مسجلة بعد</div>';
+      document.getElementById("countBadge").textContent="";
+      return;
+    }
+    const entries=Object.entries(data).sort((a,b)=>(b[1].timestamp||0)-(a[1].timestamp||0));
+    document.getElementById("countBadge").textContent=entries.length+" عنصر";
+
+    const trashSVG=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`;
+
+    let html="";
+    entries.forEach(([key,ev])=>{
+      const t=typeMap[ev.type]||typeMap.photo;
+      const ts=ev.timestamp?new Date(ev.timestamp):null;
+      const dateStr=ts?ts.toLocaleDateString("ar-KW-u-nu-latn",{year:"numeric",month:"2-digit",day:"2-digit"}):"—";
+      const timeVal=ts?ts.toLocaleTimeString("ar-KW-u-nu-latn",{hour:"2-digit",minute:"2-digit",hour12:false}):"—";
+      html+=`<div class="evt-card">
+        <div class="evt-banner">
+          <span class="evt-type-badge ${t.cls}">${t.label}</span>
+          <span class="evt-datetime">${dateStr} — ${timeVal}</span>
+        </div>
+        <div class="evt-body">
+          ${renderMedia(ev.type,ev.data)}
+          <div class="evt-meta">بواسطة ${escH(ev.uploader||"غير معروف")}</div>
+        </div>
+        <div class="evt-footer">
+          <button class="evt-del-btn" onclick="deleteEvent('${key}')">${trashSVG} حذف</button>
+        </div>
+      </div>`;
+    });
+    container.innerHTML=html;
+  }).catch(err=>{
+    container.innerHTML='<div class="no-data"><div class="no-data-icon">⚠️</div>حدث خطأ أثناء تحميل البيانات<br><small style="color:var(--muted);font-size:12px;">'+(err&&err.message?err.message:"تحقق من الاتصال")+'</small></div>';
+  });
+}
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/kabd-inspection/sw.js').catch(()=>{});
+</script>
+</body>
+</html>
